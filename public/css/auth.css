@@ -14,7 +14,8 @@
 .login-page,
 .register-page {
     background: #f5f5f5;
-    background-image: url('../images/auth/auth-light.jpg');
+    /*background-image: url('../images/auth/auth-light.jpg');*/
+    background-color: #ff8080;
     background-size:cover;
 	width: 100%;
 	min-height: auto;
@@ -25,7 +26,8 @@
 .dark-mode .login-page,
 .dark-mode .register-page {
     background: #f5f5f5;
-    background-image: url('../images/auth/auth-dark.jpg');
+    /*background-image: url('../images/auth/auth-dark.jpg');*/
+    background-color: #6666ff;
     background-size:cover;
 	width: 100%;
 	min-height: auto;
