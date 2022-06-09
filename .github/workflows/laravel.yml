@@ -58,6 +58,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
 
           script: |
-            cd /var/www/html/laravel-action
+            cd /var/www/html/acecom
             git checkout -f 
             git pull
