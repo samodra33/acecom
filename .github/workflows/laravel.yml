@@ -1,0 +1,63 @@
+name: Laravel
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+
+        uses: actions/setup-node@v2-beta
+
+        with:
+
+          node-version: '12'
+
+          check-latest: true
+
+      - name: Install NPM dependencies
+
+        run: npm install
+
+      - name: Compile assets for production
+
+        run: npm run production
+        
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+
+        uses: actions/checkout@v2
+
+      - name: Deployment
+
+        uses: appleboy/ssh-action@master
+
+        with:
+
+          host: ${{ secrets.SSH_HOST }}
+
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+          username: ${{ secrets.SSH_USERNAME }}
+
+          script: |
+            cd /var/www/html/laravel-action
+            git checkout -f 
+            git pull

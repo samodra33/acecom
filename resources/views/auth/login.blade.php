@@ -54,7 +54,7 @@
                     </p>
                 @endif
               </div>
-              <button type="submit" class="btn btn-primary btn-block">{{trans('file.LogIn')}}</button>
+              <button type="submit" class="btn btn-primary btn-block">{{trans('file.LogIn1')}}</button>
             </form>
             <!-- This three button for demo only-->
             <!-- <button type="submit" class="btn btn-success admin-btn">LogIn as Admin</button>
