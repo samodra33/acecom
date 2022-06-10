@@ -108,12 +108,21 @@
                     ['permission_id', $adjustment->id],
                     ['role_id', $role->id]
                 ])->first();
+
+                $brand_permission = DB::table('permissions')->where('name', 'brand')->first();
+                $brand_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $brand_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
             ?>
             @if($category_permission_active || $index_permission_active || $print_barcode_active || $stock_count_active || $adjustment_active)
             <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.product')}}</span><span></a>
             <ul id="product" class="collapse list-unstyled ">
                 @if($category_permission_active)
                 <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
+                @endif
+                @if($brand_permission_active)
+                    <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
                 @endif
                 @if($index_permission_active)
                 <li id="product-list-menu"><a href="{{route('products.index')}}">{{__('file.product_list')}}</a></li>
@@ -730,11 +739,6 @@
                                     ['role_id', $role->id]
                                 ])->first();
 
-                        $brand_permission = DB::table('permissions')->where('name', 'brand')->first();
-                        $brand_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $brand_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
 
                         $unit_permission = DB::table('permissions')->where('name', 'unit')->first();
                         $unit_permission_active = DB::table('role_has_permissions')->where([
@@ -835,9 +839,6 @@
                     @endif
                     @if($customer_group_permission_active)
                     <li id="customer-group-menu"><a href="{{route('customer_group.index')}}">{{trans('file.Customer Group')}}</a></li>
-                    @endif
-                    @if($brand_permission_active)
-                    <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
                     @endif
                     @if($unit_permission_active)
                     <li id="unit-menu"><a href="{{route('unit.index')}}">{{trans('file.Unit')}}</a></li>
