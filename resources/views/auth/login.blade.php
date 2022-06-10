@@ -66,6 +66,7 @@
           </div>
           <div class="copyrights text-center">
             <p>{{trans('file.Developed By')}} <span class="external">{{$general_setting->developed_by}}</span></p>
+            <p>Test Pajar</p>
           </div>
         </div>
       </div>
