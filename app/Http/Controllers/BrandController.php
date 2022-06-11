@@ -155,4 +155,11 @@ class BrandController extends Controller
         fclose($file);
         return $file_url;
     }
+
+    public function selectList()
+    {
+        return Brand::where('is_active','=', 1)->orderBy('title', 'asc')
+            ->select("id", "title")
+            ->pluck('title','id'); 
+    }
 }

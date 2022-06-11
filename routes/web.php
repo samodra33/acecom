@@ -28,5 +28,14 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 
 	Route::get('/', 'HomeController@index');
 
+
+	//product
+
+	Route::resource('mProduct', 'Product\ProductMasterController');
+	Route::get("mProduct/service/gencode", 'Product\ProductMasterController@generateCode');
+	Route::get('mProduct/saleunit/{id}', 'Product\ProductMasterController@saleUnit');
+
+	//
+
 });
 

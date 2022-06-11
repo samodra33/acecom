@@ -114,7 +114,7 @@
 
 @push('scripts')
 <script type="text/javascript">
-    $("ul#people").siblings('a').attr('aria-expanded','true');
-    $("ul#people").addClass("show");
+    $("ul#supplier").siblings('a').attr('aria-expanded','true');
+    $("ul#supplier").addClass("show");
 </script>
 @endpush

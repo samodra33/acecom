@@ -115,7 +115,7 @@
                     ['role_id', $role->id]
                 ])->first();
             ?>
-            @if($category_permission_active || $index_permission_active || $print_barcode_active || $stock_count_active || $adjustment_active)
+            @if($category_permission_active || brand_permission_active || $index_permission_active  || $stock_count_active || $adjustment_active)
             <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.product')}}</span><span></a>
             <ul id="product" class="collapse list-unstyled ">
                 @if($category_permission_active)
@@ -125,7 +125,8 @@
                     <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
                 @endif
                 @if($index_permission_active)
-                <li id="product-list-menu"><a href="{{route('products.index')}}">{{__('file.product_list')}}</a></li>
+                <li id="product-list-menu"><a href="{{route('mProduct.index')}}">{{__('file.product_list')}}</a></li>
+                <li id="product-list-menu"><a href="{{route('products.index')}}">old product (not use)</a></li>
                 <?php
                 $add_permission = DB::table('permissions')->where('name', 'products-add')->first();
                 $add_permission_active = DB::table('role_has_permissions')->where([
@@ -134,12 +135,13 @@
                 ])->first();
                 ?>
                 @if($add_permission_active)
-                <li id="product-create-menu"><a href="{{route('products.create')}}">{{__('file.add_product')}}</a></li>
+                <li id="product-create-menu"><a href="{{route('mProduct.create')}}">{{trans('file.add_product')}}</a></li>
+                <li id="product-create-menu"><a href="{{route('products.create')}}">old add product (not use)</a></li>
                 @endif
                 @endif
-                @if($print_barcode_active)
+                <!--@if($print_barcode_active)
                 <li id="printBarcode-menu"><a href="{{route('product.printBarcode')}}">{{__('file.print_barcode')}}</a></li>
-                @endif
+                @endif-->
                 @if($adjustment_active)
                 <li id="adjustment-list-menu"><a href="{{route('qty_adjustment.index')}}">{{trans('file.Adjustment List')}}</a></li>
                 <li id="adjustment-create-menu"><a href="{{route('qty_adjustment.create')}}">{{trans('file.Add Adjustment')}}</a></li>
@@ -150,6 +152,41 @@
             </ul>
             </li>
             @endif
+
+            <?php
+
+                $supplier_index_permission = DB::table('permissions')->where('name', 'suppliers-index')->first();
+
+                $supplier_index_permission_active = DB::table('role_has_permissions')->where([
+                        ['permission_id', $supplier_index_permission->id],
+                        ['role_id', $role->id]
+                    ])->first();
+            ?>
+
+            @if($supplier_index_permission_active)
+
+            <li><a href="#supplier" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Supplier')}}</span></a>
+
+                <ul id="supplier" class="collapse list-unstyled ">
+                    @if($supplier_index_permission_active)
+                    <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
+                    <?php
+                    $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
+                    $supplier_add_permission_active = DB::table('role_has_permissions')->where([
+                        ['permission_id', $supplier_add_permission->id],
+                        ['role_id', $role->id]
+                    ])->first();
+                    ?>
+                    @if($supplier_add_permission_active)
+                    <li id="supplier-create-menu"><a href="{{route('supplier.create')}}">{{trans('file.Add Supplier')}}</a></li>
+                    @endif
+                    @endif
+                </ul>
+
+            </li>
+            @endif
+
+            
             <?php
             $index_permission = DB::table('permissions')->where('name', 'purchases-index')->first();
                 $index_permission_active = DB::table('role_has_permissions')->where([
@@ -441,15 +478,8 @@
                         ['permission_id', $biller_index_permission->id],
                         ['role_id', $role->id]
                     ])->first();
-
-                $supplier_index_permission = DB::table('permissions')->where('name', 'suppliers-index')->first();
-
-                $supplier_index_permission_active = DB::table('role_has_permissions')->where([
-                        ['permission_id', $supplier_index_permission->id],
-                        ['role_id', $role->id]
-                    ])->first();
             ?>
-            @if($user_index_permission_active || $customer_index_permission_active || $biller_index_permission_active || $supplier_index_permission_active)
+            @if($user_index_permission_active || $customer_index_permission_active || $biller_index_permission_active)
             <li><a href="#people" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-user"></i><span>{{trans('file.People')}}</span></a>
             <ul id="people" class="collapse list-unstyled ">
 
@@ -494,19 +524,7 @@
                 @endif
                 @endif
 
-                @if($supplier_index_permission_active)
-                <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
-                <?php
-                $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
-                $supplier_add_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $supplier_add_permission->id],
-                    ['role_id', $role->id]
-                ])->first();
-                ?>
-                @if($supplier_add_permission_active)
-                <li id="supplier-create-menu"><a href="{{route('supplier.create')}}">{{trans('file.Add Supplier')}}</a></li>
-                @endif
-                @endif
+
             </ul>
             </li>
             @endif

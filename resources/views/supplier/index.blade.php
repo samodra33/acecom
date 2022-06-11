@@ -115,9 +115,9 @@
 @push('scripts')
 <script type="text/javascript">
 
-    $("ul#people").siblings('a').attr('aria-expanded','true');
-    $("ul#people").addClass("show");
-    $("ul#people #supplier-list-menu").addClass("active");
+    $("ul#supplier").siblings('a').attr('aria-expanded','true');
+    $("ul#supplier").addClass("show");
+    $("ul#supplier #supplier-list-menu").addClass("active");
 
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var supplier_id = [];

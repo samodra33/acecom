@@ -1,6 +1,5 @@
-@section('content')
-    {{$dataTable->table()}}
-@endsection
+{{$dataTable->table()}}
+
 
 @push('scripts')
     {{$dataTable->scripts()}}
