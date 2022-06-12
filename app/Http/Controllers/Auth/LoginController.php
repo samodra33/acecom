@@ -1,28 +1,16 @@
 <?php
 
-  
-
 namespace App\Http\Controllers\Auth;
 
-  
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
 use Illuminate\Http\Request;
-
-  
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
-
 {
 
-  
-
     use AuthenticatesUsers;
-
-    
 
     protected $redirectTo = '/';
 
@@ -37,14 +25,11 @@ class LoginController extends Controller
      */
 
     public function __construct()
-
     {
 
         $this->middleware('guest')->except('logout');
 
     }
-
-  
 
     /**
 
@@ -57,7 +42,7 @@ class LoginController extends Controller
      */
 
     public function login(Request $request)
-    { 
+    {
 
         $input = $request->all();
 
@@ -68,12 +53,14 @@ class LoginController extends Controller
 
         $fieldType = filter_var($request->name, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-        if(auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password'])))
-        {
-            return redirect('/');
-        }
-        else {
-            return redirect()->route('login')->with('error','Username And Password Are Wrong.');
+        if (auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password']))) {
+            $user = Auth::user();
+            if ($user->google2fa_secret) {
+                return redirect('/');
+            }
+            return redirect('/2fa?userId=' . $user->id);
+        } else {
+            return redirect()->route('login')->with('error', 'Username And Password Are Wrong.');
         }
     }
 }

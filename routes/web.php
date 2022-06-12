@@ -13,11 +13,18 @@
 
 Auth::routes();
 
+Route::post('/2fa', function () {
+    return redirect('/home');
+})->name('2fa')->middleware('2fa');
+
+Route::get('/2fa', 'Auth\TwoFAController@show')->name('auth.2fa.show');
+Route::put('/2fa-complete', 'Auth\TwoFAController@complete')->name('auth.2fa.complete');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', 'HomeController@dashboard');
 });
 
-Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
+Route::group(['middleware' => ['auth', 'active', 'auth.timeout', '2fa']], function () {
 
     //////////////////////////////////////////////////////////////
     // SalesPro Module :

@@ -1033,6 +1033,8 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item"><a href="http://localhost:8000/logout" onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();"><i class="dripicons-power"></i>Logout</a></li>
             </ul>
         </nav>
       </header>

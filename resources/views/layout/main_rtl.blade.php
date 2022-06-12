@@ -933,6 +933,7 @@
                 <li class="nav-item"><a class="dropdown-item btn-pos btn-sm" href="{{route('sale.pos')}}"><i class="dripicons-shopping-bag"></i><span> POS</span></a></li>
                 @endif      
                 <li class="nav-item"><a id="btnFullscreen" data-toggle="tooltip" title="{{trans('file.Full Screen')}}"><i class="dripicons-expand"></i></a></li>
+
                 @if(\Auth::user()->role_id <= 2)
                   <li class="nav-item"><a href="{{route('cashRegister.index')}}" data-toggle="tooltip" title="{{trans('file.Cash Register List')}}"><i class="dripicons-archive"></i></a></li>
                 @endif
@@ -1058,6 +1059,8 @@
                       </li>
                   </ul>
                 </li> 
+                <li class="nav-item"><a href="http://localhost:8000/logout" onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();"><i class="dripicons-power"></i>Logout</a></li>
               </ul>
             </div>
           </div>
