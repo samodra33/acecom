@@ -92,13 +92,24 @@
 
     <div class="col-md-4">
         <div class="form-group mt-3">
-            <input type="checkbox" name="product_featured" value="1">&nbsp;
+            <input type="checkbox" name="product_featured" value="1"
+            <?php if (isset($product->product_featured)) { if ($product->product_featured == 1) { echo 'checked'; } } ?> >
+
+
+            &nbsp;
             <label>{{trans('file.Featured')}}</label>
             <p class="italic">{{trans('file.Featured product will be displayed in POS')}}</p>
         </div>
     </div>
     <div class="col-md-12 mt-3" id="sn-option">
-        <h5><input name="is_sn" type="checkbox" id="is_sn" value="1">&nbsp; {{trans('file.This product has IMEI or Serial numbers')}}</h5>
+        <h5>
+            <input name="is_sn" type="checkbox" id="is_sn" value="1"
+
+            <?php if (isset($product->is_sn)) { if ($product->is_sn == 1) { echo 'checked'; } } ?> >
+
+            &nbsp; {{trans('file.This product has IMEI or Serial numbers')}}
+
+        </h5>
     </div>
     <div class="col-md-12" style="margin-top: 50px;">
         <div class="form-group">
@@ -108,10 +119,42 @@
         </div>
     </div>
 
+    @if(request()->route()->named("mProduct.edit"))
+    <div class="col-md-12">
+        <div class="form-group">
+            <table class="table table-hover" id="product_image">
+                <thead>
+                    <tr>
+                        <th><button type="button" class="btn btn-sm"><i class="fa fa-list"></i></button></th>
+                        <th>Image</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $images = explode(",", $product->product_image)?>
+                    @foreach($images as $key => $image)
+
+                    @if(!empty($image))
+                    <tr>
+                        <td><button type="button" class="btn btn-sm"><i class="fa fa-list"></i></button></i></td>
+                        <td>
+                            <img src="{{url('public/images/product', $image)}}" sizes="50%">
+                            <input type="hidden" name="prev_img[]" value="{{$image}}">
+                        </td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-img">X</button></td>
+                    </tr>
+                    @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
     <div class="col-md-12">
         <div class="form-group">
             <label>{{trans('file.Product Details')}}</label>
-            <textarea name="product_details" class="form-control" rows="3"></textarea>
+            {{ Form::textarea("product_details", isset($product->product_detail)?$product->product_detail:null, array("class"=>"form-control")) }}
         </div>
     </div>
 

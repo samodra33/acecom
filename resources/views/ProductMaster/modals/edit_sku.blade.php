@@ -15,7 +15,7 @@
 					<div class="card-body">
 
 						<div class="col-md-12">
-
+							{{ Form::hidden("edt_hidden_sku_id", null) }}
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label class="control-label">SKU</label>
@@ -37,7 +37,6 @@
 						</div>
 
 						<div class="mt-3 col-md-12">
-
 							<input type="hidden" id="edt_save_hidden_sku_id" value="">
 							<input type="hidden" id="edt_save_btn_id" value="">
 							<button type="button" class="btn btn-primary" id="btn_save_edit_sku">
@@ -111,6 +110,84 @@
 		$("#sku".concat(tableIndex) ).remove();
 		$("#desc".concat(tableIndex) ).remove();
 	}
+
+	@endif
+
+	@if(request()->route()->named("mProduct.edit"))
+
+	function getSkuDetail(id)
+    {
+
+    	var urls = '{{route("mProduct.service.find_sku", ":param")}}';
+        urls = urls.replace(':param', id);
+
+        var data = {
+        	"sku_id" : id
+        }
+
+            $.ajax({
+
+                type:'GET',
+                url:urls,
+                data: data,
+
+	            success:function(response){
+
+	            	$("input[name='edt_hidden_sku_id']").val(response.sku_id);
+	            	$("input[name='edt_sku']").val(response.sku_no);
+	            	$("textarea[name='edt_desc']").val(response.sku_desc);
+
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+    }
+
+
+    $("button[id='btn_save_edit_sku']").click( function(e){
+
+    	var url = "{{ route('mProduct.service.edit_sku',":param")}}";
+            url = url.replace(':param', $("input[name='edt_hidden_sku_id']").val());
+
+            if ( $("input[name='edt_sku']").val() == '' ) {
+            	alert("Check your input.");
+            	return false;
+            }
+
+            var data = {
+            	"edt_hidden_sku_id"   : $("input[name='edt_hidden_sku_id']").val(),
+            	"edt_sku"                   : $("input[name='edt_sku']").val(),
+            	"edt_desc"     : $("textarea[name='edt_desc']").val()
+            }
+
+            $.ajax({
+
+                type:'PATCH',
+                url:url,
+                data: data,
+
+	            success:function(response){
+
+					if(response.status == 200){
+	                    console.log(response.responseJSON);
+	                }else{
+	                    alert(response);
+	                }
+
+	            	var table = $('#product_sku').DataTable();
+	                table.ajax.reload();
+
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+    });
 
 	@endif
 

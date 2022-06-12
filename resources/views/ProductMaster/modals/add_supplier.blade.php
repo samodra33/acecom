@@ -123,6 +123,63 @@
 
 	@endif
 
+	@if(request()->route()->named("mProduct.edit"))
+
+	$("#add_supplier_button").on("click", function(e){
+
+		var moq = $("input[name='moq']").val();
+		var supplier = $("select[name='supplier']").val();
+		var moqprice = $("input[name='moqprice']").val();
+
+
+		if ( isNaN(moq) || supplier == '' || isNaN(moqprice) ) {
+
+			alert("Check your input.");
+
+			return false;
+
+		}else{
+
+			var urls = '{{ route("mProduct.service/add_supplier") }}';
+       		var product_id = $("input[name='product_id']").val();
+
+            var data = {
+                "product_id" : product_id,
+                "moq" : moq,
+                "supplier" : supplier,
+                "moqprice" : moqprice
+            }
+
+            $.ajax({
+
+                type:'POST',
+                url:urls,
+                data: data,
+
+	            success:function(response){
+
+	            	alert(response)
+
+	            	var table = $('#product_supplier').DataTable();
+	                table.ajax.reload();
+	                
+					$("input[name='moq']").val("");
+					$("input[name='moqprice']").val("");
+
+					$('select[name=supplier]').val("");
+		            $('.selectpicker').selectpicker('refresh');
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+
+		}
+	})
+
+	@endif
 
 </script>
 

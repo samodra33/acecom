@@ -34,6 +34,32 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::resource('mProduct', 'Product\ProductMasterController');
 	Route::get("mProduct/service/gencode", 'Product\ProductMasterController@generateCode');
 	Route::get('mProduct/saleunit/{id}', 'Product\ProductMasterController@saleUnit');
+	Route::post('mProduct/updateProduct', 'Product\ProductMasterController@updateProduct')->name('mProduct.updateProduct');
+
+	//product SKU
+	Route::GET('mProduct/service/sku-table', 'Product\ProductMasterController@getSkuTable')
+		->name('mProduct.service.sku_table');
+	Route::post('mProduct/service/add-sku', 'Product\ProductMasterController@addSku')
+		->name('mProduct.service/add_sku');
+	Route::delete('mProduct/destroysku/{id}', 'Product\ProductMasterController@destroySku')
+		->name("mProduct.destroySku");
+	Route::GET('mProduct/service/find-sku/{id}','Product\ProductMasterController@getSku')
+	->name('mProduct.service.find_sku');
+
+	Route::PATCH('mProduct/service/{sku_id}/edit-sku','Product\ProductMasterController@updateSkuAjax')
+	->name('mProduct.service.edit_sku');
+
+	//product Supplier
+	Route::GET('mProduct/service/supplierProd-table', 'Product\ProductMasterController@getProductSupplierTable')->name('mProduct.service.supplierProd_table');
+	Route::post('mProduct/service/add-supplier', 'Product\ProductMasterController@addProductSupplier')
+		->name('mProduct.service/add_supplier');
+	Route::delete('mProduct/destroyprodsupp/{id}', 'Product\ProductMasterController@destroyProductSupplier')
+		->name("mProduct.destroyprodsupp");
+	Route::GET('mProduct/service/find-supplier/{id}','Product\ProductMasterController@getProductSupplier')
+	->name('mProduct.service.find_supplier');
+
+	Route::PATCH('mProduct/service/{id}/edit-prod-supplier','Product\ProductMasterController@updateProductSupplierAjax')
+	->name('mProduct.service.edit_prod_supplier');
 
 	//
 

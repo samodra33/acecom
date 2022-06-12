@@ -116,6 +116,60 @@
 
 	@endif
 
+	@if(request()->route()->named("mProduct.edit"))
+
+	$("#add_sku_button").on("click", function(e){
+
+		var sku = $("input[name='sku']").val();
+		var desc = $("textarea[name='desc']").val();
+
+		var sku_list = new Array();
+		var desc_list = new Array();
+
+		if (sku == '') {
+
+			alert("Check your input.");
+
+			return false;
+
+		}else{
+
+			var urls = '{{ route("mProduct.service/add_sku") }}';
+       		var product_id = $("input[name='product_id']").val();
+
+            var data = {
+                "product_id" : product_id,
+                "sku" : sku,
+                "desc" : desc
+            }
+
+            $.ajax({
+
+                type:'POST',
+                url:urls,
+                data: data,
+
+	            success:function(response){
+
+	            	alert(response)
+
+	            	var table = $('#product_sku').DataTable();
+	                table.ajax.reload();
+	                $("input[name='sku']").val("");
+					$("textarea[name='desc']").val("");
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+
+		}
+	})
+
+	@endif
+
 
 </script>
 

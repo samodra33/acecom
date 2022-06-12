@@ -525,5 +525,6 @@ return [
 	"SKU" => "",
 	"add Supplier" => "",
 	"MOQ" => "",
+	"Update SKU and Supplier" => "",
 ];
 ?>

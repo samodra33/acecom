@@ -4,8 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\EloquentGetTableNameTrait;
+
 class Supplier extends Model
 {
+
+    use EloquentGetTableNameTrait;
+    
     protected $fillable =[
 
         "name", "image", "company_name", "vat_number",

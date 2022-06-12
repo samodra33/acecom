@@ -17,7 +17,7 @@
 					<div class="card-body">
 
 						<div class="col-md-12">
-
+							{{ Form::hidden("edt_hidden_product_supplier_id", null) }}
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label class="control-label">MOQ</label>
@@ -134,6 +134,92 @@
 		$("#supplier".concat(tableMoqIndex) ).remove();
 		$("#moqprice".concat(tableMoqIndex) ).remove();
 	}
+
+	@endif
+
+	@if(request()->route()->named("mProduct.edit"))
+
+	function getSupplierDetail(id)
+    {
+
+    	var urls = '{{route("mProduct.service.find_supplier", ":param")}}';
+        urls = urls.replace(':param', id);
+
+        var data = {
+        	"product_supplier_id" : id
+        }
+
+            $.ajax({
+
+                type:'GET',
+                url:urls,
+                data: data,
+
+	            success:function(response){
+
+	            	$("input[name='edt_hidden_product_supplier_id']").val(response.product_supplier_id);
+	            	$("input[name='edt_moq']").val(response.supplier_moq)
+					$("select[name='edt_supplier']").val(response.supplier_id)
+					$('.selectpicker').selectpicker('refresh');
+					$("input[name='edt_moqprice']").val(response.supplier_price)
+
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+    }
+
+    $("button[id='btn_save_edit_moq']").click( function(e){
+
+    	var url = "{{ route('mProduct.service.edit_prod_supplier',":param")}}";
+            url = url.replace(':param', $("input[name='edt_hidden_product_supplier_id']").val());
+
+            var moq = $("input[name='edt_moq']").val();
+            var supplier = $("select[name='edt_supplier']").val();
+            var moqprice = $("input[name='edt_moqprice']").val();
+
+            if ( isNaN(moq) || supplier == '' || isNaN(moqprice) ) {
+            	alert("Check your input.");
+
+            	return false;
+            }
+
+            var data = {
+            	"edt_hidden_product_supplier_id"   : $("input[name='edt_hidden_product_supplier_id']").val(),
+            	"moq"          : moq,
+            	"supplier"     : supplier,
+            	"moqprice"		: moqprice
+            }
+
+            $.ajax({
+
+                type:'PATCH',
+                url:url,
+                data: data,
+
+	            success:function(response){
+
+					if(response.status == 200){
+	                    console.log(response.responseJSON);
+	                }else{
+	                    alert(response);
+	                }
+
+	            	var table = $('#product_supplier').DataTable();
+	                table.ajax.reload();
+
+	            },
+	            error:function(response) {
+
+	            	alert(response)
+
+	            }
+            });
+    });
+
 
 	@endif
 
