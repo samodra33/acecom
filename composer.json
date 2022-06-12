@@ -9,12 +9,14 @@
     "license": "MIT",
     "require": {
         "php": "^7.3.0",
+        "bacon/bacon-qr-code": "^2.0",
         "barryvdh/laravel-dompdf": "^1.0",
         "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.4",
         "gladcodes/keygen": "^1.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.5",
+        "juliomotol/laravel-auth-timeout": "^3.0",
         "kwn/number-to-words": "^1.12",
         "laravel/framework": "^8.65",
         "laravel/tinker": "^2.0",
@@ -22,6 +24,7 @@
         "laravelcollective/html": "^6.2",
         "maatwebsite/excel": "^3.1",
         "milon/barcode": "^8.0",
+        "pragmarx/google2fa-laravel": "^2.0",
         "spatie/laravel-permission": "^3.17",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^7.57",
@@ -29,6 +32,7 @@
         "yajra/laravel-datatables": "^1.5"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "^2.5",
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.4.4",
