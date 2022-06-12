@@ -9,24 +9,23 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Auth::routes();
 
-Route::group(['middleware' => 'auth'], function() {
-	Route::get('/dashboard', 'HomeController@dashboard');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', 'HomeController@dashboard');
 });
 
-Route::group(['middleware' => ['auth', 'active']], function() {
+Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
 
-	//////////////////////////////////////////////////////////////
-	// SalesPro Module :
+    //////////////////////////////////////////////////////////////
+    // SalesPro Module :
 
-	require('salespro/salespro_route.php');
+    require ('salespro/salespro_route.php');
 
-	////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
 
-	Route::get('/', 'HomeController@index');
+    Route::get('/', 'HomeController@index');
 
 });
-
