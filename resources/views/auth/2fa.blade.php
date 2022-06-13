@@ -48,7 +48,7 @@
                         @csrf
                         {{ method_field('PUT') }}
                         <input name="google2fa_secret" type="hidden" value="{{ $secret }}">
-                        <button type="submit" class="btn-primary">Complete</button>
+                        <button type="submit" class="btn btn-primary btn-block">Complete</button>
                     </form>
                 </div>
             </div>
