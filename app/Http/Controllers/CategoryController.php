@@ -262,4 +262,11 @@ class CategoryController extends Controller
         $lims_category_data->save();
         return redirect('category')->with('not_permitted', 'Category deleted successfully');
     }
+
+    public function selectList()
+    {
+        return Category::where('is_active','=', 1)->orderBy('name', 'asc')
+            ->select("id", "name")
+            ->pluck('name','id'); 
+    }
 }

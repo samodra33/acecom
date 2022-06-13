@@ -636,5 +636,13 @@ return [
 	"Monthly Summary" => "Monthly Summary",
 	"Switch Theme" => "Switch Theme",
 	"Documentation" => "Documentation",
+	"Recommendation Selling Price" => "Recommendation Selling Price",
+	"add SKU" => "add SKU",
+	"Action" => "Action",
+	"SKU" => "SKU",
+	"add Supplier" => "Add Supplier",
+	"MOQ" => "MOQ",
+	"Update SKU and Supplier" => "Update SKU and Supplier",
+
 ];
 ?>

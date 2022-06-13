@@ -155,4 +155,17 @@ class UnitController extends Controller
         $lims_unit_data->save();
         return redirect('unit');
     }
+
+    public function selectList()
+    {
+        return Unit::where('is_active', true)->orderBy('unit_name', 'asc')
+            ->select("id", "unit_name")
+            ->pluck('unit_name','id'); 
+    }
+
+    public function saleUnit($id)
+    {
+        $unit = Unit::where("base_unit", $id)->orWhere('id', $id)->orderBy('unit_name', 'asc')->pluck('unit_name','id');
+        return json_encode($unit);
+    }
 }

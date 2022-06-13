@@ -11,6 +11,8 @@ use Spatie\Permission\Models\Permission;
 use App\Mail\UserNotification;
 use Illuminate\Support\Facades\Mail;
 
+use DB;
+
 class SupplierController extends Controller
 {
     public function index()
@@ -200,5 +202,12 @@ class SupplierController extends Controller
             }
         }
         return redirect('supplier')->with('message', $message); 
+    }
+
+    public function selectList()
+    {
+        return Supplier::where('is_active','=', 1)->orderBy('name', 'asc')
+            ->select("id", "name", DB::raw("CONCAT(name,'-',company_name) AS supplier"))
+            ->pluck('supplier','id'); 
     }
 }

@@ -519,5 +519,12 @@ return [
 	"Type date or sale reference..." => "",
 	"Type date or purchase reference..." => "",
 	"Tax Number" => "",
+	"Recommendation Selling Price" => "",
+	"add SKU" => "",
+	"Action" => "",
+	"SKU" => "",
+	"add Supplier" => "",
+	"MOQ" => "",
+	"Update SKU and Supplier" => "",
 ];
 ?>
