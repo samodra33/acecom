@@ -42,22 +42,14 @@
                 <div class="mt-3">
                     <form method="POST" action="{{ route('2fa') }}" id="login-form">
                         @csrf
-                        {{-- {{ method_field('PUT') }} --}}
-                        <div class="form-group">
+                        <div class="form-group mb-4">
                             <p>Please enter the  <strong>OTP</strong> generated on your Authenticator App. <br> Ensure you submit the current one because it refreshes every 30 seconds.</p>
-                            <label for="one_time_password" class="col-md-4 control-label">One Time Password</label>
-                            <div class="col-md-6">
-                                <input id="one_time_password" type="number" class="form-control" name="one_time_password" required autofocus>
-                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Login
-                                </button>
-                            </div>
+                        <div class="form-group-material mb-4">
+                            <input id="login-username" type="number" name="one_time_password" required class="input-material" required>
+                            <label for="login-username" class="label-material">One Time Password</label>
                         </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit & Login</button>
                     </form>
                 </div>
             </div>

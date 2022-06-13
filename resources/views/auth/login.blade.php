@@ -56,11 +56,7 @@
               </div>
               <button type="submit" class="btn btn-primary btn-block">{{trans('file.LogIn')}}</button>
             </form>
-            <!-- This three button for demo only-->
-            <!-- <button type="submit" class="btn btn-success admin-btn">LogIn as Admin</button>
-            <button type="submit" class="btn btn-info staff-btn">LogIn as Staff</button>
-            <button type="submit" class="btn btn-dark customer-btn">LogIn as Customer</button>
-            <br><br> -->
+            
             <a href="{{ route('password.request') }}" class="forgot-pass">{{trans('file.Forgot Password?')}}</a>
             <p>{{trans('file.Do not have an account?')}}</p><a href="{{url('register')}}" class="signup">{{trans('file.Register')}}</a>
           </div>
