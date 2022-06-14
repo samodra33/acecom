@@ -643,6 +643,7 @@ return [
 	"add Supplier" => "Add Supplier",
 	"MOQ" => "MOQ",
 	"Update SKU and Supplier" => "Update SKU and Supplier",
+	"Inventory" => "Inventory",
 
 ];
 ?>

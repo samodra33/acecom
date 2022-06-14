@@ -80,10 +80,13 @@ class CategoryController extends Controller
 
                 $nestedData['name'] = $category->name;
 
+                /*
+
                 if($category->parent_id)
                     $nestedData['parent_id'] = Category::find($category->parent_id)->name;
                 else
                     $nestedData['parent_id'] = "N/A";
+                
 
                 $nestedData['number_of_product'] = $category->product()->where('is_active', true)->count();
                 $nestedData['stock_qty'] = $category->product()->where('is_active', true)->sum('qty');
@@ -94,6 +97,8 @@ class CategoryController extends Controller
                     $nestedData['stock_worth'] = config('currency').' '.$total_price.' / '.config('currency').' '.$total_cost;
                 else
                     $nestedData['stock_worth'] = $total_price.' '.config('currency').' / '.$total_cost.' '.config('currency');
+
+                */
 
                 $nestedData['options'] = '<div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
