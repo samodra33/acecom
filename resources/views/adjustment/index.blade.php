@@ -83,9 +83,9 @@
 @endsection
 @push('scripts')
 <script type="text/javascript">
-    $("ul#product").siblings('a').attr('aria-expanded','true');
-    $("ul#product").addClass("show");
-    $("ul#product #adjustment-list-menu").addClass("active");
+    $("ul#inventory").siblings('a').attr('aria-expanded','true');
+    $("ul#inventory").addClass("show");
+    $("ul#inventory #adjustment-list-menu").addClass("active");
 
     function confirmDelete() {
         if (confirm("Are you sure want to delete?")) {

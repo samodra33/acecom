@@ -11,6 +11,8 @@ use Yajra\DataTables\Services\DataTable;
 use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
+use App\Brand;
+use App\Category;
 
 class ProductDataTable extends DataTable
 {
@@ -23,16 +25,20 @@ class ProductDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables($query)
-        ->addColumn("#", function($query){
+        ->addColumn("image", function($query){
 
-            $product_name = $query->product_name;
+            if ($query->product_image) {
 
-            return "<button type='button' class='btn btn-link' data-ref='".$query->product_id."' onclick=selectPart(this)>
-            ".$product_name."
-            </button>";
+                $product_image = explode(",", $query->product_image);
+                $product_image = htmlspecialchars($product_image[0]);
+
+                return '<img src="'.url('public/images/product', $product_image).'" height="80" width="80">';
+            }
+
+            return "Image not found";
         })
         ->addColumn('action', 'ProductMaster.tables.button_action')
-        ->rawColumns(["#", "action"]);
+        ->rawColumns(["image", "action"]);
     }
 
     /**
@@ -45,13 +51,19 @@ class ProductDataTable extends DataTable
     {
         return $model->newQuery()
 
+                     ->leftjoin(Brand::getTableName()." as brand", "brand.id", MasterProduct::getTableName().".product_brand")
+
+                     ->leftjoin(Category::getTableName()." as category", "category.id", MasterProduct::getTableName().".product_category")
+
                      ->select(
                                 MasterProduct::getTableName().".product_id",
                                 MasterProduct::getTableName().".product_code",
                                 MasterProduct::getTableName().".product_name",
                                 MasterProduct::getTableName().".product_selling_price",
                                 MasterProduct::getTableName().".product_image",
-                                MasterProduct::getTableName().".is_active"
+                                MasterProduct::getTableName().".is_active",
+                                "brand.title as Brand",
+                                "category.name as Category"
 
 
                               )
@@ -82,8 +94,11 @@ class ProductDataTable extends DataTable
     {
         return [
             "action",
+            "image",
             "product_code",
-            "product_name"
+            "product_name",
+            "Brand",
+            "Category"
         ];
     }
 
