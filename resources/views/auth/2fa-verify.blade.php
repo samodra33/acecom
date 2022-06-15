@@ -50,7 +50,9 @@
                             <label for="login-username" class="label-material">One Time Password</label>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block mb-3">Submit & Login</button>
-                        <a href="#" onclick="GoBackWithRefresh();return false;" class="btn btn-info btn-block">Move Back</a>
+                        @if( request()->get('firstToken') )
+                            <a href="#" onclick="GoBackWithRefresh();return false;" class="btn btn-info btn-block">Move Back</a>
+                        @endif
                     </form>
                 </div>
             </div>
