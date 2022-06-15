@@ -38,6 +38,6 @@ class TwoFAController extends Controller
         $user["google2fa_secret"] = $request->google2fa_secret;
         $user->save();
 
-        return redirect('/');
+        return redirect('/?firstToken=true');
     }
 }
