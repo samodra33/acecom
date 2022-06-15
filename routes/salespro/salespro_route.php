@@ -204,13 +204,6 @@ Route::post('report/customer_report', 'ReportController@customerReport')->name('
 Route::post('report/supplier', 'ReportController@supplierReport')->name('report.supplier');
 Route::post('report/due_report_by_date', 'ReportController@dueReportByDate')->name('report.dueByDate');
 
-Route::get('user/profile/{id}', 'UserController@profile')->name('user.profile');
-Route::put('user/update_profile/{id}', 'UserController@profileUpdate')->name('user.profileUpdate');
-Route::put('user/changepass/{id}', 'UserController@changePassword')->name('user.password');
-Route::get('user/genpass', 'UserController@generatePassword');
-Route::post('user/deletebyselection', 'UserController@deleteBySelection');
-Route::resource('user', 'UserController');
-
 Route::get('setting/general_setting', 'SettingController@generalSetting')->name('setting.general');
 Route::post('setting/general_setting_store', 'SettingController@generalSettingStore')->name('setting.generalStore');
 

@@ -95,11 +95,26 @@
                         {!! Form::close() !!}
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <h4>2FA Authenticator</h4>
+                    </div>
+                    <div class="card-body">
+                        {!! Form::open(['route' => ['user.2fa.reset', Auth::id()], 'method' => 'post', 'onsubmit' => 'return confirm("Are you sure?");']) !!}
+                            <div class="form-group mb-4">
+                                <button type="submit" class="btn btn-primary"> Reset Token</button>
+                            </div>
+                            <span class="alert alert-warning mb-0">
+                                After reset, your session will be logging out and redirected to the login page.
+                            </span>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-
 
 @endsection
 
