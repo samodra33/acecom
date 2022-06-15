@@ -3,12 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\EloquentGetTableNameTrait;
 
 class Warehouse extends Model
 {
+
+    use EloquentGetTableNameTrait;
+
     protected $fillable =[
 
-        "name", "phone", "email", "address", "is_active"
+        "name", "outlet_name", "phone", "email", "address", "description", "is_hq", "is_active"
     ];
 
     public function product()

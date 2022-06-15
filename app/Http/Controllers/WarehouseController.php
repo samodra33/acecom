@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Warehouse;
 use Illuminate\Validation\Rule;
 use Keygen;
+use Auth;
 
 class WarehouseController extends Controller
 {
@@ -28,6 +29,18 @@ class WarehouseController extends Controller
         ]);
         $input = $request->all();
         $input['is_active'] = true;
+
+        if ($request->is_hq) {
+            if ($request->is_hq == 1) {
+                
+                $warehouse = Warehouse::where("is_hq", 1)
+                ->where("is_active", 1)
+                ->update([
+                    "is_hq" => 0
+                ]);
+            }
+        }
+
         Warehouse::create($input);
         return redirect('warehouse')->with('message', 'Data inserted successfully');
     }
@@ -50,6 +63,28 @@ class WarehouseController extends Controller
         ]);
         $input = $request->all();
         $lims_warehouse_data = Warehouse::find($input['warehouse_id']);
+
+        if ($request->is_hq) {
+
+            if ($request->is_hq == 1) {
+                
+                $warehouse = Warehouse::where("is_hq", 1)
+                ->where("is_active", 1)
+                ->update([
+                    "is_hq" => 0
+                ]);
+            }
+
+        }
+
+        $warehouse = Warehouse::where("is_hq", 1)->where("is_active", 1)->first();
+
+        if (empty($warehouse)) {
+
+            return redirect('warehouse')->with('not_permitted', 'Update Failed, warehouse must be have one HQ warehouse');
+        }
+
+
         $lims_warehouse_data->update($input);
         return redirect('warehouse')->with('message', 'Data updated successfully');
     }
@@ -109,8 +144,13 @@ class WarehouseController extends Controller
     public function destroy($id)
     {
         $lims_warehouse_data = Warehouse::find($id);
+
+        if ($lims_warehouse_data->is_hq == 1) {
+            return redirect('warehouse')->with('not_permitted', 'Failed, HQ warehouse Can Not be Deleted!');
+        }
+
         $lims_warehouse_data->is_active = false;
         $lims_warehouse_data->save();
-        return redirect('warehouse')->with('not_permitted', 'Data deleted successfully');
+        return redirect('warehouse')->with('message', 'Data deleted successfully');
     }
 }
