@@ -49,11 +49,11 @@
                             <input id="login-username" type="number" name="one_time_password" required class="input-material" required>
                             <label for="login-username" class="label-material">One Time Password</label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Submit & Login</button>
+                        <button type="submit" class="btn btn-primary btn-block mb-3">Submit & Login</button>
+                        <a href="#" onclick="GoBackWithRefresh();return false;" class="btn btn-info btn-block">Move Back</a>
                     </form>
                 </div>
             </div>
-
           </div>
           <div class="copyrights text-center">
             <p>{{trans('file.Developed By')}} <span class="external">{{$general_setting->developed_by}}</span></p>
@@ -116,4 +116,15 @@
             $(this).siblings('.label-material').removeClass('active');
         }
     });
+</script>
+<script type="text/javascript">
+    function GoBackWithRefresh(event) {
+        if ('referrer' in document) {
+            window.location = document.referrer;
+            /* OR */
+            //location.replace(document.referrer);
+        } else {
+            window.history.back();
+        }
+    }
 </script>
