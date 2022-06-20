@@ -82,7 +82,7 @@ class ProductDataTable extends DataTable
                     ->setTableId('product-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->parameters([])
+                    ->parameters([ 'responsive' => true, 'autoWidth' => false ])
                     ->orderBy(2);
     }
 
