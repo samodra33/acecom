@@ -74,7 +74,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.City')}} </label>
-                                    <input type="text" name="city" required class="form-control">
+                                    <input type="text" name="city" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -93,6 +93,12 @@
                                 <div class="form-group">
                                     <label>{{trans('file.Country')}}</label>
                                     <input type="text" name="country" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{trans('file.Lead Time')}}</label>
+                                    <input type="number" name="lead_time" class="form-control" value="0">
                                 </div>
                             </div>
                             <div class="col-md-12">

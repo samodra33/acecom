@@ -661,6 +661,7 @@ return [
 	"Min Selling Price" => "Min Selling Price",
 	"Contact Person" => "Contact Person",
 	"GST" => "GST",
+	"Lead Time" => "Lead Time",
 
 ];
 ?>

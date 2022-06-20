@@ -73,8 +73,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.City')}} *</label>
-                                    <input type="text" name="city"  value="{{$lims_supplier_data->city}}" required class="form-control">
+                                    <label>{{trans('file.City')}}</label>
+                                    <input type="text" name="city"  value="{{$lims_supplier_data->city}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -93,6 +93,12 @@
                                 <div class="form-group">
                                     <label>{{trans('file.Country')}}</label>
                                     <input type="text" name="country" value="{{$lims_supplier_data->country}}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{trans('file.Lead Time')}}</label>
+                                    <input type="number" name="lead_time" value="{{$lims_supplier_data->lead_time}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
