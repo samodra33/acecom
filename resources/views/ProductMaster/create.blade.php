@@ -17,7 +17,7 @@
                             @include('ProductMaster.field')
 
                             <!-- Table Add-->
-
+                            <!--
                             <div class="col-md-12" style="margin-top: 50px;">
                                 <div class="form-group">
                                     <a href="#" data-toggle="modal" data-target="#add_sku" class="btn btn-primary"><i class="dripicons-plus"></i> {{__('file.add SKU')}}</a>
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
 
-                            
+                            -->
 
                             <div class="col-md-12" style="margin-top: 50px;">
                                 <div class="form-group">

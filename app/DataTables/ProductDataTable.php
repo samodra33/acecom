@@ -57,7 +57,7 @@ class ProductDataTable extends DataTable
 
                      ->select(
                                 MasterProduct::getTableName().".product_id",
-                                MasterProduct::getTableName().".product_code",
+                                MasterProduct::getTableName().".product_code as product_sku",
                                 MasterProduct::getTableName().".product_name",
                                 MasterProduct::getTableName().".product_selling_price",
                                 MasterProduct::getTableName().".product_image",
@@ -95,7 +95,7 @@ class ProductDataTable extends DataTable
         return [
             "action",
             "image",
-            "product_code",
+            "product_sku",
             "product_name",
             "Brand",
             "Category"

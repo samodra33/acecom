@@ -644,6 +644,23 @@ return [
 	"MOQ" => "MOQ",
 	"Update SKU and Supplier" => "Update SKU and Supplier",
 	"Inventory" => "Inventory",
+	"Good Receive Note" => "Good Receive Note",
+	"GRN List" => "GRN List",
+	"create GRN" => "create GRN",
+	"Purchase Request" => "Purchase Request",
+	"Purchase Order" => "Purchase Order",
+	"Inventory List" => "Inventory List",
+	"Stock Take" => "Stock Take",
+	"Stock Transfer" => "Stock Transfer",
+	"Stock Adjustment" => "Stock Adjustment",
+	"Product SKU" => "Product SKU",
+	"Product UPC" => "Product UPC",
+	"Suggested Selling Price" => "Suggested Selling Price",
+	"Selling Price" => "Selling Price",
+	"This product has Serial numbers" => "This product has Serial numbers",
+	"Min Selling Price" => "Min Selling Price",
+	"Contact Person" => "Contact Person",
+	"GST" => "GST",
 
 ];
 ?>

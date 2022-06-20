@@ -16,7 +16,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.name')}} *</strong> </label>
+                                    <label>{{trans('file.Contact Person')}} *</strong> </label>
                                     <input type="text" name="name" required class="form-control">
                                 </div>
                             </div>
@@ -44,8 +44,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.VAT Number')}}</label>
-                                    <input type="text" name="vat_number" class="form-control">
+                                    <label>{{trans('file.GST')}}</label>
+                                    <input type="number" name="vat_number" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -73,7 +73,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.City')}} *</label>
+                                    <label>{{trans('file.City')}} </label>
                                     <input type="text" name="city" required class="form-control">
                                 </div>
                             </div>

@@ -12,9 +12,9 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Product Code')}} <strong>*</strong> </label>
+            <label>{{trans('file.Product SKU')}} <strong>*</strong> </label>
             <div class="input-group">
-                {{ Form::text("product_code", isset($product->product_code)?$product->product_code:null, array("class"=>"form-control", "placeholder"=>"Product Code", "required"=>"required")) }}
+                {{ Form::text("product_code", isset($product->product_code)?$product->product_code:null, array("class"=>"form-control", "placeholder"=>"Product SKU", "required"=>"required")) }}
                 <div class="input-group-append">
                     <button id="genbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
                 </div>
@@ -22,6 +22,20 @@
             <span class="validation-msg" id="code-error"></span>
         </div>
     </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>{{trans('file.Product UPC')}} <strong>*</strong> </label>
+            <div class="input-group">
+                {{ Form::text("product_code", isset($product->product_code)?$product->product_code:null, array("class"=>"form-control", "placeholder"=>"Product UPC", "required"=>"required")) }}
+                <div class="input-group-append">
+                    <button id="genbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
+                </div>
+            </div>
+            <span class="validation-msg" id="code-error"></span>
+        </div>
+    </div>
+
     <div class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Brand')}} <strong>*</strong> </label>
@@ -76,29 +90,36 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Recommendation Selling Price')}} <strong>*</strong> </label>
+            <label>{{trans('file.Suggested Selling Price')}} <strong>*</strong> </label>
             {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
             <span class="validation-msg"></span>
         </div>
 
     </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>{{trans('file.Min Selling Price')}} <strong>*</strong> </label>
+            {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
+            <span class="validation-msg"></span>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>{{trans('file.Product Cost')}} <strong>*</strong> </label>
+            {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
+            <span class="validation-msg"></span>
+        </div>
+
+    </div>
+
     <div id="alert-qty" class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Alert Quantity')}} <strong>*</strong> </label>
             {{ Form::number("alert_quantity", isset($product->product_alert_qty)?$product->product_alert_qty:0, array("class"=>"form-control", "step"=>"any")) }}
             <span class="validation-msg"></span>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="form-group mt-3">
-            <input type="checkbox" name="product_featured" value="1"
-            <?php if (isset($product->product_featured)) { if ($product->product_featured == 1) { echo 'checked'; } } ?> >
-
-
-            &nbsp;
-            <label>{{trans('file.Featured')}}</label>
-            <p class="italic">{{trans('file.Featured product will be displayed in POS')}}</p>
         </div>
     </div>
     <div class="col-md-12 mt-3" id="sn-option">
@@ -107,7 +128,7 @@
 
             <?php if (isset($product->is_sn)) { if ($product->is_sn == 1) { echo 'checked'; } } ?> >
 
-            &nbsp; {{trans('file.This product has IMEI or Serial numbers')}}
+            &nbsp; {{trans('file.This product has Serial numbers')}}
 
         </h5>
     </div>

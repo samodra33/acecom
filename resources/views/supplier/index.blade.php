@@ -19,9 +19,9 @@
                     <!--<th class="not-exported"></th>-->
                     <th class="not-exported">{{trans('file.action')}}</th>
                     <th>{{trans('file.Image')}}</th>
-                    <th>{{trans('file.name')}}</th>
+                    <th>{{trans('file.Contact Person')}}</th>
                     <th>{{trans('file.Company Name')}}</th>
-                    <th>{{trans('file.VAT Number')}}</th>
+                    <th>{{trans('file.GST')}}</th>
                     <th>{{trans('file.Email')}}</th>
                     <th>{{trans('file.Phone Number')}}</th>
                     <th>{{trans('file.Address')}}</th>

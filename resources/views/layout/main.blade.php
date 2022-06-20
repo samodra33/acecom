@@ -194,6 +194,12 @@
             </li>
             @endif
 
+            <li><a href="#grn" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Good Receive Note')}}</span></a>
+            <ul id="grn" class="collapse list-unstyled ">
+                <li id="grn-list-menu"><a href="">{{trans('file.GRN List')}}</a></li>
+                <li id="grn-create-menu"><a href="">{{trans('file.create GRN')}}</a></li>
+            </ul>
+
             <?php
 
                 $stock_count = DB::table('permissions')->where('name', 'stock_count')->first();
