@@ -45,7 +45,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.GST')}}</label>
-                                    <input type="number" name="vat_number" class="form-control">
+                                    <input type="number" name="gst_number" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">

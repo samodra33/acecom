@@ -44,8 +44,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.VAT Number')}}</label>
-                                    <input type="text" name="vat_number" value="{{$lims_supplier_data->vat_number}}" class="form-control">
+                                    <label>{{trans('file.GST')}}</label>
+                                    <input type="text" name="gst_number" value="{{$lims_supplier_data->gst_number}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">

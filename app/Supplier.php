@@ -13,7 +13,7 @@ class Supplier extends Model
     
     protected $fillable =[
 
-        "name", "image", "company_name", "vat_number",
+        "name", "image", "company_name",
         "email", "phone_number", "address", "city",
         "state", "postal_code", "country", "is_active"
         
