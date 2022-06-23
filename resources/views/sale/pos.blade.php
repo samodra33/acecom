@@ -746,6 +746,24 @@
 </nav>
 <section class="forms pos-section">
     <div class="container-fluid">
+        <div class="py-2 px-3 bg-white mt-2 rounded">
+            <div class="row">
+                <div class="col-9">
+                    <div class="py-1 px-3 border rounded">
+                        <marquee direction="" onmouseover="this.stop();" onmouseout="this.start();">
+                            <div class="holder">
+                                @forelse ($boardProducts as $boardProduct)
+                                    <div class="pr-3 text-danger d-inline text-running">{{$boardProduct->name}} | ${{$boardProduct->price}}</div>
+                                @empty
+                                    
+                                @endforelse
+                            </div>
+                        </marquee>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        </div>
         <div class="row">
             <audio id="mysoundclip1" preload="auto">
                 <source src="{{url('public/beep/beep-timber.mp3')}}"></source>
@@ -753,8 +771,8 @@
             <audio id="mysoundclip2" preload="auto">
                 <source src="{{url('public/beep/beep-07.mp3')}}"></source>
             </audio>
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-md-6 mt-1">
+                <div class="card mt-3">
                     <div class="card-body" style="padding-bottom: 0">
                         {!! Form::open(['route' => 'sales.store', 'method' => 'post', 'files' => true, 'class' => 'payment-form']) !!}
                         @php
@@ -1314,72 +1332,81 @@
                         </div>
                     </div>
                 </div>
-          <div class="row">
-                    <div class="col-md-4">
-                        <button class="btn btn-block btn-primary" id="category-filter">{{trans('file.category')}}</button>
+                <div class="row px-2">
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-block btn-primary" id="category-filter">{{trans('file.category')}}</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-block btn-info" id="brand-filter">{{trans('file.Brand')}}</button>
+                            </div>
+                            {{-- <div class="col-md-4">
+                                <button class="btn btn-block btn-danger" id="featured-filter">{{trans('file.Featured')}}</button>
+                            </div> --}}
+                            <div class="col-md-12 mt-1 table-container">
+                                <table id="product-table" class="table no-shadow product-list">
+                                    <thead class="d-none">
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for ($i=0; $i < ceil($product_number/5); $i++)
+                                        <tr>
+                                            <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}" data-product ="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
+                                                <p>{{$lims_product_list[0+$i*5]->name}}</p>
+                                                <span>{{$lims_product_list[0+$i*5]->code}}</span>
+                                            </td>
+                                            @if(!empty($lims_product_list[1+$i*5]))
+                                            <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}" data-product ="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
+                                                <p>{{$lims_product_list[1+$i*5]->name}}</p>
+                                                <span>{{$lims_product_list[1+$i*5]->code}}</span>
+                                            </td>
+                                            @else
+                                            <td style="border:none;"></td>
+                                            @endif
+                                            @if(!empty($lims_product_list[2+$i*5]))
+                                            <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}" data-product ="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
+                                                <p>{{$lims_product_list[2+$i*5]->name}}</p>
+                                                <span>{{$lims_product_list[2+$i*5]->code}}</span>
+                                            </td>
+                                            @else
+                                            <td style="border:none;"></td>
+                                            @endif
+                                            @if(!empty($lims_product_list[3+$i*5]))
+                                            <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}" data-product ="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
+                                                <p>{{$lims_product_list[3+$i*5]->name}}</p>
+                                                <span>{{$lims_product_list[3+$i*5]->code}}</span>
+                                            </td>
+                                            @else
+                                            <td style="border:none;"></td>
+                                            @endif
+                                            @if(!empty($lims_product_list[4+$i*5]))
+                                            <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}" data-product ="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
+                                                <p>{{$lims_product_list[4+$i*5]->name}}</p>
+                                                <span>{{$lims_product_list[4+$i*5]->code}}</span>
+                                            </td>
+                                            @else
+                                            <td style="border:none;"></td>
+                                            @endif
+                                        </tr>
+                                    @endfor
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-block btn-info" id="brand-filter">{{trans('file.Brand')}}</button>
+                    <div class="col-4">
+                        <div class="bg-white p-5">
+                            for sales revenue
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-block btn-danger" id="featured-filter">{{trans('file.Featured')}}</button>
-                    </div>
-                    <div class="col-md-12 mt-1 table-container">
-                        <table id="product-table" class="table no-shadow product-list">
-                            <thead class="d-none">
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @for ($i=0; $i < ceil($product_number/5); $i++)
-                                <tr>
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}" data-product ="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
-                                        <p>{{$lims_product_list[0+$i*5]->name}}</p>
-                                        <span>{{$lims_product_list[0+$i*5]->code}}</span>
-                                    </td>
-                                    @if(!empty($lims_product_list[1+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}" data-product ="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
-                                        <p>{{$lims_product_list[1+$i*5]->name}}</p>
-                                        <span>{{$lims_product_list[1+$i*5]->code}}</span>
-                                    </td>
-                                    @else
-                                    <td style="border:none;"></td>
-                                    @endif
-                                    @if(!empty($lims_product_list[2+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}" data-product ="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
-                                        <p>{{$lims_product_list[2+$i*5]->name}}</p>
-                                        <span>{{$lims_product_list[2+$i*5]->code}}</span>
-                                    </td>
-                                    @else
-                                    <td style="border:none;"></td>
-                                    @endif
-                                    @if(!empty($lims_product_list[3+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}" data-product ="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
-                                        <p>{{$lims_product_list[3+$i*5]->name}}</p>
-                                        <span>{{$lims_product_list[3+$i*5]->code}}</span>
-                                    </td>
-                                    @else
-                                    <td style="border:none;"></td>
-                                    @endif
-                                    @if(!empty($lims_product_list[4+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}" data-product ="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
-                                        <p>{{$lims_product_list[4+$i*5]->name}}</p>
-                                        <span>{{$lims_product_list[4+$i*5]->code}}</span>
-                                    </td>
-                                    @else
-                                    <td style="border:none;"></td>
-                                    @endif
-                                </tr>
-                            @endfor
-                            </tbody>
-                        </table>
-                    </div>
-              </div>
+                </div>
             </div>
             <!-- product edit modal -->
             <div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
