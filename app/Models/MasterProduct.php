@@ -20,13 +20,13 @@ class MasterProduct extends Model
     const UPDATED_AT = 'updated_at';
 
     protected $fillable = [
-        "product_code",
+        "product_sku",
+        "product_upc",
         "product_name",
         "product_brand",
         "product_category",
         "product_selling_price",
         "product_alert_qty",
-        "bom_division",
         "created_by",
         "updated_by"
     ];

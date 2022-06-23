@@ -70,6 +70,9 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout', '2fa']], functi
     Route::PATCH('mProduct/service/{id}/edit-prod-supplier', 'Product\ProductMasterController@updateProductSupplierAjax')
         ->name('mProduct.service.edit_prod_supplier');
 
-    //
+    //supplier
+
+    Route::get('supplier/getDetail/{id}', 'SupplierController@getSupplier')
+        ->name('supplier.getDetail');
 
 });

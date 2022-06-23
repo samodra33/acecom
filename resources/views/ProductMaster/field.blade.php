@@ -14,12 +14,12 @@
         <div class="form-group">
             <label>{{trans('file.Product SKU')}} <strong>*</strong> </label>
             <div class="input-group">
-                {{ Form::text("product_code", isset($product->product_code)?$product->product_code:null, array("class"=>"form-control", "placeholder"=>"Product SKU", "required"=>"required")) }}
+                {{ Form::text("product_sku", isset($product->product_sku)?$product->product_sku:null, array("class"=>"form-control", "placeholder"=>"Product SKU", "required"=>"required")) }}
                 <div class="input-group-append">
-                    <button id="genbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
+                    <button id="genSkubutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
                 </div>
             </div>
-            <span class="validation-msg" id="code-error"></span>
+            <span class="validation-msg" id="sku-error"></span>
         </div>
     </div>
 
@@ -27,12 +27,12 @@
         <div class="form-group">
             <label>{{trans('file.Product UPC')}} <strong>*</strong> </label>
             <div class="input-group">
-                {{ Form::text("product_code", isset($product->product_code)?$product->product_code:null, array("class"=>"form-control", "placeholder"=>"Product UPC", "required"=>"required")) }}
+                {{ Form::text("product_upc", isset($product->product_upc)?$product->product_upc:null, array("class"=>"form-control", "placeholder"=>"Product UPC", "required"=>"required")) }}
                 <div class="input-group-append">
-                    <button id="genbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
+                    <button id="genUpcbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
                 </div>
             </div>
-            <span class="validation-msg" id="code-error"></span>
+            <span class="validation-msg" id="upc-error"></span>
         </div>
     </div>
 
@@ -41,10 +41,10 @@
             <label>{{trans('file.Brand')}} <strong>*</strong> </label>
             <div class="input-group">
 
-                {{ Form::select("brand_id", $brand_lists, isset($product->product_brand)?$product->product_brand:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins")) }}
+                {{ Form::select("brand_id", $brand_lists, isset($product->product_brand)?$product->product_brand:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
 
             </div>
-            <span class="validation-msg"></span>
+            <span class="validation-msg" id="brand-error"></span>
         </div>
     </div>
 
@@ -53,10 +53,10 @@
             <label>{{trans('file.category')}} *</strong> </label>
             <div class="input-group">
 
-                {{ Form::select("category_id", $category_lists, isset($product->product_category)?$product->product_category:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins")) }}
+                {{ Form::select("category_id", $category_lists, isset($product->product_category)?$product->product_category:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
 
             </div>
-            <span class="validation-msg"></span>
+            <span class="validation-msg" id="category-error"></span>
         </div>
     </div>
 
@@ -65,12 +65,12 @@
             <div class="col-md-4 form-group">
                 <label>{{trans('file.Product Unit')}} *</strong> </label>
                 <div class="input-group">
-                    {{ Form::select("unit_id", $unit_lists, isset($product->product_unit)?$product->product_unit:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins")) }}
+                    {{ Form::select("unit_id", $unit_lists, isset($product->product_unit)?$product->product_unit:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
                 </div>
-                <span class="validation-msg"></span>
+                <span class="validation-msg" id="unit-error"></span>
             </div>
             <div class="col-md-4">
-                <label>{{trans('file.Sale Unit')}}</strong> </label>
+                <label>{{trans('file.Sale Unit')}}</label>
                 <div class="input-group">
                     {{ Form::select("sale_unit_id", [], isset($product->product_sale_unit)?$product->product_sale_unit:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins")) }}
                 </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>{{trans('file.Purchase Unit')}}</strong> </label>
+                    <label>{{trans('file.Purchase Unit')}} </label>
                     <div class="input-group">
                         {{ Form::select("purchase_unit_id", [], isset($product->product_purchase_unit)?$product->product_purchase_unit:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins")) }}
                     </div>
@@ -91,8 +91,8 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Suggested Selling Price')}} <strong>*</strong> </label>
-            {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
-            <span class="validation-msg"></span>
+            {{ Form::number("product_suggested_price", isset($product->product_suggested_price)?$product->product_suggested_price:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
+            <span class="validation-msg" id="suggested-error"></span>
         </div>
 
     </div>
@@ -100,8 +100,8 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Min Selling Price')}} <strong>*</strong> </label>
-            {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
-            <span class="validation-msg"></span>
+            {{ Form::number("product_min_price", isset($product->product_min_price)?$product->product_min_price:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
+            <span class="validation-msg" id="min-error"></span>
         </div>
 
     </div>
@@ -109,8 +109,8 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Product Cost')}} <strong>*</strong> </label>
-            {{ Form::number("price", isset($product->product_selling_price)?$product->product_selling_price:0, array("class"=>"form-control", "step"=>"any")) }}
-            <span class="validation-msg"></span>
+            {{ Form::number("product_cost", isset($product->product_cost)?$product->product_cost:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
+            <span class="validation-msg" id="cost-error"></span>
         </div>
 
     </div>
@@ -118,8 +118,8 @@
     <div id="alert-qty" class="col-md-4">
         <div class="form-group">
             <label>{{trans('file.Alert Quantity')}} <strong>*</strong> </label>
-            {{ Form::number("alert_quantity", isset($product->product_alert_qty)?$product->product_alert_qty:0, array("class"=>"form-control", "step"=>"any")) }}
-            <span class="validation-msg"></span>
+            {{ Form::number("product_alert_qty", isset($product->product_alert_qty)?$product->product_alert_qty:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
+            <span class="validation-msg" id="alert-error"></span>
         </div>
     </div>
     <div class="col-md-12 mt-3" id="sn-option">

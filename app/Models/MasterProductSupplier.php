@@ -25,7 +25,6 @@ class MasterProductSupplier extends Model
         "supplier_moq",
         "supplier_price",
         "is_active",
-        "seq_num",
         "created_by",
         "updated_by"
     ];

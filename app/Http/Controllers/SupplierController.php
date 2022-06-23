@@ -210,4 +210,11 @@ class SupplierController extends Controller
             ->select("id", "name", DB::raw("CONCAT(name,'-',company_name) AS supplier"))
             ->pluck('supplier','id'); 
     }
+
+    public function getSupplier($id)
+    {
+        $supplier = Supplier::where("id", $id)->first();
+        return response()->json($supplier);
+
+    }
 }

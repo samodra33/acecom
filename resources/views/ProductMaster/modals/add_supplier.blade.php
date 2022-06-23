@@ -36,6 +36,15 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">
+									<label class="control-label">Lead Time</label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::text("lead_time", null, array("class"=>"form-control", "readonly"=>"true")) }}
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-4">
 									<label class="control-label">Price</label>
 								</div>
 								<div class="col-md-8">
@@ -66,6 +75,23 @@
 
 	window.tableMoqIndex = 0;
 
+    $('select[name="supplier"]').on('change', function() {
+
+        var id = $(this).val();
+        var urls = '{{ route('supplier.getDetail',':param') }}';
+        urls = urls.replace(':param', id);
+
+        $.ajax({
+            url: urls,
+            type: "GET",
+            dataType: "json",
+            success:function(data) {
+
+            	$("input[name='lead_time']").val(data.lead_time);
+            },
+        });
+    });
+
 	@if(request()->route()->named("mProduct.create"))
 
 	$("#add_supplier_button").on("click", function(e){
@@ -73,6 +99,7 @@
 		var moq = $("input[name='moq']").val();
 		var supplier = $("select[name='supplier']").val();
 		var moqprice = $("input[name='moqprice']").val();
+		var leadTime = $("input[name='lead_time']").val();
 
 
 		if ( isNaN(moq) || supplier == '' || isNaN(moqprice) ) {
@@ -108,6 +135,7 @@
 				'<input type="hidden" id="tableMoqIndex'+tableMoqIndex+'" name="tableMoqIndex[]" value="'+tableMoqIndex+'">'+
 				'<input type="hidden" id="moq'+tableMoqIndex+'" name="moq[]" value="'+moq+'">'+
 				'<input type="hidden" id="supplier'+tableMoqIndex+'" name="supplier[]" value="'+supplier+'">'+
+				'<input type="hidden" id="leadtime'+tableMoqIndex+'" name="leadtime[]" value="'+leadTime+'">'+
 				'<input type="hidden" id="moqprice'+tableMoqIndex+'" name="moqprice[]" value="'+moqprice+'">'
 			);
 			tableMoqIndex++;
@@ -115,6 +143,7 @@
 			alert("Added.");
 			$("input[name='moq']").val("");
 			$("input[name='moqprice']").val("");
+			$("input[name='lead_time']").val("");
 
 			$('select[name=supplier]').val("");
             $('.selectpicker').selectpicker('refresh');

@@ -65,7 +65,7 @@
                                 </div>
                             </div>
 
-                            <div id="add_product_sku_table_hidden"></div>
+                            <!--<div id="add_product_sku_table_hidden"></div>-->
                             <div id="add_product_supplier_table_hidden"></div>
 
                             <!-- Button Submit-->
@@ -104,9 +104,15 @@
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('#genbutton').on("click", function(){
+    $('#genSkubutton').on("click", function(){
       $.get('service/gencode', function(data){
-        $("input[name='product_code']").val(data);
+        $("input[name='product_sku']").val(data);
+      });
+    });
+
+    $('#genUpcbutton').on("click", function(){
+      $.get('service/gencode', function(data){
+        $("input[name='product_upc']").val(data);
       });
     });
 
@@ -281,7 +287,7 @@
         },
         successmultiple: function (file, response) {
             location.href = '../mProduct';
-            //console.log(file, response);
+            //console.log(response);
         },
         completemultiple: function (file, response) {
             console.log(file, response, "completemultiple");
@@ -296,8 +302,7 @@
 
     jQuery.validator.setDefaults({
         errorPlacement: function (error, element) {
-            if(error.html() == 'Select Category...')
-                error.html('This field is required.');
+            error.html('This field is required.');
             $(element).closest('div.form-group').find('.validation-msg').html(error.html());
         },
         highlight: function (element) {
