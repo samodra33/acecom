@@ -7,12 +7,16 @@
         <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
       </div>
       <div class="modal-body">
+        <input type="hidden" name="board_product_id">
         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
         <div class="form-group">
           <label>Product Name *</label>
           {{Form::text('name',null, array('required' => 'required', 'class' => 'form-control'))}}
         </div>
-        <input type="hidden" name="board_product_id">
+        <div class="form-group">
+          <label>SKU *</label>
+          {{Form::number('sku',null, array('required' => 'required', 'class' => 'form-control'))}}
+        </div>
         <div class="form-group">
           <label>Product Price *</label>
           {{Form::number('price',null, array('required' => 'required', 'class' => 'form-control'))}}

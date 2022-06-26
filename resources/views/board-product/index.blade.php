@@ -26,6 +26,7 @@
                     <!--<th class="not-exported"></th>-->
                     <th class="not-exported">{{trans('file.action')}}</th>
                     <th>Product Name</th>
+                    <th>SKU</th>
                     <th>Price</th>
                     
                 </tr>
@@ -54,6 +55,9 @@
                         {{$boardProduct->name}}
                     </td>
                     <td>
+                        {{$boardProduct->sku}}
+                    </td>
+                    <td>
                         ${{$boardProduct->price}}
                     </td>
                 </tr>
@@ -76,9 +80,9 @@
 @push('scripts')
 <script type="text/javascript">
 
-    $("ul#product").siblings('a').attr('aria-expanded','true');
-    $("ul#product").addClass("show");
-    // $("ul#product #category-menu").addClass("active");
+    $("ul#sale").siblings('a').attr('aria-expanded','true');
+    $("ul#sale").addClass("show");
+    $("ul#sale #board-product").addClass("active");
 
     var board_product_id = [];
     var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
@@ -127,6 +131,7 @@
             $.get(url, function(data) {
                 $("input[name='name']").val(data['name']);
                 $("input[name='price']").val(data['price']);
+                $("input[name='sku']").val(data['sku']);
                 $("input[name='board_product_id']").val(data['id']);
             });
         });
