@@ -55,10 +55,11 @@ class LoginController extends Controller
 
         if (auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password']))) {
             $user = Auth::user();
-            if ($user->google2fa_secret) {
-                return redirect('/');
-            }
-            return redirect('/2fa?userId=' . $user->id);
+            // if ($user->google2fa_secret) {
+            //     return redirect('/');
+            // }
+            // return redirect('/2fa?userId=' . $user->id);
+            return redirect('/');
         } else {
             return redirect()->route('login')->with('error', 'Username And Password Are Wrong.');
         }

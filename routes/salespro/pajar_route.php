@@ -8,3 +8,6 @@ Route::get('user/genpass', 'UserController@generatePassword');
 Route::post('user/deletebyselection', 'UserController@deleteBySelection');
 Route::post('user/{id}/2fa-reset', 'UserController@twoFAReset')->name('user.2fa.reset');
 Route::resource('user', 'UserController');
+
+// Board Product
+Route::resource('board-product', 'BoardProductController')->except('show', 'create');
