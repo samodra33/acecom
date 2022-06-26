@@ -753,7 +753,7 @@
                         <marquee direction="" onmouseover="this.stop();" onmouseout="this.start();">
                             <div class="holder">
                                 @forelse ($boardProducts as $boardProduct)
-                                    <div class="pr-3 text-danger d-inline text-running">{{$boardProduct->name}} | ${{$boardProduct->price}}</div>
+                                    <div class="pr-3 text-danger d-inline text-running">**{{$boardProduct->name}} | {{$boardProduct->sku ? $boardProduct->sku : '-'}}: Lates Price ${{$boardProduct->price}}**</div>
                                 @empty
                                     
                                 @endforelse
