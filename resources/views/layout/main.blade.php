@@ -281,6 +281,7 @@
                 @if($delivery_permission_active)
                 <li id="delivery-menu"><a href="{{route('delivery.index')}}">{{trans('file.Delivery List')}}</a></li>
                 @endif
+                <li id="board-product"><a href="{{route('board-product.index')}}">Board Product</a></li>
             </ul>
             </li>
             @endif

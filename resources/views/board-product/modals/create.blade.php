@@ -11,6 +11,8 @@
             <div class="form-group">
                 <label>Product Name *</label>
                 {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type product name...'))}}
+                <label>SKU *</label>
+                {{Form::number('sku',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type SKU...'))}}
                 <label>Product Price *</label>
                 {{Form::number('price',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type a price...'))}}
 
