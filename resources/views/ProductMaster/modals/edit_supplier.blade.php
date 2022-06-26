@@ -38,6 +38,15 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">
+									<label class="control-label">Lead Time</label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::text("edt_lead_time", null, array("class"=>"form-control", "readonly"=>"true")) }}
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-4">
 									<label class="control-label">Price</label>
 								</div>
 								<div class="col-md-8">
@@ -76,6 +85,7 @@
 		$("input[name='edt_moq']").val( $( "#moq".concat(tableMoqIndex) ).val())
 		$("select[name='edt_supplier']").val( $( "#supplier".concat(tableMoqIndex) ).val())
 		$('.selectpicker').selectpicker('refresh');
+		$("input[name='edt_lead_time']").val( $( "#leadtime".concat(tableMoqIndex) ).val())
 		$("input[name='edt_moqprice']").val( $( "#moqprice".concat(tableMoqIndex) ).val())
 
 		$("#edt_save_hidden_moq_id").val(tableMoqIndex);
@@ -133,6 +143,7 @@
 		$("#moq".concat(tableMoqIndex) ).remove();
 		$("#supplier".concat(tableMoqIndex) ).remove();
 		$("#moqprice".concat(tableMoqIndex) ).remove();
+		$("#leadtime".concat(tableMoqIndex) ).remove();
 	}
 
 	@endif
@@ -162,6 +173,7 @@
 					$("select[name='edt_supplier']").val(response.supplier_id)
 					$('.selectpicker').selectpicker('refresh');
 					$("input[name='edt_moqprice']").val(response.supplier_price)
+					$("input[name='edt_lead_time']").val(response.lead_time)
 
 	            },
 	            error:function(response) {

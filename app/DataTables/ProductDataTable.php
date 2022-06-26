@@ -57,9 +57,10 @@ class ProductDataTable extends DataTable
 
                      ->select(
                                 MasterProduct::getTableName().".product_id",
-                                MasterProduct::getTableName().".product_code",
+                                MasterProduct::getTableName().".product_sku",
+                                MasterProduct::getTableName().".product_upc",
                                 MasterProduct::getTableName().".product_name",
-                                MasterProduct::getTableName().".product_selling_price",
+                                MasterProduct::getTableName().".product_suggested_price",
                                 MasterProduct::getTableName().".product_image",
                                 MasterProduct::getTableName().".is_active",
                                 "brand.title as Brand",
@@ -82,6 +83,7 @@ class ProductDataTable extends DataTable
                     ->setTableId('product-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
+                    ->parameters([ 'responsive' => true, 'autoWidth' => false ])
                     ->orderBy(2);
     }
 
@@ -95,7 +97,8 @@ class ProductDataTable extends DataTable
         return [
             "action",
             "image",
-            "product_code",
+            "product_sku",
+            "product_upc",
             "product_name",
             "Brand",
             "Category"

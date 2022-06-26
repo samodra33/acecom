@@ -16,6 +16,7 @@ use DB;
 use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
+use App\Supplier;
 
 use App\DataTables\ProductDataTable;
 use App\DataTables\ProductSkuDataTable;
@@ -119,16 +120,18 @@ class ProductMasterController extends Controller
 
         $prod = new MasterProduct();
 
-        $prod->product_code = $request->product_code;
+        $prod->product_sku = $request->product_sku;
+        $prod->product_upc = $request->product_upc;
         $prod->product_name = $request->product_name;
         $prod->product_brand = $request->brand_id;
         $prod->product_category = $request->category_id;
         $prod->product_unit = $request->unit_id ?? 0;
         $prod->product_sale_unit = $request->sale_unit_id ?? 0;
         $prod->product_purchase_unit = $request->purchase_unit_id ?? 0;
-        $prod->product_selling_price = $request->price ?? 0;
-        $prod->product_alert_qty = $request->alert_quantity ?? 0;
-        $prod->product_featured = $request->product_featured ?? 0;
+        $prod->product_suggested_price = $request->product_suggested_price ?? 0;
+        $prod->product_min_price = $request->product_min_price ?? 0;
+        $prod->product_cost = $request->product_cost ?? 0;
+        $prod->product_alert_qty = $request->product_alert_qty ?? 0;
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
@@ -140,9 +143,10 @@ class ProductMasterController extends Controller
 
         //store SKU and Supplier Moq
 
-        if ($request->sku) {
+        /*if ($request->sku) {
             $sku = $this->storeSku($prod->product_id,$request);
-        }
+        }*/
+
         if ($request->supplier) {
             $supplierMoq = $this->storeSupplierMoq($prod->product_id,$request);
         }
@@ -150,63 +154,6 @@ class ProductMasterController extends Controller
 
         \Session::flash('create_message', 'Product created successfully');        
 
-    }
-
-    //Store SKU
-    public function storeSku($product_id, $request)
-    {
-        $productSkuData = array();
-        $seq_num = 1;
-
-        foreach ($request->sku as $key => $value) {
-
-            $sku_desc = "";
-
-            //get SKU Data
-
-            try {
-
-
-                if ($request->has("desc")) {
-                    if (array_key_exists($key, $request->desc)) {
-                        $sku_desc = (int) $request->desc[$key];
-                    }
-                }
-
-                $productSkuData[] = array(
-                    "product_id" =>  $product_id,
-                    "sku_no" =>  $value,
-                    "sku_desc" =>  $sku_desc,
-                    "is_active" =>  1,
-                    "seq_num" => $seq_num,
-                    "created_by" =>  Auth::user()->id,
-                    "updated_by" =>  Auth::user()->id,
-                );
-
-                $seq_num++;
-
-            } catch (Exception $e) {
-
-            }
-
-            //endforarch
-        }
-
-        
-        //store SKU
-
-        if (count($productSkuData) > 0) {
-            foreach ($productSkuData as $key => $value) {
-
-                try {
-                    $productSku = MasterProductSku::create($productSkuData[$key]);
-                } catch (Exception $e) {
-
-                }
-
-
-            }
-        }
     }
 
     //store Supplier
@@ -220,7 +167,7 @@ class ProductMasterController extends Controller
 
             $moq = 1;
             $moqprice = 0;
-            //get SKU Data
+            //get supplier Data
 
             try {
 
@@ -233,18 +180,24 @@ class ProductMasterController extends Controller
 
                 if ($request->has("moqprice")) {
                     if (array_key_exists($key, $request->moqprice)) {
-                        $moqprice = (int) $request->moqprice[$key];
+                        $moqprice = (float) $request->moqprice[$key];
+                    }
+                }
+
+                if ($request->has("tableMoqIndex")) {
+                    if (array_key_exists($key, $request->tableMoqIndex)) {
+                        $index = (int) $request->tableMoqIndex[$key];
                     }
                 }
 
 
                 $productSupplierData[] = array(
+                    "index" =>  $index,
                     "product_id" =>  $product_id,
                     "supplier_id" =>  $value,
                     "supplier_moq" =>  $moq,
                     "supplier_price" =>  $moqprice,
                     "is_active" =>  1,
-                    "seq_num" => $seq_num,
                     "created_by" =>  Auth::user()->id,
                     "updated_by" =>  Auth::user()->id,
                 );
@@ -258,10 +211,12 @@ class ProductMasterController extends Controller
             //endforarch
         }
 
-        
-        //store SKU
+        $productSupplierData = array_unique($productSupplierData, SORT_REGULAR);
+
+        //store supplier
 
         if (count($productSupplierData) > 0) {
+
             foreach ($productSupplierData as $key => $value) {
 
                 try {
@@ -387,16 +342,18 @@ class ProductMasterController extends Controller
         //update
         
 
-        $prod->product_code = $request->product_code;
+        $prod->product_sku = $request->product_sku;
+        $prod->product_upc = $request->product_upc;
         $prod->product_name = $request->product_name;
         $prod->product_brand = $request->brand_id;
         $prod->product_category = $request->category_id;
         $prod->product_unit = $request->unit_id ?? 0;
         $prod->product_sale_unit = $request->sale_unit_id ?? 0;
         $prod->product_purchase_unit = $request->purchase_unit_id ?? 0;
-        $prod->product_selling_price = $request->price ?? 0;
-        $prod->product_alert_qty = $request->alert_quantity ?? 0;
-        $prod->product_featured = $request->product_featured ?? 0;
+        $prod->product_suggested_price = $request->product_suggested_price ?? 0;
+        $prod->product_min_price = $request->product_min_price ?? 0;
+        $prod->product_cost = $request->product_cost ?? 0;
+        $prod->product_alert_qty = $request->product_alert_qty ?? 0;
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
@@ -414,23 +371,181 @@ class ProductMasterController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $prod = MasterProduct::find($id);
 
-    public function destroySku($id)
-    {
-        return $id;
+        if(empty($prod)){
+          
+          return redirect()->back()->with('not_permitted', 'Product Not Found !');
+        }
+
+        $prod->is_active = 0;
+        $prod->updated_by = Auth::user()->id;
+        $prod->save();
+
+        $suppMoq = MasterProductSupplier::where("product_id", $id)
+        ->update([
+            "is_active" => 0,
+            "updated_by" => Auth::user()->id,
+        ]);
+
+        \Session::flash('create_message', 'Product deleted successfully');  
+
+        return redirect(route("mProduct.index"));
     }
 
     public function destroyProductSupplier($id)
     {
-        return $id;
+        $suppMoq = MasterProductSupplier::find($id);
+
+        $suppMoq->is_active = 0;
+        $suppMoq->updated_by = Auth::user()->id;
+        $suppMoq->save();
+
+        \Session::flash('create_message', 'Supplier deleted successfully'); 
+        return redirect()->back();
     }
 
     public function generateCode()
     {
         $id = Keygen::numeric(8)->generate();
         return $id;
+    }
+
+    //find supplier
+    public function getProductSupplier(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("product_supplier_id")){
+            return response()->json($res, 400);
+        }
+
+        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".product_supplier_id")
+                                    ->where("product_supplier_id", $id)
+                                    ->first();
+
+        if(!empty($prodSupp)){
+            $res = $prodSupp->toArray();
+        }
+
+        return $prodSupp;
+    }
+
+    //update supplier
+
+    public function updateProductSupplierAjax(Request $request, $id=null)
+    {
+        $prodSupp = MasterProductSupplier::where("product_supplier_id", $id)
+                                    ->first();
+
+        if(empty($prodSupp)){
+            return response()->json("The data is empty.", 201);
+        }
+
+        $prodSupp->supplier_moq      = $request->moq;
+        $prodSupp->supplier_id    = $request->supplier;
+        $prodSupp->supplier_price    = $request->moqprice;
+
+        $prodSupp->updated_by = Auth::user()->id;
+
+        $prodSupp->save();
+
+        return response()->json("Record updated successfully.", 200);
+    }
+
+    //add Product Supplier
+    public function addProductSupplier(Request $request)
+    {
+
+
+        $suppDb = new MasterProductSupplier(); 
+
+        $suppDb->supplier_moq      = $request->moq;
+        $suppDb->product_id  = $request->product_id;
+        $suppDb->supplier_id    = $request->supplier;
+        $suppDb->supplier_price    = $request->moqprice;
+
+        $suppDb->created_by = Auth::user()->id;
+        $suppDb->updated_by = Auth::user()->id;
+
+        $suppDb->save();
+
+        return "Added.";
+    }
+
+    //get Supplier table
+
+    public function getProductSupplierTable(Request $request, ProductSupplierDataTable $dataTable)
+    {
+        return $dataTable
+            ->with("id", $request->product_id)
+            ->render('mProduct.edit');
+    }
+
+    public function saleUnit($id)
+    {
+        return app("App\Http\Controllers\UnitController")->saleUnit($id);
+    }
+
+
+
+    //Store SKU
+    /*
+    public function storeSku($product_id, $request)
+    {
+        $productSkuData = array();
+        $seq_num = 1;
+
+        foreach ($request->sku as $key => $value) {
+
+            $sku_desc = "";
+
+            //get SKU Data
+
+            try {
+
+
+                if ($request->has("desc")) {
+                    if (array_key_exists($key, $request->desc)) {
+                        $sku_desc = (int) $request->desc[$key];
+                    }
+                }
+
+                $productSkuData[] = array(
+                    "product_id" =>  $product_id,
+                    "sku_no" =>  $value,
+                    "sku_desc" =>  $sku_desc,
+                    "is_active" =>  1,
+                    "seq_num" => $seq_num,
+                    "created_by" =>  Auth::user()->id,
+                    "updated_by" =>  Auth::user()->id,
+                );
+
+                $seq_num++;
+
+            } catch (Exception $e) {
+
+            }
+
+            //endforarch
+        }
+
+        
+        //store SKU
+
+        if (count($productSkuData) > 0) {
+            foreach ($productSkuData as $key => $value) {
+
+                try {
+                    $productSku = MasterProductSku::create($productSkuData[$key]);
+                } catch (Exception $e) {
+
+                }
+
+
+            }
+        }
     }
 
     //add sku
@@ -502,80 +617,6 @@ class ProductMasterController extends Controller
         return response()->json("Record updated successfully.", 200);
     }
 
-    //find supplier
-    public function getProductSupplier(Request $request, $id)
-    {
-
-        $res = array();
-
-        if(!$request->has("product_supplier_id")){
-            return response()->json($res, 400);
-        }
-
-        $prodSupp = MasterProductSupplier::where("product_supplier_id", $id)
-                                    ->first();
-
-        if(!empty($prodSupp)){
-            $res = $prodSupp->toArray();
-        }
-
-        return $prodSupp;
-    }
-
-    //update supplier
-
-    public function updateProductSupplierAjax(Request $request, $id=null)
-    {
-        $prodSupp = MasterProductSupplier::where("product_supplier_id", $id)
-                                    ->first();
-
-        if(empty($prodSupp)){
-            return response()->json("The data is empty.", 201);
-        }
-
-        $prodSupp->supplier_moq      = $request->moq;
-        $prodSupp->supplier_id    = $request->supplier;
-        $prodSupp->supplier_price    = $request->moqprice;
-
-        $prodSupp->updated_by = Auth::user()->id;
-
-        $prodSupp->save();
-
-        return response()->json("Record updated successfully.", 200);
-    }
-
-    //add Product Supplier
-    public function addProductSupplier(Request $request)
-    {
-
-
-        $prodSupp = MasterProductSupplier::where("product_id", $request->product_id)
-                                    ->select("seq_num")
-                                    ->orderBy("seq_num", "DESC")
-                                    ->first();
-
-        $seq_num = 1;
-
-        if(!empty($prodSupp)){
-            $seq_num = $prodSupp->seq_num + 1;
-        }
-
-        $suppDb = new MasterProductSupplier(); 
-
-        $suppDb->supplier_moq      = $request->moq;
-        $suppDb->product_id  = $request->product_id;
-        $suppDb->supplier_id    = $request->supplier;
-        $suppDb->supplier_price    = $request->moqprice;
-        $suppDb->seq_num     = $seq_num;
-
-        $suppDb->created_by = Auth::user()->id;
-        $suppDb->updated_by = Auth::user()->id;
-
-        $suppDb->save();
-
-        return "Added.";
-    }
-
     //get SKU Table
 
     public function getSkuTable(Request $request, ProductSkuDataTable $dataTable)
@@ -585,19 +626,9 @@ class ProductMasterController extends Controller
             ->render('mProduct.edit');
     }
 
-    //get SKU Suuplier
-
-    public function getProductSupplierTable(Request $request, ProductSupplierDataTable $dataTable)
+    public function destroySku($id)
     {
-        return $dataTable
-            ->with("id", $request->product_id)
-            ->render('mProduct.edit');
+        return $id;
     }
-
-    public function saleUnit($id)
-    {
-        return app("App\Http\Controllers\UnitController")->saleUnit($id);
-    }
-
-
+    */
 }

@@ -14,25 +14,29 @@
 <section>
     <div class="container-fluid">
         <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Warehouse')}}</a>
-        <a href="#" data-toggle="modal" data-target="#importWarehouse" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Warehouse')}}</a>
+        <!--<a href="#" data-toggle="modal" data-target="#importWarehouse" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Warehouse')}}</a>-->
     </div>
     <div class="table-responsive">
         <table id="warehouse-table" class="table">
             <thead>
                 <tr>
-                    <th class="not-exported"></th>
+                    <!--<th class="not-exported"></th>-->
+                    <th class="not-exported">{{trans('file.action')}}</th>
                     <th>{{trans('file.Warehouse')}}</th>
+                    <th>{{trans('file.outlet')}}</th>
+                    <th>{{trans('file.type')}}</th>
                     <th>{{trans('file.Phone Number')}}</th>
                     <th>{{trans('file.Email')}}</th>
                     <th>{{trans('file.Address')}}</th>
-                    <th>{{trans('file.Number of Product')}}</th>
-                    <th>{{trans('file.Stock Quantity')}}</th>
-                    <th class="not-exported">{{trans('file.action')}}</th>
+                    <!--<th>{{trans('file.Number of Product')}}</th>
+                    <th>{{trans('file.Stock Quantity')}}</th>-->
+                    
                 </tr>
             </thead>
             <tbody>
                 @foreach($lims_warehouse_all as $key=>$warehouse)
                 <?php
+                    /*
                     $number_of_product = App\Product_Warehouse::
                     join('products', 'product_warehouse.product_id', '=', 'products.id')
                     ->where([ ['product_warehouse.warehouse_id', $warehouse->id],
@@ -44,15 +48,10 @@
                     ->where([ ['product_warehouse.warehouse_id', $warehouse->id],
                               ['products.is_active', true]
                     ])->sum('product_warehouse.qty');
+                    */
                 ?>
                 <tr data-id="{{$warehouse->id}}">
-                    <td>{{$key}}</td>
-                    <td>{{ $warehouse->name }}</td>
-                    <td>{{ $warehouse->phone}}</td>
-                    <td>{{ $warehouse->email}}</td>
-                    <td>{{ $warehouse->address}}</td>
-                    <td>{{$number_of_product}}</td>
-                    <td>{{$stock_qty}}</td>
+                    <!--<td>{{$key}}</td>-->
                     <td>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
@@ -73,6 +72,18 @@
                             </ul>
                         </div>
                     </td>
+
+                    <td>{{ $warehouse->name }}</td>
+                    <td>{{ $warehouse->outlet_name }}</td>
+                    @if($warehouse->is_hq === 1)
+                    <td>HQ</td>
+                    @else
+                    <td>Outlet</td>
+                    @endif
+                    <td>{{ $warehouse->phone}}</td>
+                    <td>{{ $warehouse->email}}</td>
+                    <td>{{ $warehouse->address}}</td>
+
                 </tr>
                 @endforeach
             </tbody>
@@ -80,108 +91,8 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-    <div class="modal-content">
-    	{!! Form::open(['route' => 'warehouse.store', 'method' => 'post']) !!}
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Warehouse')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-      </div>
-      <div class="modal-body">
-        <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-          <div class="form-group">
-            <label>{{trans('file.name')}} *</label>
-            <input type="text" placeholder="Type WareHouse Name..." name="name" required="required" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Phone Number')}} *</label>
-            <input type="text" name="phone" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Email')}}</label>
-            <input type="email" name="email" placeholder="example@example.com" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Address')}} *</label>
-            <textarea required class="form-control" rows="3" name="address"></textarea>
-          </div>
-          <div class="form-group">
-            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-          </div>
-      </div>
-      {{ Form::close() }}
-    </div>
-  </div>
-</div>
-
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-    <div class="modal-content">
-    	{!! Form::open(['route' => ['warehouse.update',1], 'method' => 'put']) !!}
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Warehouse')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-      </div>
-      <div class="modal-body">
-        <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-          <div class="form-group">
-          	<input type="hidden" name="warehouse_id">
-            <label>{{trans('file.name')}} *</label>
-            <input type="text" placeholder="Type WareHouse Name..." name="name" required="required" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Phone Number')}} *</label>
-            <input type="text" name="phone" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Email')}}</label>
-            <input type="email" name="email" placeholder="example@example.com" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>{{trans('file.Address')}} *</label>
-            <textarea class="form-control" rows="3" name="address" required></textarea>
-          </div>
-          <div class="form-group">
-            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-          </div>
-      </div>
-      {{ Form::close() }}
-    </div>
-  </div>
-</div>
-
-<div id="importWarehouse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-    <div class="modal-content">
-    	{!! Form::open(['route' => 'warehouse.import', 'method' => 'post', 'files' => true]) !!}
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Warehouse')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-      </div>
-      <div class="modal-body">
-  		<p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-         <p>{{trans('file.The correct column order is')}} (name*, phone, email, address*) {{trans('file.and you must follow this')}}.</p>
-        <div class="row">
-              <div class="col-md-6">
-                  <div class="form-group">
-                      <label>{{trans('file.Upload CSV File')}} *</label>
-                      {{Form::file('file', array('class' => 'form-control','required'))}}
-                  </div>
-              </div>
-              <div class="col-md-6">
-                  <div class="form-group">
-                      <label> {{trans('file.Sample File')}}</label>
-                      <a href="public/sample_file/sample_warehouse.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
-                  </div>
-              </div>
-        </div>
-        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-      </div>
-      {{ Form::close() }}
-    </div>
-  </div>
-</div>
+@include('warehouse.modals.create')
+@include('warehouse.modals.edit')
 
 
 @endsection
@@ -218,10 +129,19 @@
 
 	        $.get(url, function(data) {
 	            $("#editModal input[name='name']").val(data['name']);
+                $("#editModal input[name='outlet_name']").val(data['outlet_name']);
 	            $("#editModal input[name='phone']").val(data['phone']);
 	            $("#editModal input[name='email']").val(data['email']);
 	            $("#editModal textarea[name='address']").val(data['address']);
+                $("#editModal textarea[name='description']").val(data['description']);
 	            $("#editModal input[name='warehouse_id']").val(data['id']);
+
+                $("#editModal input[name='is_hq']").prop( "checked", false );
+
+                if (data['is_hq'] == 1) {
+
+                    $("#editModal input[name='is_hq']").prop( "checked", true );
+                }
 
 	        });
 	    });
@@ -241,8 +161,10 @@
         'columnDefs': [
             {
                 "orderable": false,
-                'targets': [0, 5, 6, 7]
+                'targets': [0]
             },
+
+            /*
             {
                 'render': function(data, type, row, meta){
                     if(type === 'display'){
@@ -257,9 +179,12 @@
                 },
                 'targets': [0]
             }
+            */
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},
         'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+        /*
         dom: '<"row"lfB>rtip',
         buttons: [
             {
@@ -319,6 +244,8 @@
                 columns: ':gt(0)'
             },
         ],
+
+        */
     } );
 
 $.ajaxSetup({

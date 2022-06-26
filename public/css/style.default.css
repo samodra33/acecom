@@ -442,7 +442,7 @@ nav.navbar a.menu-btn i[class*=icon-] {
 }
 
 .side-navbar.shrink {
-	width: 0;
+	height: 0;
 	opacity: 0
 }
 

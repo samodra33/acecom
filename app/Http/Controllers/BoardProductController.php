@@ -46,6 +46,7 @@ class BoardProductController extends Controller
     {
         $boardProduct = BoardProduct::findOrFail($request->board_product_id);
         $boardProduct->name = $request->name;
+        $boardProduct->sku = $request->sku;
         $boardProduct->price = $request->price;
         $boardProduct->save();
         return redirect('board-product');

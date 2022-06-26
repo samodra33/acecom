@@ -1156,3 +1156,41 @@ table.dataTable tbody td.dt-checkboxes-cell {
 	overflow-y: auto;
 }
 
+@media screen and (max-width: 1200px) {
+  .side-navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .side-navbar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 1200px) {
+  .side-navbar a {
+    float: none;
+  }
+}
+
+.table-responsive::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.table-responsive::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+
+.table-responsive::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    border-radius: 10px;  
+    background-color: #ffffff; 
+}
