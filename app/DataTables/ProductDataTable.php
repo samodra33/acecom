@@ -11,6 +11,7 @@ use Yajra\DataTables\Services\DataTable;
 use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
+use App\Supplier;
 use App\Brand;
 use App\Category;
 
@@ -37,8 +38,26 @@ class ProductDataTable extends DataTable
 
             return "Image not found";
         })
+        ->addColumn("supplier", function($query){
+
+            $supplier = MasterProductSupplier::join(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+            ->where("product_id", $query->product_id)
+            ->where(MasterProductSupplier::getTableName().".is_active", 1)
+            ->select("supp.name")
+            ->get();
+
+            $supplierPrint = "";
+
+            foreach ($supplier as $key => $value) {
+
+                $supplierPrint .= "<li>".$value->name."</li>";
+            }
+
+            return "<ul>".$supplierPrint."</ul>";
+        })
+
         ->addColumn('action', 'ProductMaster.tables.button_action')
-        ->rawColumns(["image", "action"]);
+        ->rawColumns(["image", "action", "supplier"]);
     }
 
     /**
@@ -60,7 +79,9 @@ class ProductDataTable extends DataTable
                                 MasterProduct::getTableName().".product_sku",
                                 MasterProduct::getTableName().".product_upc",
                                 MasterProduct::getTableName().".product_name",
-                                MasterProduct::getTableName().".product_suggested_price",
+                                MasterProduct::getTableName().".product_suggested_price as suggested_price",
+                                MasterProduct::getTableName().".product_min_price as min_price",
+                                MasterProduct::getTableName().".product_cost as cost",
                                 MasterProduct::getTableName().".product_image",
                                 MasterProduct::getTableName().".is_active",
                                 "brand.title as Brand",
@@ -101,7 +122,11 @@ class ProductDataTable extends DataTable
             "product_upc",
             "product_name",
             "Brand",
-            "Category"
+            "Category",
+            "supplier",
+            "suggested_price",
+            "min_price",
+            "cost"
         ];
     }
 
