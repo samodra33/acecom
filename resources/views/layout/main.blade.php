@@ -106,12 +106,14 @@
             @if($category_permission_active || brand_permission_active || $index_permission_active)
             <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.product')}}</span><span></a>
             <ul id="product" class="collapse list-unstyled ">
-                @if($category_permission_active)
-                <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
-                @endif
                 @if($brand_permission_active)
                     <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
                 @endif
+
+                @if($category_permission_active)
+                <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
+                @endif
+
                 @if($index_permission_active)
                 <li id="product-list-menu"><a href="{{route('mProduct.index')}}">{{__('file.product_list')}}</a></li>
                 <!--<li id="product-list-menu"><a href="{{route('products.index')}}">old product (not use)</a></li>-->
@@ -123,7 +125,6 @@
                 ])->first();
                 ?>
                 @if($add_permission_active)
-                <li id="product-create-menu"><a href="{{route('mProduct.create')}}">{{trans('file.add_product')}}</a></li>
                 <!--<li id="product-create-menu"><a href="{{route('products.create')}}">old add product (not use)</a></li>-->
                 @endif
                 @endif
