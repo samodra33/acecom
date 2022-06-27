@@ -231,6 +231,32 @@
             @endif
 
             <?php
+            $index_permission = DB::table('permissions')->where('name', 'transfers-index')->first();
+            $index_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+            ?>
+            @if($index_permission_active)
+            <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
+            <ul id="transfer" class="collapse list-unstyled ">
+                <li id="transfer-list-menu"><a href="{{route('transfers.index')}}">{{trans('file.Transfer List')}}</a></li>
+                <?php
+                $add_permission = DB::table('permissions')->where('name', 'transfers-add')->first();
+                $add_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $add_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+                ?>
+                @if($add_permission_active)
+                <li id="transfer-create-menu"><a href="{{route('transfers.create')}}">{{trans('file.Add Transfer')}}</a></li>
+                <li id="transfer-import-menu"><a href="{{url('transfers/transfer_by_csv')}}">{{trans('file.Import Transfer By CSV')}}</a></li>
+                @endif
+            </ul>
+            </li>
+            @endif
+
+            <?php
             $sale_index_permission = DB::table('permissions')->where('name', 'sales-index')->first();
             $sale_index_permission_active = DB::table('role_has_permissions')->where([
                     ['permission_id', $sale_index_permission->id],
@@ -332,31 +358,6 @@
                 ?>
                 @if($add_permission_active)
                 <li id="quotation-create-menu"><a href="{{route('quotations.create')}}">{{trans('file.Add Quotation')}}</a></li>
-                @endif
-            </ul>
-            </li>
-            @endif
-            <?php
-            $index_permission = DB::table('permissions')->where('name', 'transfers-index')->first();
-            $index_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $index_permission->id],
-                    ['role_id', $role->id]
-                ])->first();
-            ?>
-            @if($index_permission_active)
-            <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
-            <ul id="transfer" class="collapse list-unstyled ">
-                <li id="transfer-list-menu"><a href="{{route('transfers.index')}}">{{trans('file.Transfer List')}}</a></li>
-                <?php
-                $add_permission = DB::table('permissions')->where('name', 'transfers-add')->first();
-                $add_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $add_permission->id],
-                    ['role_id', $role->id]
-                ])->first();
-                ?>
-                @if($add_permission_active)
-                <li id="transfer-create-menu"><a href="{{route('transfers.create')}}">{{trans('file.Add Transfer')}}</a></li>
-                <li id="transfer-import-menu"><a href="{{url('transfers/transfer_by_csv')}}">{{trans('file.Import Transfer By CSV')}}</a></li>
                 @endif
             </ul>
             </li>
