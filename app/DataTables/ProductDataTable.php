@@ -103,15 +103,15 @@ class ProductDataTable extends DataTable
                                 MasterProduct::getTableName().".product_sku",
                                 MasterProduct::getTableName().".product_upc",
                                 MasterProduct::getTableName().".product_name",
-                                MasterProduct::getTableName().".product_suggested_price as suggested_price",
-                                MasterProduct::getTableName().".product_min_price as min_price",
-                                MasterProduct::getTableName().".product_cost as cost",
+                                MasterProduct::getTableName().".product_suggested_price",
+                                MasterProduct::getTableName().".product_min_price",
+                                MasterProduct::getTableName().".product_cost",
                                 MasterProduct::getTableName().".product_image",
                                 MasterProduct::getTableName().".is_active",
                                 MasterProduct::getTableName().".sn_input_type",
                                 MasterProduct::getTableName().".is_sn",
-                                "brand.title as Brand",
-                                "category.name as Category"
+                                "brand.title",
+                                "category.name"
 
 
                               )
@@ -142,18 +142,18 @@ class ProductDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            "action",
+            "action" => ["orderable" => false],
             "image",
             "product_sku",
             "product_upc",
             "product_name",
-            "Brand",
-            "Category",
+            "Brand" => [ "data" => "title", "name" => "brand.title" ],
+            "Category" => [ "data" => "name", "name" => "category.name" ],
+            "suggested_price" => [ "data" => "product_suggested_price" ],
+            "min_price" => [ "data" => "product_min_price" ],
+            "cost" => [ "data" => "product_cost" ],
+            "S/N Input Type",
             "supplier",
-            "suggested_price",
-            "min_price",
-            "cost",
-            "S/N Input Type"
         ];
     }
 

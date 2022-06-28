@@ -151,27 +151,6 @@
     //table
     window.product_image = $('#product_image').DataTable({searching: false, paging: false, info: false});
 
-    $('#product_sku').DataTable({
-
-        processing: true,
-        serverSide: true,
-        bInfo: false,
-        bPaginate: true,
-        bAutoWidth: false, 
-        ajax: {
-          url : '{{ route("mProduct.service.sku_table") }}',
-          data : {
-            product_id : $('input[name="product_id"]').val()
-          }
-        },
-        columns: [
-        {data: 'action', name: 'action'},
-        {data: 'sku_no', name: 'sku_no'},
-        {data: 'sku_desc', name: 'sku_desc'}
-        ],
-        order: [[2, 'desc']]
-    });
-
     $('#product_supplier').DataTable({
 
         processing: true,
@@ -188,7 +167,7 @@
         columns: [
         {data: 'action', name: 'action'},
         {data: 'supplier_moq', name: 'supplier_moq'},
-        {data: 'supplier_name', name: 'supplier_name'},
+        {data: 'supplier_name', name: 'supp.name'},
         {data: 'supplier_price', name: 'supplier_price'}
         ],
         order: [[2, 'desc']]
@@ -376,5 +355,27 @@
     });
 
 
+    /*
+    $('#product_sku').DataTable({
+
+        processing: true,
+        serverSide: true,
+        bInfo: false,
+        bPaginate: true,
+        bAutoWidth: false, 
+        ajax: {
+          url : '{{ route("mProduct.service.sku_table") }}',
+          data : {
+            product_id : $('input[name="product_id"]').val()
+          }
+        },
+        columns: [
+        {data: 'action', name: 'action'},
+        {data: 'sku_no', name: 'sku_no'},
+        {data: 'sku_desc', name: 'sku_desc'}
+        ],
+        order: [[2, 'desc']]
+    });
+    */
 </script>
 @endpush
