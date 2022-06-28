@@ -164,41 +164,77 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('products-delete');
 
-        if($request->has('purchases-index')){
-            $permission = Permission::firstOrCreate(['name' => 'purchases-index']);
-            if(!$role->hasPermissionTo('purchases-index')){
+        if($request->has('purchases-request-index')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-request-index']);
+            if(!$role->hasPermissionTo('purchases-request-index')){
                 $role->givePermissionTo($permission);
             }
         }
         else
-            $role->revokePermissionTo('purchases-index');
+            $role->revokePermissionTo('purchases-request-index');
 
-        if($request->has('purchases-add')){
-            $permission = Permission::firstOrCreate(['name' => 'purchases-add']);
-            if(!$role->hasPermissionTo('purchases-add')){
+        if($request->has('purchases-request-add')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-request-add']);
+            if(!$role->hasPermissionTo('purchases-request-add')){
                 $role->givePermissionTo($permission);
             }
         }
         else
-            $role->revokePermissionTo('purchases-add');
+            $role->revokePermissionTo('purchases-request-add');
 
-        if($request->has('purchases-edit')){
-            $permission = Permission::firstOrCreate(['name' => 'purchases-edit']);
-            if(!$role->hasPermissionTo('purchases-edit')){
+        if($request->has('purchases-request-edit')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-request-edit']);
+            if(!$role->hasPermissionTo('purchases-request-edit')){
                 $role->givePermissionTo($permission);
             }
         }
         else
-            $role->revokePermissionTo('purchases-edit');
+            $role->revokePermissionTo('purchases-request-edit');
 
-        if($request->has('purchases-delete')){
-            $permission = Permission::firstOrCreate(['name' => 'purchases-delete']);
-            if(!$role->hasPermissionTo('purchases-delete')){
+        if($request->has('purchases-request-delete')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-request-delete']);
+            if(!$role->hasPermissionTo('purchases-request-delete')){
                 $role->givePermissionTo($permission);
             }
         }
         else
-            $role->revokePermissionTo('purchases-delete');
+            $role->revokePermissionTo('purchases-request-delete');
+
+        if($request->has('purchases-order-index')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-order-index']);
+            if(!$role->hasPermissionTo('purchases-order-index')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('purchases-order-index');
+
+        if($request->has('purchases-order-add')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-order-add']);
+            if(!$role->hasPermissionTo('purchases-order-add')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('purchases-order-add');
+
+        if($request->has('purchases-order-edit')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-order-edit']);
+            if(!$role->hasPermissionTo('purchases-order-edit')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('purchases-order-edit');
+
+        if($request->has('purchases-order-delete')){
+            $permission = Permission::firstOrCreate(['name' => 'purchases-order-delete']);
+            if(!$role->hasPermissionTo('purchases-order-delete')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('purchases-order-delete');
 
         if($request->has('sales-index')){
             $permission = Permission::firstOrCreate(['name' => 'sales-index']);

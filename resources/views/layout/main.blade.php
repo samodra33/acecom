@@ -170,27 +170,48 @@
 
             
             <?php
-            $index_permission = DB::table('permissions')->where('name', 'purchases-index')->first();
-                $index_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $index_permission->id],
+                //view
+
+                $index_pr_permission = DB::table('permissions')->where('name', 'purchases-request-index')->first();
+                $index_pr_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_pr_permission->id],
                     ['role_id', $role->id]
                 ])->first();
-            ?>
-            @if($index_permission_active)
-            <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Purchase')}}</span></a>
-            <ul id="purchase" class="collapse list-unstyled ">
-                <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('file.Purchase List')}}</a></li>
-                <?php
-                $add_permission = DB::table('permissions')->where('name', 'purchases-add')->first();
+
+
+                $index_po_permission = DB::table('permissions')->where('name', 'purchases-order-index')->first();
+                $index_po_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_po_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+
+                //add
+
+                $add_permission = DB::table('permissions')->where('name', 'purchases-request-add')->first();
                 $add_permission_active = DB::table('role_has_permissions')->where([
                     ['permission_id', $add_permission->id],
                     ['role_id', $role->id]
                 ])->first();
-                ?>
+            ?>
+            @if($index_pr_permission_active || $index_po_permission_active)
+            <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Purchase')}}</span></a>
+            <ul id="purchase" class="collapse list-unstyled ">
+
+                @if($index_pr_permission_active)
+                <li id="purchase-list-menu"><a href="{{route('pr.index')}}">{{trans('file.Purchase Request')}}</a></li>
+                @endif
+
+                @if($index_po_permission_active)
+                <li id="purchase-list-menu"><a href="{{route('po.index')}}">{{trans('file.Purchase Order')}}</a></li>
+                @endif
+
+                <!--
+                <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('file.Purchase List')}}</a></li>
                 @if($add_permission_active)
                 <li id="purchase-create-menu"><a href="{{route('purchases.create')}}">{{trans('file.Add Purchase')}}</a></li>
                 <li id="purchase-import-menu"><a href="{{url('purchases/purchase_by_csv')}}">{{trans('file.Import Purchase By CSV')}}</a></li>
                 @endif
+                -->
             </ul>
             </li>
             @endif
