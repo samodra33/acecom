@@ -37,7 +37,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>{{trans('file.Update SKU and Supplier')}}</h4>
+                        <h4>{{trans('file.Update Supplier')}}</h4>
                     </div>
                     <div class="card-body">
 

@@ -59,6 +59,8 @@
 
 </section>
 
+@include('ProductMaster.modals.view_product')
+
 @endsection
 
 @push('scripts')

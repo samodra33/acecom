@@ -17,6 +17,8 @@ use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
 use App\Supplier;
+use App\Brand;
+use App\Category;
 
 use App\DataTables\ProductDataTable;
 use App\DataTables\ProductSkuDataTable;
@@ -411,6 +413,47 @@ class ProductMasterController extends Controller
     {
         $id = Keygen::numeric(8)->generate();
         return $id;
+    }
+
+    //find Product
+    public function getProductDetail(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("product_id")){
+            return response()->json($res, 400);
+        }
+
+        $prod = MasterProduct::leftjoin(Brand::getTableName()." as brand", "brand.id", MasterProduct::getTableName().".product_brand")
+                            ->leftjoin(Category::getTableName()." as category", "category.id", MasterProduct::getTableName().".product_category")
+                            ->where("product_id", $id)
+                            ->select(
+                                MasterProduct::getTableName().".product_id",
+                                MasterProduct::getTableName().".product_sku",
+                                MasterProduct::getTableName().".product_upc",
+                                MasterProduct::getTableName().".product_name",
+                                MasterProduct::getTableName().".product_suggested_price as suggested_price",
+                                MasterProduct::getTableName().".product_min_price as min_price",
+                                MasterProduct::getTableName().".product_cost as cost",
+                                MasterProduct::getTableName().".product_image",
+                                MasterProduct::getTableName().".is_active",
+                                MasterProduct::getTableName().".sn_input_type",
+                                MasterProduct::getTableName().".is_sn",
+                                MasterProduct::getTableName().".product_detail",
+                                MasterProduct::getTableName().".product_alert_qty",
+                                "brand.title as Brand",
+                                "category.name as Category"
+
+
+                              )
+                            ->first();
+
+        if(!empty($prod)){
+            $res = $prod->toArray();
+        }
+
+        return response()->json($prod);
     }
 
     //find supplier

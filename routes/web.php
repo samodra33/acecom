@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
     Route::get("mProduct/service/gencode", 'Product\ProductMasterController@generateCode');
     Route::get('mProduct/saleunit/{id}', 'Product\ProductMasterController@saleUnit');
     Route::post('mProduct/updateProduct', 'Product\ProductMasterController@updateProduct')->name('mProduct.updateProduct');
+    Route::GET('mProduct/service/find-product/{id}', 'Product\ProductMasterController@getProductDetail')
+        ->name('mProduct.service.find_product');
 
     //product SKU
     Route::GET('mProduct/service/sku-table', 'Product\ProductMasterController@getSkuTable')
