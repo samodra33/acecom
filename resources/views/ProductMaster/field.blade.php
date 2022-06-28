@@ -128,10 +128,32 @@
 
             <?php if (isset($product->is_sn)) { if ($product->is_sn == 1) { echo 'checked'; } } ?> >
 
-            &nbsp; {{trans('file.This product has Serial numbers')}}
+            &nbsp; {{trans('file.This product have Serial numbers')}}
 
         </h5>
     </div>
+    <div class="col-md-12 mt-3" id="sn-option">
+        <h5>
+            <input name="sn_input_type" type="radio" id="sn_input_type" value="0"
+
+            <?php if (isset($product->sn_input_type)) { if ($product->sn_input_type == 0) { echo 'checked'; } } ?> >
+
+            &nbsp; {{trans('file.Auto Generate by System')}}
+
+        </h5>
+    </div>
+
+    <div class="col-md-12 mt-3" id="sn-option">
+        <h5>
+            <input name="sn_input_type" type="radio" id="sn_input_type" value="1"
+
+            <?php if (isset($product->sn_input_type)) { if ($product->sn_input_type == 1) { echo 'checked'; } } ?> >
+
+            &nbsp; {{trans('file.Manual Input')}}
+
+        </h5>
+    </div>
+
     <div class="col-md-12" style="margin-top: 50px;">
         <div class="form-group">
             <label>{{trans('file.Product Image')}}</strong> </label> <i class="dripicons-question" data-toggle="tooltip" title="{{trans('file.You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.')}}"></i>

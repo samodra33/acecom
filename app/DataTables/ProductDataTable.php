@@ -56,6 +56,30 @@ class ProductDataTable extends DataTable
             return "<ul>".$supplierPrint."</ul>";
         })
 
+        ->addColumn("S/N Input Type", function($query){
+
+
+            if ($query->is_sn == 1) {
+
+                if ($query->sn_input_type == 1) {
+                    return "Manual Input";
+                }
+                elseif($query->sn_input_type == 0) {
+
+                    return "Auto Generate by System";
+                }else{
+
+                    return "Auto Generate by System";
+                }
+
+            }else{
+
+                return "";
+
+            }
+
+        })
+
         ->addColumn('action', 'ProductMaster.tables.button_action')
         ->rawColumns(["image", "action", "supplier"]);
     }
@@ -84,6 +108,8 @@ class ProductDataTable extends DataTable
                                 MasterProduct::getTableName().".product_cost as cost",
                                 MasterProduct::getTableName().".product_image",
                                 MasterProduct::getTableName().".is_active",
+                                MasterProduct::getTableName().".sn_input_type",
+                                MasterProduct::getTableName().".is_sn",
                                 "brand.title as Brand",
                                 "category.name as Category"
 
@@ -126,7 +152,8 @@ class ProductDataTable extends DataTable
             "supplier",
             "suggested_price",
             "min_price",
-            "cost"
+            "cost",
+            "S/N Input Type"
         ];
     }
 

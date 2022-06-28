@@ -161,6 +161,20 @@
         });
     }
 
+    //radio button SN
+
+    $("input[name=sn_input_type][value=0]").prop("checked",true);
+    $("input[name=sn_input_type]").prop("disabled",true);
+
+    $("input[name='is_sn']").on("change", function () {
+        if ($(this).is(':checked')) {
+            $("input[name=sn_input_type]").prop("disabled",false);
+        }else{
+
+            $("input[name=sn_input_type]").prop("disabled",true);
+        }
+    });
+
 
     //dropzone portion
     Dropzone.autoDiscover = false;

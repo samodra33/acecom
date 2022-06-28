@@ -657,11 +657,13 @@ return [
 	"Product UPC" => "Product UPC",
 	"Suggested Selling Price" => "Suggested Selling Price",
 	"Selling Price" => "Selling Price",
-	"This product has Serial numbers" => "This product has Serial numbers",
+	"This product have Serial numbers" => "This product have Serial numbers",
 	"Min Selling Price" => "Min Selling Price",
 	"Contact Person" => "Contact Person",
 	"GST" => "GST",
 	"Lead Time" => "Lead Time",
+	"Auto Generate by System" => "Auto Generate by System",
+	"Manual Input" => "Manual Input",
 
 ];
 ?>

@@ -135,6 +135,7 @@ class ProductMasterController extends Controller
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
+        $prod->sn_input_type = $request->sn_input_type ?? 0;
         $prod->created_by = Auth::user()->id;
         $prod->updated_by = Auth::user()->id;
 
@@ -357,6 +358,7 @@ class ProductMasterController extends Controller
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
+        $prod->sn_input_type = $request->sn_input_type ?? 0;
         $prod->created_by = Auth::user()->id;
         $prod->updated_by = Auth::user()->id;
 

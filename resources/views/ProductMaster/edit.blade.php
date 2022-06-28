@@ -229,6 +229,25 @@
         });
     }
 
+    //radio button SN
+
+    var sn = {{ $product->is_sn ?? 0  }};
+
+    $("input[name=sn_input_type]").prop("disabled",true);
+
+    if (sn == 1) {
+
+        $("input[name=sn_input_type]").prop("disabled",false);
+    }
+
+    $("input[name='is_sn']").on("change", function () {
+        if ($(this).is(':checked')) {
+            $("input[name=sn_input_type]").prop("disabled",false);
+        }else{
+
+            $("input[name=sn_input_type]").prop("disabled",true);
+        }
+    });
 
     //dropzone portion
     Dropzone.autoDiscover = false;
