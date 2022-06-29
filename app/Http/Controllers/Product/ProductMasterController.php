@@ -58,9 +58,6 @@ class ProductMasterController extends Controller
             if(empty($all_permission))
                 $all_permission[] = 'dummy text';
 
-
-            //return view('ProductMaster.index', compact('all_permission'));
-
             return $datatable->render("ProductMaster.index", compact('all_permission'));
         }
         else
@@ -75,7 +72,7 @@ class ProductMasterController extends Controller
     public function create()
     {
         $this->productSelectionList();
-        return view("ProductMaster.create")->with($this->selectionList);;
+        return view("ProductMaster.create")->with($this->selectionList);
     }
 
     /**

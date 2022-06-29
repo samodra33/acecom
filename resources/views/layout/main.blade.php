@@ -198,11 +198,11 @@
             <ul id="purchase" class="collapse list-unstyled ">
 
                 @if($index_pr_permission_active)
-                <li id="purchase-list-menu"><a href="{{route('pr.index')}}">{{trans('file.Purchase Request')}}</a></li>
+                <li id="purchase-request-menu"><a href="{{route('pr.index')}}">{{trans('file.Purchase Request')}}</a></li>
                 @endif
 
                 @if($index_po_permission_active)
-                <li id="purchase-list-menu"><a href="{{route('po.index')}}">{{trans('file.Purchase Order')}}</a></li>
+                <li id="purchase-order-menu"><a href="{{route('po.index')}}">{{trans('file.Purchase Order')}}</a></li>
                 @endif
 
                 <!--
