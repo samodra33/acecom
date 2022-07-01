@@ -70,6 +70,9 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
     Route::GET('mProduct/service/find-supplier/{id}', 'Product\ProductMasterController@getProductSupplier')
         ->name('mProduct.service.find_supplier');
 
+    Route::GET('mProduct/service/find-supplier-by-product/{id}', 'Product\ProductMasterController@getListSupplierbyProductJson')
+        ->name('mProduct.service.find_supplier_by_product');
+
     Route::PATCH('mProduct/service/{id}/edit-prod-supplier', 'Product\ProductMasterController@updateProductSupplierAjax')
         ->name('mProduct.service.edit_prod_supplier');
 

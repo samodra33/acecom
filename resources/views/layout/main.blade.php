@@ -63,6 +63,8 @@
       <link rel="stylesheet" href="<?php echo asset('vendor/bootstrap/css/bootstrap-rtl.min.css') ?>" type="text/css">
       <link rel="stylesheet" href="<?php echo asset('css/custom-rtl.css') ?>" type="text/css" id="custom-style">
     @endif
+
+      <link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}">
   </head>
 
   <body onload="myFunction()">
@@ -1503,6 +1505,8 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
     @endif
+    <script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('js/custom.js')}}"></script>
     @stack('scripts')
     <script>
         if ('serviceWorker' in navigator ) {

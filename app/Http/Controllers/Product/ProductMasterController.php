@@ -19,6 +19,7 @@ use App\Models\MasterProductSupplier;
 use App\Supplier;
 use App\Brand;
 use App\Category;
+use App\Unit;
 
 use App\DataTables\ProductDataTable;
 use App\DataTables\ProductSkuDataTable;
@@ -412,6 +413,15 @@ class ProductMasterController extends Controller
         return $id;
     }
 
+    //getAllProduct
+
+    public function selectList()
+    {
+        return MasterProduct::where('is_active','=', 1)->orderBy('product_sku', 'asc')
+            ->select("product_id", DB::raw("CONCAT(product_sku,' - ',product_name) AS product"))
+            ->pluck('product','product_id'); 
+    }
+
     //find Product
     public function getProductDetail(Request $request, $id)
     {
@@ -424,6 +434,7 @@ class ProductMasterController extends Controller
 
         $prod = MasterProduct::leftjoin(Brand::getTableName()." as brand", "brand.id", MasterProduct::getTableName().".product_brand")
                             ->leftjoin(Category::getTableName()." as category", "category.id", MasterProduct::getTableName().".product_category")
+                            ->leftjoin(Unit::getTableName()." as pUnit", "pUnit.id", MasterProduct::getTableName().".product_purchase_unit")
                             ->where("product_id", $id)
                             ->select(
                                 MasterProduct::getTableName().".product_id",
@@ -440,7 +451,8 @@ class ProductMasterController extends Controller
                                 MasterProduct::getTableName().".product_detail",
                                 MasterProduct::getTableName().".product_alert_qty",
                                 "brand.title as Brand",
-                                "category.name as Category"
+                                "category.name as Category",
+                                "pUnit.unit_code as prchsunit"
 
 
                               )
@@ -453,7 +465,7 @@ class ProductMasterController extends Controller
         return response()->json($prod);
     }
 
-    //find supplier
+    //find supplier by supplier
     public function getProductSupplier(Request $request, $id)
     {
 
@@ -463,7 +475,7 @@ class ProductMasterController extends Controller
             return response()->json($res, 400);
         }
 
-        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".product_supplier_id")
+        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
                                     ->where("product_supplier_id", $id)
                                     ->first();
 
@@ -472,6 +484,26 @@ class ProductMasterController extends Controller
         }
 
         return $prodSupp;
+    }
+
+    //find supplier by product
+    public function getListSupplierbyProductJson(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("product_id")){
+            return response()->json($res, 400);
+        }
+
+        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+                                    ->where("product_id", $id)
+                                    ->where(MasterProductSupplier::getTableName().".is_active", 1)
+                                    ->select("product_supplier_id", DB::raw("CONCAT(name,' - ',company_name) AS supplier"))
+                                    ->pluck("supplier","product_supplier_id")
+                                    ->all();
+
+        return response()->json($prodSupp);
     }
 
     //update supplier

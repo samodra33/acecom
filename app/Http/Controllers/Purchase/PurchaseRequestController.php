@@ -17,6 +17,7 @@ use App\PosSetting;
 use App\Warehouse;
 use App\Account;
 use App\Models\PurchaseRequest;
+use App\Models\PurchaseRequestProduct;
 
 class PurchaseRequestController extends Controller
 {
@@ -27,7 +28,8 @@ class PurchaseRequestController extends Controller
      */
 
     private $selectionList = array(
-        "permissions_lists" =>array()
+        "permissions_lists" =>array(),
+        "product_list" => array()
     );
 
     private $documentType = "purchase_request";
@@ -43,6 +45,7 @@ class PurchaseRequestController extends Controller
 
 
         $this->selectionList["permissions_lists"] = $all_permission;
+        $this->selectionList["product_list"] = app("App\Http\Controllers\Product\ProductMasterController")->selectList();
     }
 
     public function index()
@@ -109,10 +112,105 @@ class PurchaseRequestController extends Controller
             return redirect()->back()->with('not_permitted', 'Error while updating PR number!');
         }
 
+        if ($request->product) {
+            $prProduct = $this->storePrProduct($pr->pr_id,$request);
+        }
+
         \Session::flash('message', 'Product created successfully');  
         return redirect()->back();
 
 
+    }
+
+    //store product
+    public function storePrProduct($pr_id, $request)
+    {
+        $productData = array();
+        $seq_num = 1;
+
+        foreach ($request->product as $key => $value) {
+
+            $product_price = 0;
+            $product_qty = 0;
+
+            //get Product Data
+
+            try {
+
+                if ($request->has("product_id")) {
+                    if (array_key_exists($key, $request->product_id)) {
+                        $product_id = (int) $request->product_id[$key];
+                    }
+                }
+
+                if ($request->has("supplier_id")) {
+                    if (array_key_exists($key, $request->supplier_id)) {
+                        $supplier_id = (int) $request->supplier_id[$key];
+                    }
+                }
+
+                if ($request->has("product_supplier")) {
+                    if (array_key_exists($key, $request->product_supplier)) {
+                        $product_supplier_moq = (int) $request->product_supplier[$key];
+                    }
+                }
+
+                if ($request->has("product_qty")) {
+                    if (array_key_exists($key, $request->product_qty)) {
+                        $product_qty = (int) $request->product_qty[$key];
+                    }
+                }
+
+                if ($request->has("product_moqprice")) {
+                    if (array_key_exists($key, $request->product_moqprice)) {
+                        $product_price = (float) $request->product_moqprice[$key];
+                    }
+                }
+
+                $productData[] = array(
+                    "product_id" =>  $product_id,
+                    "supplier_id" =>  $supplier_id,
+                    "supplier_moq_id" =>  $product_supplier_moq,
+                    "product_qty" =>  $product_qty,
+                    "product_price" =>  $product_price,
+                    "seq_num" => $seq_num,
+                    "is_active" =>  1,
+                    "created_by" =>  Auth::user()->id,
+                    "updated_by" =>  Auth::user()->id,
+                );
+
+                $seq_num++;
+                
+            } catch (Exception $e) {
+                
+                return 0;
+            }
+
+            //endforarch
+        }
+
+        //store product
+
+        if (count($productData) > 0) {
+
+            foreach ($productData as $key => $value) {
+
+                try {
+
+                    $productPr = PurchaseRequestProduct::create($productData[$key]);
+
+                } catch (Exception $e) {
+
+                    return 0;
+                }
+
+                //endforarch
+            }
+
+            return 1;
+
+            //endif
+        }
     }
 
     /**

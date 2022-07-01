@@ -28,6 +28,8 @@
                         {{-- */RIGHT FIELD --}}
                         </div>
 
+                        <div id="hidden_product_purchase"></div>
+
                         <div class="mt-3 col-md-12">
                             <button type="submit" class="btn btn-primary" id="btn_save">Save</button>
                         </div>
@@ -37,7 +39,50 @@
             </div>
         </div>
     </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <h4>{{trans('file.product_list')}}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <a href="#" data-toggle="modal" data-target="#add_product" class="btn btn-primary"><i class="dripicons-plus"></i> {{__('file.add_product')}}</a>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="add-product-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{trans('file.Action')}}</th>
+                                            <th>{{trans('file.Product SKU')}}</th>
+                                            <th>{{trans('file.Product UPC')}}</th>
+                                            <th>{{trans('file.Product Name')}}</th>
+                                            <th>{{trans('file.Brand')}}</th>
+                                            <th>{{trans('file.Supplier')}}</th>
+                                            <th>{{trans('file.Qty')}}</th>
+                                            <th>{{trans('file.Unit')}}</th>
+                                            <th>{{trans('file.Price')}}</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
+
+@include('purchase_request.modals.add_product')
+@include('purchase_request.modals.edit_product')
 
 @endsection
 @push('scripts')
@@ -52,6 +97,9 @@
     }).on('changeDate',function(e){
       $("input[name='pr_date']").val(e.format("yyyy-mm-dd"));
     });
+
+    //table
+    window.add_product_table = $('#add-product-table').DataTable();
 
 </script>
 
