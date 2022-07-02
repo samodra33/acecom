@@ -49,7 +49,7 @@
     </div>
 
     <div class="table-responsive">
-
+         @include("global.datatable")
     </div>
 
 </section>

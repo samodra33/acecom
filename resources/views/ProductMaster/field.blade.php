@@ -2,7 +2,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Product Name')}} <strong>*</strong> </label>
+            <label>{{trans('file.Product Name')}} <strong><span style="color:red;">*</span></strong> </label>
 
             {{ Form::text("product_name", isset($product->product_name)?$product->product_name:null, array("class"=>"form-control", "placeholder"=>"Product Name", "required"=>"required")) }}
 
@@ -12,7 +12,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Product SKU')}} <strong>*</strong> </label>
+            <label>{{trans('file.Product SKU')}} <strong><span style="color:red;">*</span></strong> </label>
             <div class="input-group">
                 {{ Form::text("product_sku", isset($product->product_sku)?$product->product_sku:null, array("class"=>"form-control", "placeholder"=>"Product SKU", "required"=>"required")) }}
                 <div class="input-group-append">
@@ -25,7 +25,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Product UPC')}} <strong>*</strong> </label>
+            <label>{{trans('file.Product UPC')}} <strong><span style="color:red;">*</span></strong> </label>
             <div class="input-group">
                 {{ Form::text("product_upc", isset($product->product_upc)?$product->product_upc:null, array("class"=>"form-control", "placeholder"=>"Product UPC", "required"=>"required")) }}
                 <div class="input-group-append">
@@ -38,7 +38,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Brand')}} <strong>*</strong> </label>
+            <label>{{trans('file.Brand')}} <strong><span style="color:red;">*</span></strong> </label>
             <div class="input-group">
 
                 {{ Form::select("brand_id", $brand_lists, isset($product->product_brand)?$product->product_brand:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
@@ -50,7 +50,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.category')}} *</strong> </label>
+            <label>{{trans('file.category')}} <strong><span style="color:red;">*</span></strong> </label>
             <div class="input-group">
 
                 {{ Form::select("category_id", $category_lists, isset($product->product_category)?$product->product_category:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
@@ -63,7 +63,7 @@
     <div id="unit" class="col-md-12">
         <div class="row ">
             <div class="col-md-4 form-group">
-                <label>{{trans('file.Product Unit')}} *</strong> </label>
+                <label>{{trans('file.Product Unit')}} <strong><span style="color:red;">*</span></strong> </label>
                 <div class="input-group">
                     {{ Form::select("unit_id", $unit_lists, isset($product->product_unit)?$product->product_unit:null, array("class"=>"form-control selectpicker", "title"=>"Select", "data-live-search"=>"true", "data-live-search-style"=>"begins", "required"=>"required")) }}
                 </div>
@@ -90,7 +90,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Suggested Selling Price')}} <strong>*</strong> </label>
+            <label>{{trans('file.Suggested Selling Price')}} <strong><span style="color:red;">*</span></strong> </label>
             {{ Form::number("product_suggested_price", isset($product->product_suggested_price)?$product->product_suggested_price:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
             <span class="validation-msg" id="suggested-error"></span>
         </div>
@@ -99,7 +99,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Min Selling Price')}} <strong>*</strong> </label>
+            <label>{{trans('file.Min Selling Price')}} <strong><span style="color:red;">*</span></strong> </label>
             {{ Form::number("product_min_price", isset($product->product_min_price)?$product->product_min_price:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
             <span class="validation-msg" id="min-error"></span>
         </div>
@@ -108,7 +108,7 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Product Cost')}} <strong>*</strong> </label>
+            <label>{{trans('file.Product Cost')}} <strong><span style="color:red;">*</span></strong> </label>
             {{ Form::number("product_cost", isset($product->product_cost)?$product->product_cost:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
             <span class="validation-msg" id="cost-error"></span>
         </div>
@@ -117,7 +117,7 @@
 
     <div id="alert-qty" class="col-md-4">
         <div class="form-group">
-            <label>{{trans('file.Alert Quantity')}} <strong>*</strong> </label>
+            <label>{{trans('file.Alert Quantity')}} <strong><span style="color:red;">*</span></strong> </label>
             {{ Form::number("product_alert_qty", isset($product->product_alert_qty)?$product->product_alert_qty:0, array("class"=>"form-control", "step"=>"any", "required"=>"required")) }}
             <span class="validation-msg" id="alert-error"></span>
         </div>

@@ -65,6 +65,8 @@
 								</div>
 								<div class="col-md-8">
 									{{ Form::text("product_unit", null, array("class"=>"form-control", "placeholder"=>"Unit", "readonly"=>"true")) }}
+
+									{{ Form::hidden("unit_id", null) }}
 								</div>
 							</div>
 
@@ -156,6 +158,7 @@
 	        	$('input[name="product_category"]').val(data.Category);
 	        	$('input[name="product_brand"]').val(data.Brand);
 	        	$('input[name="product_unit"]').val(data.prchsunit);
+	        	$('input[name="unit_id"]').val(data.prchsunitId);
 
 				$('input[name="product_moq"]').val('');
 	        	$('input[name="product_lead_time"]').val('');
@@ -181,6 +184,8 @@
 	        	$('input[name="product_lead_time"]').val('');
 	        	$('input[name="product_moqprice"]').val('');
 	        	$('input[name="supplier_id"]').val('');
+	        	$('input[name="unit_id"]').val('');
+	        	$('select[name="product_supplier"]').val('').trigger("change");
     	}
     });
 
@@ -260,6 +265,7 @@
     		var product_brand = $('input[name="product_brand"]').val();
     		var product_qty = $('input[name="product_qty"]').val();
     		var product_unit = $('input[name="product_unit"]').val();
+    		var product_unit_id = $('input[name="unit_id"]').val();
 
     		var product_supplier = $('select[name="product_supplier"]').val();
     		var supplier_id = $('input[name="supplier_id"]').val();
@@ -328,6 +334,7 @@
 				'<input type="hidden" id="product_brand'+tableIndex+'" name="product_brand[]" value="'+product_brand+'">'+
 				'<input type="hidden" id="product_qty'+tableIndex+'" name="product_qty[]" value="'+product_qty+'">'+
 				'<input type="hidden" id="product_unit'+tableIndex+'" name="product_unit[]" value="'+product_unit+'">'+
+				'<input type="hidden" id="product_unit_id'+tableIndex+'" name="product_unit_id[]" value="'+product_unit_id+'">'+
 				'<input type="hidden" id="product_supplier'+tableIndex+'" name="product_supplier[]" value="'+product_supplier+'">'+
 				'<input type="hidden" id="supplier_id'+tableIndex+'" name="supplier_id[]" value="'+supplier_id+'">'+
 				'<input type="hidden" id="product_moq'+tableIndex+'" name="product_moq[]" value="'+product_moq+'">'+

@@ -21,9 +21,11 @@ class PurchaseRequestProduct extends Model
 
     protected $fillable = [
         "product_id",
+        "pr_id",
         "supplier_id",
         "supplier_moq_id",
         "product_qty",
+        "product_purchase_unit",
         "product_price",
         "seq_num",
         "is_active",

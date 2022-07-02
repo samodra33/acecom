@@ -662,6 +662,7 @@ return [
 	"Contact Person" => "Contact Person",
 	"GST" => "GST",
 	"Add Purchase Request" => "Add Purchase Request",
+	"Edit Purchase Request" => "Edit Purchase Request",
 	"Lead Time" => "Lead Time",
 	"Auto Generate by System" => "Auto Generate by System",
 	"Manual Input" => "Manual Input",

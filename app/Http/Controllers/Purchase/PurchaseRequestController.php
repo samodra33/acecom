@@ -19,6 +19,9 @@ use App\Account;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
 
+use App\DataTables\PurchaseRequestDataTable;
+use App\DataTables\PurchaseRequestProductDataTable;
+
 class PurchaseRequestController extends Controller
 {
     /**
@@ -48,14 +51,14 @@ class PurchaseRequestController extends Controller
         $this->selectionList["product_list"] = app("App\Http\Controllers\Product\ProductMasterController")->selectList();
     }
 
-    public function index()
+    public function index(PurchaseRequestDataTable $datatable)
     {
 
         $role = Role::find(Auth::user()->role_id);
         if($role->hasPermissionTo('purchases-request-index')) {
             
             $this->prSelectionList();
-            return view('purchase_request.index')->with($this->selectionList);;
+            return $datatable->render("purchase_request.index", $this->selectionList);
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
@@ -86,7 +89,9 @@ class PurchaseRequestController extends Controller
         $getDocumentNumber = app("App\Http\Controllers\DocumentNumber\DocumentNumberController")->generate($this->documentType);
 
         if (empty($getDocumentNumber)) {
-            return redirect()->back()->with('not_permitted', 'Something wrong. Please try again a moment.');
+
+            \Session::flash('not_permitted', 'Something wrong. Please try again a moment.');  
+            return redirect()->back();
         }
         $pr_no = $getDocumentNumber["document_no"];
         $sequenceID = $getDocumentNumber["sequence_id"];
@@ -105,11 +110,20 @@ class PurchaseRequestController extends Controller
 
         $pr->save();
 
+        if (!isset($pr->pr_id)) {
+
+            \Session::flash('not_permitted', 'Failed !');  
+            return redirect()->back();
+
+        }
+
         $getUpdateSequence = app("App\Http\Controllers\DocumentNumber\DocumentNumberController")
                                 ->updateSequence($sequenceID, $nextSequence);
 
         if (empty($getUpdateSequence)) {
-            return redirect()->back()->with('not_permitted', 'Error while updating PR number!');
+
+            \Session::flash('not_permitted', 'Error while updating PR number!');  
+            return redirect()->back();
         }
 
         if ($request->product) {
@@ -117,7 +131,7 @@ class PurchaseRequestController extends Controller
         }
 
         \Session::flash('message', 'Product created successfully');  
-        return redirect()->back();
+        return redirect(route('pr.edit', $pr->pr_id));
 
 
     }
@@ -132,6 +146,7 @@ class PurchaseRequestController extends Controller
 
             $product_price = 0;
             $product_qty = 0;
+            $product_unit_id = 1;
 
             //get Product Data
 
@@ -155,6 +170,12 @@ class PurchaseRequestController extends Controller
                     }
                 }
 
+                if ($request->has("product_unit_id")) {
+                    if (array_key_exists($key, $request->product_supplier)) {
+                        $product_unit_id = (int) $request->product_unit_id[$key];
+                    }
+                }
+
                 if ($request->has("product_qty")) {
                     if (array_key_exists($key, $request->product_qty)) {
                         $product_qty = (int) $request->product_qty[$key];
@@ -169,9 +190,11 @@ class PurchaseRequestController extends Controller
 
                 $productData[] = array(
                     "product_id" =>  $product_id,
+                    "pr_id" =>  $pr_id,
                     "supplier_id" =>  $supplier_id,
                     "supplier_moq_id" =>  $product_supplier_moq,
                     "product_qty" =>  $product_qty,
+                    "product_purchase_unit" =>  $product_unit_id,
                     "product_price" =>  $product_price,
                     "seq_num" => $seq_num,
                     "is_active" =>  1,
@@ -221,7 +244,7 @@ class PurchaseRequestController extends Controller
      */
     public function show($id)
     {
-        //
+        return "SHOW";
     }
 
     /**
@@ -230,9 +253,28 @@ class PurchaseRequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PurchaseRequestProductDataTable $datatable, $id)
     {
-        //
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+        if ($role->hasPermissionTo('purchases-request-edit')) {
+
+            $pr = PurchaseRequest::where("pr_id", $id)->where("is_active", 1)->first();
+
+            if(empty($pr)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            $this->prSelectionList();
+
+            $this->selectionList["pr"] = $pr;
+            $this->selectionList["id"] = $id;
+
+            return $datatable->with("id", $id)->render('purchase_request.edit', $this->selectionList);
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     /**
@@ -244,7 +286,30 @@ class PurchaseRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+        if ($role->hasPermissionTo('purchases-request-edit')) {
+
+            $pr = PurchaseRequest::where("pr_id", $id)->where("is_active", 1)->first();
+
+            if(empty($pr)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            $pr->pr_date                = $request->pr_date;
+            $pr->pr_remarks             = $request->pr_remarks;
+            $pr->pr_remarks_supplier    = $request->pr_remarks_to_supplier;
+            $pr->updated_by             = Auth::user()->id;
+
+            $pr->save();
+
+            \Session::flash('message', 'Product updated successfully');  
+            return redirect()->back();
+
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     /**
@@ -255,6 +320,6 @@ class PurchaseRequestController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return "DESTROY";
     }
 }

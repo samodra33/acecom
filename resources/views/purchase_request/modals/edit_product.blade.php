@@ -65,6 +65,8 @@
 								</div>
 								<div class="col-md-8">
 									{{ Form::text("edt_product_unit", null, array("class"=>"form-control", "placeholder"=>"Unit", "readonly"=>"true")) }}
+
+									{{ Form::hidden("edt_unit_id", null) }}
 								</div>
 							</div>
 
@@ -154,6 +156,8 @@
     		$('input[name="edt_product_qty"]').val( $( "#product_qty".concat(tableIndex) ).val() );
     		$('input[name="edt_product_unit"]').val( $( "#product_unit".concat(tableIndex) ).val() );
 
+    		$('input[name="edt_unit_id"]').val( $( "#product_unit_id".concat(tableIndex) ).val() );
+
     		$('input[name="edt_supplier_id"]').val( $( "#supplier_id".concat(tableIndex) ).val() );
     		$('input[name="edt_product_moq"]').val( $( "#product_moq".concat(tableIndex) ).val() );
 	        $('input[name="edt_product_lead_time"]').val( $( "#product_lead_time".concat(tableIndex) ).val() );
@@ -215,6 +219,7 @@
 			var product_brand = $("#product_brand".concat(tableIndex) ).val( $("input[name='edt_product_brand']").val() );
 			var product_qty = $("#product_qty".concat(tableIndex) ).val( $("input[name='edt_product_qty']").val() );
 			var product_unit = $("#product_unit".concat(tableIndex) ).val( $("input[name='edt_product_unit']").val() );
+			var product_unit_id = $("#product_unit_id".concat(tableIndex) ).val( $("input[name='edt_unit_id']").val() );
 			var product_supplier = $("#product_supplier".concat(tableIndex) ).val( $("select[name='edt_product_supplier']").val() );
 			var product_moq = $("#product_moq".concat(tableIndex) ).val( $("input[name='edt_product_moq']").val() );
 			var product_lead_time = $("#product_lead_time".concat(tableIndex) ).val( $("input[name='edt_product_lead_time']").val() );
@@ -270,6 +275,7 @@
 			$("#product_lead_time".concat(tableIndex) ).remove();
 			$("#product_moqprice".concat(tableIndex) ).remove();
 			$("#supplier_id".concat(tableIndex) ).remove();
+			$("#product_unit_id".concat(tableIndex) ).remove();
 		}
 
     @endif
@@ -303,6 +309,7 @@
 	        	$('input[name="edt_product_category"]').val(data.Category);
 	        	$('input[name="edt_product_brand"]').val(data.Brand);
 	        	$('input[name="edt_product_unit"]').val(data.prchsunit);
+	        	$('input[name="edt_unit_id"]').val(data.prchsunitId);
 
 				$('input[name="edt_product_moq"]').val('');
 	        	$('input[name="edt_product_lead_time"]').val('');
@@ -328,6 +335,8 @@
 	        	$('input[name="edt_product_lead_time"]').val('');
 	        	$('input[name="edt_product_moqprice"]').val('');
 	        	$('input[name="edt_supplier_id"]').val('');
+	        	$('input[name="edt_unit_id"]').val('');
+	        	$('select[name="edt_product_supplier"]').val('').trigger("change");
     	}
     });
 

@@ -452,7 +452,8 @@ class ProductMasterController extends Controller
                                 MasterProduct::getTableName().".product_alert_qty",
                                 "brand.title as Brand",
                                 "category.name as Category",
-                                "pUnit.unit_code as prchsunit"
+                                "pUnit.unit_code as prchsunit",
+                                "pUnit.id as prchsunitId"
 
 
                               )
@@ -465,7 +466,7 @@ class ProductMasterController extends Controller
         return response()->json($prod);
     }
 
-    //find supplier by supplier
+    //find supplier by product_supplier_id
     public function getProductSupplier(Request $request, $id)
     {
 
