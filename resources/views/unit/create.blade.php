@@ -43,7 +43,7 @@
                         <?php $base_unit = DB::table('units')->where('id', $unit->base_unit)->first(); ?>
                         <td>{{ $base_unit->unit_name }}</td>
                     @else
-                        <td>N/A</td>
+                        <td style="color:red;">Parent Unit</td>
                     @endif
                     @if($unit->operator)
                         <td>{{ $unit->operator }}</td>
