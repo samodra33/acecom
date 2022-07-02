@@ -44,8 +44,17 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.GST')}}</label>
-                                    <input type="text" name="gst_number" value="{{$lims_supplier_data->gst_number}}" class="form-control">
+                                    <label>{{trans('file.GST')}} *</strong> </label>
+                                    <select required name="gst_number" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select GST...">
+                                        @foreach($tax as $datas)
+
+                                        @if($datas->id ===  $lims_supplier_data->gst_number)
+                                            <option value="{{$datas->id}}" selected>{{$datas->name}}</option>
+                                        @else
+                                            <option value="{{$datas->id}}">{{$datas->name}}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -57,6 +66,21 @@
                                        <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                     @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{trans('file.Currency')}} *</strong> </label>
+                                    <select required name="currency_number" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Currency...">
+                                        @foreach($currency as $datas)
+
+                                            @if($datas->id ===  $lims_supplier_data->currency_number)
+                                                <option value="{{$datas->id}}" selected>{{$datas->code}}</option>
+                                            @else
+                                                <option value="{{$datas->id}}">{{$datas->code}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">

@@ -15,9 +15,4 @@ class Warehouse extends Model
         "name", "outlet_name", "phone", "email", "address", "description", "is_hq", "is_active"
     ];
 
-    public function product()
-    {
-    	return $this->hasMany('App\Product');
-    	
-    }
 }

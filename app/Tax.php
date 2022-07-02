@@ -4,15 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\EloquentGetTableNameTrait;
+
 class Tax extends Model
 {
+    use EloquentGetTableNameTrait;
+    
     protected $fillable =[
         "name", "rate", "is_active"
     ];
 
-    public function product()
-    {
-    	return $this->hasMany('App/Product');
-    	
-    }
 }

@@ -158,6 +158,7 @@
         bInfo: false,
         bPaginate: true,
         bAutoWidth: false, 
+        searching: false, 
         ajax: {
           url : '{{ route("mProduct.service.supplierProd_table") }}',
           data : {

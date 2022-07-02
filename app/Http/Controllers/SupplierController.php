@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Supplier;
+use App\Currency;
+use App\Tax;
 use Illuminate\Validation\Rule;
 use Auth;
 use Spatie\Permission\Models\Role;
@@ -35,7 +37,11 @@ class SupplierController extends Controller
     {
         $role = Role::find(Auth::user()->role_id);
         if($role->hasPermissionTo('suppliers-add')){
-            return view('supplier.create');
+
+            $tax = Tax::where('is_active', true)->get();
+            $currency = Currency::get();
+
+            return view('supplier.create', compact('tax', 'currency'));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
@@ -87,8 +93,11 @@ class SupplierController extends Controller
     {
         $role = Role::find(Auth::user()->role_id);
         if($role->hasPermissionTo('suppliers-edit')){
+
+            $tax = Tax::where('is_active', true)->get();
+            $currency = Currency::get();
             $lims_supplier_data = Supplier::where('id',$id)->first();
-            return view('supplier.edit',compact('lims_supplier_data'));
+            return view('supplier.edit',compact('lims_supplier_data', 'tax', 'currency'));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');

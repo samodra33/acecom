@@ -8,6 +8,12 @@
 
 <section>
     <div class="container-fluid">
+        @if(in_array("purchases-request-add", $permissions_lists))
+        <a href="{{route('pr.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Purchase')}}</a>&nbsp;
+        @endif
+    </div>
+
+    <div class="container-fluid">
         <div class="card">
             <div class="card-header mt-2">
                 <h3 class="text-center">{{trans('file.Purchase Request')}}</h3>
@@ -43,13 +49,36 @@
                 </div>
             </div>
         </div>
-        @if(in_array("purchases-request-add", $permissions_lists))
-            <a href="{{route('pr.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Purchase')}}</a>&nbsp;
-        @endif
     </div>
 
-    <div class="table-responsive">
-         @include("global.datatable")
+    <div class="container-fluid">
+        <div class="mt-3">
+          <div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <strong class="card-title">Purchase Request List</strong>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 table-responsive">
+                        @include("global.datatable")
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 
 </section>

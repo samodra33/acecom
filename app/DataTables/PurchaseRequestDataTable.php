@@ -109,7 +109,11 @@ class PurchaseRequestDataTable extends DataTable
                     ->setTableId('pr-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->parameters([ 'responsive' => true, 'autoWidth' => false ])
+                    ->parameters([ 
+                                    'responsive' => true, 
+                                    'autoWidth' => false, 
+                                    'searching' => false  
+                                ])
                     ->orderBy(6);
     }
 

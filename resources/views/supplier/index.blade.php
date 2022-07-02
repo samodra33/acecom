@@ -21,7 +21,6 @@
                     <th>{{trans('file.Image')}}</th>
                     <th>{{trans('file.Contact Person')}}</th>
                     <th>{{trans('file.Company Name')}}</th>
-                    <th>{{trans('file.GST')}}</th>
                     <th>{{trans('file.Email')}}</th>
                     <th>{{trans('file.Phone Number')}}</th>
                     <th>{{trans('file.Address')}}</th>
@@ -63,7 +62,6 @@
                     @endif
                     <td>{{ $supplier->name }}</td>
                     <td>{{ $supplier->company_name}}</td>
-                    <td>{{ $supplier->vat_number}}</td>
                     <td>{{ $supplier->email}}</td>
                     <td>{{ $supplier->phone_number}}</td>
                     <td>{{ $supplier->address}}
