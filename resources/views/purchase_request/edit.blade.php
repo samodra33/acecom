@@ -91,6 +91,10 @@
 @push('scripts')
 <script type="text/javascript">
 
+    $(document).ready(function () {
+        var validator = $("#purchase-request-form").validate();
+    });
+
     $("ul#purchase").siblings('a').attr('aria-expanded','true');
     $("ul#purchase").addClass("show");
     $("ul#purchase #purchase-request-menu").addClass("active");
@@ -104,7 +108,23 @@
     //table
     window.add_product_table = $('#add-product-table').DataTable();
 
-    //
+    //validator
+
+    jQuery.validator.setDefaults({
+        errorPlacement: function (error, element) {
+            error.html('This field is required.');
+            $(element).closest('div.form-group').find('.validation-msg').html(error.html());
+        },
+        highlight: function (element) {
+            $(element).closest('div.form-group').removeClass('has-success').addClass('has-error');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest('div.form-group').removeClass('has-error').addClass('has-success');
+            $(element).closest('div.form-group').find('.validation-msg').html('');
+        }
+    });
+
+    //disable
 
     @if($pr->is_approve == 1 || isset($read_only))
     $('#btn_save').remove();
