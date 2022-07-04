@@ -1,16 +1,18 @@
 <?php 
 $plMsg = "Are you sure ?";
+$btn = 'primary';
+$btn_fa = 'pencil';
 
+$showDelButton = true;
+if ($is_approve == 1 || request()->route()->getName() == 'pr.show') {
+
+	$btn = 'warning';
+	$btn_fa = 'eye';
+	$showDelButton = false;
+}
 
 //get role
 $role = DB::table('roles')->find(Auth::user()->role_id);
-
-//view role
-$view_permission = DB::table('permissions')->where('name', 'purchases-request-index')->first();
-$view_permission_active = DB::table('role_has_permissions')->where([
-	['permission_id', $view_permission->id],
-	['role_id', $role->id]
-])->first();
 
 //edit role
 $edit_permission = DB::table('permissions')->where('name', 'purchases-request-edit')->first();
@@ -31,22 +33,12 @@ $delete_permission_active = DB::table('role_has_permissions')->where([
 
 {!! Form::open(['route' => ['prProd.destroyprprod', $pr_product_id], 'method' => 'delete']) !!}
 <div class='btn-group'>
-
-@if($view_permission_active)
-
-	<a href="#" class='btn btn-warning btn-sm'>
-		<i class="fa fa-eye fa-fw"></i>
+	
+	<a href="#" class='btn btn-{{$btn}} btn-sm' data-toggle="modal" data-target="#edit_product" onclick="getProduct( {{ $pr_product_id }} )">
+		<i class="fa fa-{{$btn_fa}} fa-fw"></i>
 	</a>
 
-@endif
-
-@if($edit_permission_active)
-	<a href="#" class='btn btn-primary btn-sm'>
-		<i class="fa fa-pencil fa-fw"></i>
-	</a>
-@endif
-
-@if($delete_permission_active)
+@if($delete_permission_active && $showDelButton)
 
 	{!! Form::button('<i class="fa fa-trash fa-fw"></i>', [
 	'type' => 'submit',

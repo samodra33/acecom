@@ -83,6 +83,16 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">
+									<label class="control-label">GST<span style="color:red;">*</span></label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::select("product_gst", $gst_list, null, array("class"=>"form-control select2_picker", "placeholder"=>"Select")) }}
+								</div>
+							</div>
+
+
+							<div class="row form-group">
+								<div class="col-md-4">
 									<label class="control-label">MOQ</label>
 								</div>
 								<div class="col-md-8">
@@ -96,6 +106,15 @@
 								</div>
 								<div class="col-md-8">
 									{{ Form::text("product_lead_time", null, array("class"=>"form-control", "readonly"=>"true")) }}
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label class="control-label">Currency<span style="color:red;">*</span></label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::select("product_currency", $currency_list, null, array("class"=>"form-control select2_picker", "placeholder"=>"Select", "disabled"=>"true")) }}
 								</div>
 							</div>
 
@@ -164,6 +183,8 @@
 	        	$('input[name="product_lead_time"]').val('');
 	        	$('input[name="product_moqprice"]').val('');
 	        	$('input[name="supplier_id"]').val('');
+	        	$('select[name="product_gst"]').val('').trigger("change");
+				$('select[name="product_currency"]').val('').trigger("change");
 
 	        	getSupplierList(data.product_id);
 	        })
@@ -186,6 +207,8 @@
 	        	$('input[name="supplier_id"]').val('');
 	        	$('input[name="unit_id"]').val('');
 	        	$('select[name="product_supplier"]').val('').trigger("change");
+	        	$('select[name="product_gst"]').val('').trigger("change");
+				$('select[name="product_currency"]').val('').trigger("change");
     	}
     });
 
@@ -231,10 +254,13 @@
 	        var ajax = getDataWithAjax(urls, 'GET', data);
 
 	        ajax.done(function(data){
-	        	$('input[name="supplier_id"]').val(data.id);
+	        	$('input[name="supplier_id"]').val(data.supplier_id);
 	        	$('input[name="product_moq"]').val(data.supplier_moq);
 	        	$('input[name="product_lead_time"]').val(data.lead_time);
 	        	$('input[name="product_moqprice"]').val(data.supplier_price);
+
+	        	$('select[name="product_gst"]').val(data.gst_id).trigger("change");
+	        	$('select[name="product_currency"]').val(data.currency_id).trigger("change");
 	        })
 	        ajax.fail(function(error){
 	            alert("Something Wrong (product).!")
@@ -246,6 +272,8 @@
 	        	$('input[name="product_lead_time"]').val('');
 	        	$('input[name="product_moqprice"]').val('');
 	        	$('input[name="edt_supplier_id"]').val('');
+	        	$('select[name="product_gst"]').val('').trigger("change");
+				$('select[name="product_currency"]').val('').trigger("change");
 
     	}
     });
@@ -272,9 +300,11 @@
     		var product_moq = $('input[name="product_moq"]').val();
     		var product_lead_time = $('input[name="product_lead_time"]').val();
     		var product_moqprice = $('input[name="product_moqprice"]').val();
+    		var product_gst = $('select[name="product_gst"]').val();
+    		var product_currency = $('select[name="product_currency"]').val();
 
 
-    		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '') 
+    		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '' || product_gst == '') 
     		{
     			alert("Check Your Input.");
 
@@ -339,7 +369,9 @@
 				'<input type="hidden" id="supplier_id'+tableIndex+'" name="supplier_id[]" value="'+supplier_id+'">'+
 				'<input type="hidden" id="product_moq'+tableIndex+'" name="product_moq[]" value="'+product_moq+'">'+
 				'<input type="hidden" id="product_lead_time'+tableIndex+'" name="product_lead_time[]" value="'+product_lead_time+'">'+
-				'<input type="hidden" id="product_moqprice'+tableIndex+'" name="product_moqprice[]" value="'+product_moqprice+'">'
+				'<input type="hidden" id="product_moqprice'+tableIndex+'" name="product_moqprice[]" value="'+product_moqprice+'">'+
+				'<input type="hidden" id="product_gst'+tableIndex+'" name="product_gst[]" value="'+product_gst+'">'+
+				'<input type="hidden" id="product_currency'+tableIndex+'" name="product_currency[]" value="'+product_currency+'">'
 			);
 
 			tableIndex++;
@@ -348,6 +380,8 @@
 
 			$('select[name="product"]').val('').trigger("change");
 			$('select[name="product_supplier"]').val('').trigger("change");
+			$('select[name="product_gst"]').val('').trigger("change");
+			$('select[name="product_currency"]').val('').trigger("change");
 
 			$('input[name="supplier_id"]').val('');
 			$('input[name="product_id"]').val('');
@@ -367,7 +401,110 @@
     @endif
 
     @if(request()->route()->named("pr.edit"))
+    	$("#add_product_button").on("click", function(e){
 
+    		var pr_id = $('input[name="pr_id"]').val();
+
+    		//product
+    		var product = $('select[name="product"]').val();
+    		var product_id = $('input[name="product_id"]').val();
+	        var product_name = $('input[name="product_name"]').val();
+	        var product_sku = $('input[name="product_sku"]').val();
+	        var product_upc = $('input[name="product_upc"]').val();
+    		var product_category = $('input[name="product_category"]').val();
+    		var product_brand = $('input[name="product_brand"]').val();
+    		var product_qty = $('input[name="product_qty"]').val();
+    		var product_unit = $('input[name="product_unit"]').val();
+    		var product_unit_id = $('input[name="unit_id"]').val();
+
+    		var product_supplier = $('select[name="product_supplier"]').val();
+    		var supplier_id = $('input[name="supplier_id"]').val();
+    		var product_moq = $('input[name="product_moq"]').val();
+    		var product_lead_time = $('input[name="product_lead_time"]').val();
+    		var product_moqprice = $('input[name="product_moqprice"]').val();
+    		var product_gst = $('select[name="product_gst"]').val();
+    		var product_currency = $('select[name="product_currency"]').val();
+
+
+    		if (pr_id) {
+
+    			var urls = '{{route("prProd.service/store_pr_product")}}';
+
+	       		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '' || product_gst == '') 
+	       		{
+	       			alert("Check Your Input.");
+
+	       			return false;
+
+	       		}
+
+	       		if ( isNaN(product_qty) ) {
+
+	       			alert("Qty must be number.");
+
+	       			return false;
+	       		}
+
+	       		if ( isNaN(product_moqprice) ) {
+
+	       			alert("Price must be number.");
+
+	       			return false;
+	       		}
+
+	       		//set Data
+
+    			var data = {
+    						"func_type" : "store",
+	            			"pr_id" : pr_id,
+	            			"product_gst" : product_gst,
+	            			"product_currency" : product_currency,
+	            			"product_id" : product_id,
+	            			"supplier_id" : supplier_id,
+	            			"supplier_moq_id" : product_supplier,
+	            			"product_qty" : product_qty,
+	            			"product_purchase_unit" : product_unit_id,
+	            			"product_price" : product_moqprice
+
+	       		};
+
+	       		//ajax
+
+
+	       		var ajax = getDataWithAjax(urls, 'POST', data);
+
+		        ajax.done(function(response){
+		        	alert(response);
+		        	var table = $('#pr-product-table').DataTable();
+					table.ajax.reload();
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (controller).!")
+		        })
+
+    		}else{
+    			alert("Something Wrong (pr_id input)")
+    		}
+
+			$('select[name="product"]').val('').trigger("change");
+			$('select[name="product_supplier"]').val('').trigger("change");
+			$('select[name="product_gst"]').val('').trigger("change");
+			$('select[name="product_currency"]').val('').trigger("change");
+
+			$('input[name="supplier_id"]').val('');
+			$('input[name="product_id"]').val('');
+			$('input[name="product_name"]').val('');
+			$('input[name="product_sku"]').val('');
+			$('input[name="product_upc"]').val('');
+			$('input[name="product_category"]').val('');
+			$('input[name="product_brand"]').val('');
+			$('input[name="product_unit"]').val('');
+			$('input[name="product_moq"]').val('');
+			$('input[name="product_lead_time"]').val('');
+			$('input[name="product_moqprice"]').val('');
+			$('input[name="product_qty"]').val('');
+    		
+    	})
     @endif
 
 </script>

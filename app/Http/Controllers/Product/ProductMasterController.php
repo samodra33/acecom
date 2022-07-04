@@ -20,6 +20,8 @@ use App\Supplier;
 use App\Brand;
 use App\Category;
 use App\Unit;
+use App\Currency;
+use App\Tax;
 
 use App\DataTables\ProductDataTable;
 use App\DataTables\ProductSkuDataTable;
@@ -477,14 +479,27 @@ class ProductMasterController extends Controller
         }
 
         $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+                                    ->leftjoin(Tax::getTableName()." as tax", "tax.id", "supp.gst_number")
+                                    ->leftjoin(Currency::getTableName()." as curr", "curr.id", "supp.currency_number")
                                     ->where("product_supplier_id", $id)
+                                    ->select(
+                                                MasterProductSupplier::getTableName().".product_supplier_id",
+                                                MasterProductSupplier::getTableName().".product_id",
+                                                MasterProductSupplier::getTableName().".supplier_id",
+                                                MasterProductSupplier::getTableName().".supplier_moq",
+                                                MasterProductSupplier::getTableName().".supplier_price",
+                                                "supp.lead_time",
+                                                "supp.gst_number as gst_id",
+                                                "supp.currency_number as currency_id"
+                                    )
                                     ->first();
 
         if(!empty($prodSupp)){
             $res = $prodSupp->toArray();
         }
 
-        return $prodSupp;
+        return response()->json($prodSupp);
+        //return $prodSupp;
     }
 
     //find supplier by product
@@ -546,7 +561,8 @@ class ProductMasterController extends Controller
 
         $suppDb->save();
 
-        return "Added.";
+        return response()->json("Record Added successfully.", 200);
+        //return "Added.";
     }
 
     //get Supplier table

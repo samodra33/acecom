@@ -16,8 +16,15 @@ use DB;
 use App\PosSetting;
 use App\Warehouse;
 use App\Account;
+use App\Supplier;
+use App\Brand;
+use App\Category;
+use App\Unit;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
+use App\Models\MasterProduct;
+use App\Models\MasterProductSupplier;
+use App\Models\PurchaseType;
 
 use App\DataTables\PurchaseRequestDataTable;
 use App\DataTables\PurchaseRequestProductDataTable;
@@ -32,7 +39,10 @@ class PurchaseRequestController extends Controller
 
     private $selectionList = array(
         "permissions_lists" =>array(),
-        "product_list" => array()
+        "product_list" => array(),
+        "gst_list" => array(),
+        "currency_list" => array(),
+        "purchase_type_list" => array()
     );
 
     private $documentType = "purchase_request";
@@ -49,6 +59,16 @@ class PurchaseRequestController extends Controller
 
         $this->selectionList["permissions_lists"] = $all_permission;
         $this->selectionList["product_list"] = app("App\Http\Controllers\Product\ProductMasterController")->selectList();
+        $this->selectionList["gst_list"] = app("App\Http\Controllers\TaxController")->selectList();
+        $this->selectionList["currency_list"] = app("App\Http\Controllers\CurrencyController")->selectList();
+        $this->selectionList["purchase_type_list"] = app("App\Http\Controllers\Purchase\PurchaseRequestController")->purchaseTypeselectList();
+    }
+
+    public function purchaseTypeselectList()
+    {
+        return PurchaseType::select("type_id", "type_name")
+            ->where("is_active", 1)
+            ->pluck('type_name','type_id'); 
     }
 
     public function index(PurchaseRequestDataTable $datatable)
@@ -103,6 +123,7 @@ class PurchaseRequestController extends Controller
 
         $pr->pr_no                  = $pr_no;
         $pr->pr_date                = $request->pr_date;
+        $pr->pr_type                = $request->pr_type;
         $pr->pr_remarks             = $request->pr_remarks;
         $pr->pr_remarks_supplier    = $request->pr_remarks_to_supplier;
         $pr->created_by             = Auth::user()->id;
@@ -136,7 +157,7 @@ class PurchaseRequestController extends Controller
 
     }
 
-    //store product
+    //store product create Page
     public function storePrProduct($pr_id, $request)
     {
         $productData = array();
@@ -182,6 +203,18 @@ class PurchaseRequestController extends Controller
                     }
                 }
 
+                if ($request->has("product_currency")) {
+                    if (array_key_exists($key, $request->product_currency)) {
+                        $product_currency = (int) $request->product_currency[$key];
+                    }
+                }
+
+                if ($request->has("product_gst")) {
+                    if (array_key_exists($key, $request->product_gst)) {
+                        $product_gst = (int) $request->product_gst[$key];
+                    }
+                }
+
                 if ($request->has("product_moqprice")) {
                     if (array_key_exists($key, $request->product_moqprice)) {
                         $product_price = (float) $request->product_moqprice[$key];
@@ -196,6 +229,8 @@ class PurchaseRequestController extends Controller
                     "product_qty" =>  $product_qty,
                     "product_purchase_unit" =>  $product_unit_id,
                     "product_price" =>  $product_price,
+                    "product_currency" =>  $product_currency,
+                    "product_gst" =>  $product_gst,
                     "seq_num" => $seq_num,
                     "is_active" =>  1,
                     "created_by" =>  Auth::user()->id,
@@ -236,16 +271,97 @@ class PurchaseRequestController extends Controller
         }
     }
 
+    //store product Edit Page
+    public function storeProduct(Request $request)
+    {
+
+        if ($request->func_type == "store") {
+
+            $seq_num = 1;
+
+            $seqCheck = PurchaseRequestProduct::where("pr_id", $request->pr_id)
+                                                ->orderBy("seq_num", "desc")
+                                                ->first();
+            if (!empty($seqCheck)) {
+
+                $seq_num = $seq_num + $seqCheck->seq_num;
+            }
+
+            $prprod = new PurchaseRequestProduct();
+
+            $prprod->pr_id                  = $request->pr_id;
+            $prprod->product_id             = $request->product_id;
+            $prprod->supplier_id            = $request->supplier_id;
+            $prprod->supplier_moq_id        = $request->supplier_moq_id;
+            $prprod->product_qty            = $request->product_qty;
+            $prprod->product_purchase_unit  = $request->product_purchase_unit;
+            $prprod->product_price          = $request->product_price;
+            $prprod->product_gst            = $request->product_gst;
+            $prprod->product_currency       = $request->product_currency;
+            $prprod->seq_num                = $seq_num;
+            $prprod->created_by             = Auth::user()->id;
+            $prprod->updated_by             = Auth::user()->id;
+
+            $prprod->save();
+
+            return response()->json("Record Added successfully.", 200);
+        }
+
+        if ($request->func_type == "update") {
+
+            $prprod = PurchaseRequestProduct::where("pr_product_id", $request->pr_product_id)
+                                                ->first();
+            $prprod->product_id             = $request->product_id;
+            $prprod->supplier_id            = $request->supplier_id;
+            $prprod->supplier_moq_id        = $request->supplier_moq_id;
+            $prprod->product_qty            = $request->product_qty;
+            $prprod->product_purchase_unit  = $request->product_purchase_unit;
+            $prprod->product_price          = $request->product_price;
+            $prprod->product_gst            = $request->product_gst;
+            $prprod->product_currency       = $request->product_currency;
+            $prprod->updated_by             = Auth::user()->id;
+
+            $prprod->save();
+
+            return response()->json("Record updated successfully.", 200);
+        }
+
+        return response()->json("Something Wrong (controller method type)");
+
+
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(PurchaseRequestProductDataTable $datatable, $id)
     {
-        return "SHOW";
-    }
+        \View::share("name_form", "Show");
+        \View::share("read_only", true);
+
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+        if ($role->hasPermissionTo('purchases-request-index')) {
+
+            $pr = PurchaseRequest::where("pr_id", $id)->where("is_active", 1)->first();
+
+            if(empty($pr)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            $this->prSelectionList();
+
+            $this->selectionList["pr"] = $pr;
+            $this->selectionList["id"] = $id;
+
+            return $datatable->with("id", $id)->render('purchase_request.edit', $this->selectionList);
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');    }
 
     /**
      * Show the form for editing the specified resource.
@@ -255,6 +371,9 @@ class PurchaseRequestController extends Controller
      */
     public function edit(PurchaseRequestProductDataTable $datatable, $id)
     {
+
+        \View::share("name_form", "Edit");
+
         $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
         if ($role->hasPermissionTo('purchases-request-edit')) {
 
@@ -297,6 +416,17 @@ class PurchaseRequestController extends Controller
                 return redirect()->back();
             }
 
+            if($request->has("approve_pr")){
+                
+                $pr->is_approve   = 1;
+                $pr->updated_by             = Auth::user()->id;
+
+                $pr->save();
+
+                \Session::flash('message', 'Product Approved successfully');  
+                return redirect(route('pr.show', $pr->pr_id));
+            }
+
             $pr->pr_date                = $request->pr_date;
             $pr->pr_remarks             = $request->pr_remarks;
             $pr->pr_remarks_supplier    = $request->pr_remarks_to_supplier;
@@ -322,4 +452,51 @@ class PurchaseRequestController extends Controller
     {
         return "DESTROY";
     }
+
+    public function destroyPrProduct($id)
+    {
+        return "DESTROY";
+    }
+
+    //find product by Id
+    public function getProductbyId($id)
+    {
+
+        $prProd = PurchaseRequestProduct::leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseRequestProduct::getTableName().".product_id") 
+                                        ->leftjoin(Category::getTableName()." as category", "category.id", "prod.product_category")
+                                        ->leftjoin(Brand::getTableName()." as brand", "brand.id", "prod.product_brand")
+                                        ->leftjoin(Unit::getTableName()." as pUnit", "pUnit.id", PurchaseRequestProduct::getTableName().".product_purchase_unit")
+                                        ->leftjoin(MasterProductSupplier::getTableName()." as suppProd", "suppProd.product_supplier_id", PurchaseRequestProduct::getTableName().".supplier_moq_id")
+                                        ->leftjoin(Supplier::getTableName()." as supp", "supp.id", PurchaseRequestProduct::getTableName().".supplier_id")
+                                        ->select(
+                                                   PurchaseRequestProduct::getTableName().".pr_product_id" ,
+                                                   PurchaseRequestProduct::getTableName().".product_qty" ,
+                                                   PurchaseRequestProduct::getTableName().".product_price" ,
+                                                   PurchaseRequestProduct::getTableName().".supplier_id" ,
+                                                   PurchaseRequestProduct::getTableName().".product_gst" ,
+                                                   PurchaseRequestProduct::getTableName().".product_currency" ,
+                                                   "prod.product_id",
+                                                   "prod.product_name",
+                                                   "prod.product_sku",
+                                                   "prod.product_upc",
+                                                   "category.id as category_id",
+                                                   "category.name as category_name",
+                                                   "brand.id as brand_id",
+                                                   "brand.title as brand_name",
+                                                   "pUnit.unit_code as prchsunit",
+                                                   "pUnit.id as prchsunitId",
+                                                   "suppProd.product_supplier_id",
+                                                   "suppProd.supplier_moq",
+                                                   "supp.lead_time"
+                                        )
+                                        ->where("pr_product_id", $id)
+                                        ->first();
+
+        if(!empty($prProd)){
+            $res = $prProd->toArray();
+        }
+
+        return response()->json($prProd);
+    }
+
 }

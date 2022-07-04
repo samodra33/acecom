@@ -15,7 +15,7 @@
 					<div class="card-body">
 
 						<div class="col-md-12">
-
+							{{ Form::hidden("edt_pr_product_id", null) }}
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label class="control-label">Product<span style="color:red;">*</span></label>
@@ -83,6 +83,15 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">
+									<label class="control-label">GST<span style="color:red;">*</span></label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::select("edt_product_gst", $gst_list, null, array("class"=>"form-control select2_picker", "placeholder"=>"Select")) }}
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-4">
 									<label class="control-label">MOQ</label>
 								</div>
 								<div class="col-md-8">
@@ -96,6 +105,15 @@
 								</div>
 								<div class="col-md-8">
 									{{ Form::text("edt_product_lead_time", null, array("class"=>"form-control", "readonly"=>"true")) }}
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label class="control-label">Currency<span style="color:red;">*</span></label>
+								</div>
+								<div class="col-md-8">
+									{{ Form::select("edt_product_currency", $currency_list, null, array("class"=>"form-control select2_picker", "placeholder"=>"Select", "disabled"=>"true")) }}
 								</div>
 							</div>
 
@@ -165,6 +183,10 @@
 
     		$('select[name="edt_product"]').val( $( "#product".concat(tableIndex) ).val() ).trigger("change");
 
+    		$('select[name="edt_product_gst"]').val( $( "#product_gst".concat(tableIndex) ).val() ).trigger("change");
+
+    		$('select[name="edt_product_currency"]').val( $( "#product_currency".concat(tableIndex) ).val() ).trigger("change");
+
     		getEditSupplierList(id, supplierSelected);
 
     		$("#edt_save_hidden_product_id").val(tableIndex);
@@ -179,8 +201,10 @@
 			var product_qty = $('input[name="edt_product_qty"]').val();
 			var product_supplier = $('select[name="edt_product_supplier"]').val();
 			var product_moqprice = $('input[name="edt_product_moqprice"]').val();
+			var product_gst = $('select[name="edt_product_gst"]').val();
+    		var product_currency = $('select[name="edt_product_currency"]').val();
 
-    		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '') 
+    		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '' || product_gst == '') 
     		{
     			alert("Check Your Input.");
 
@@ -225,6 +249,8 @@
 			var product_lead_time = $("#product_lead_time".concat(tableIndex) ).val( $("input[name='edt_product_lead_time']").val() );
 			var product_moqprice = $("#product_moqprice".concat(tableIndex) ).val( $("input[name='edt_product_moqprice']").val() );
 			var supplier_id = $("#supplier_id".concat(tableIndex) ).val( $("input[name='edt_supplier_id']").val() );
+			var product_gst = $("#product_gst".concat(tableIndex) ).val( $("select[name='edt_product_gst']").val() );
+			var product_currency = $("#product_currency".concat(tableIndex) ).val( $("select[name='edt_product_currency']").val() );
 
 
 			if(tableIndex!=''){
@@ -276,11 +302,170 @@
 			$("#product_moqprice".concat(tableIndex) ).remove();
 			$("#supplier_id".concat(tableIndex) ).remove();
 			$("#product_unit_id".concat(tableIndex) ).remove();
+			$("#product_gst".concat(tableIndex) ).remove();
+			$("#product_currency".concat(tableIndex) ).remove();
 		}
 
     @endif
 
-    @if(request()->route()->named("pr.edit"))
+    @if(!request()->route()->named("pr.create"))
+
+	//get Product
+
+    	function getProduct(id)
+    	{
+    		if(id){
+
+    			var urls = '{{route("prProd.service.find_product_id", ":param")}}';
+	        	urls = urls.replace(':param', id);
+
+	        	var ajax = getDataWithAjax(urls, 'GET');
+
+	        	ajax.done(function(datas){
+	        		//console.log(datas)
+
+	        		$('input[name="edt_pr_product_id"]').val( datas.pr_product_id );
+
+		    		$('input[name="edt_product_id"]').val( datas.product_id );
+		    		$('input[name="edt_product_name"]').val( datas.product_name);
+		    		$('input[name="edt_product_sku"]').val( datas.product_sku );
+		    		$('input[name="edt_product_upc"]').val( datas.product_upc );
+		    		$('input[name="edt_product_category"]').val( datas.category_name );
+		    		$('input[name="edt_product_brand"]').val( datas.brand_name );
+		    		$('input[name="edt_product_qty"]').val( datas.product_qty );
+		    		$('input[name="edt_product_unit"]').val( datas.prchsunit );
+
+		    		$('input[name="edt_unit_id"]').val( datas.prchsunitId );
+
+		    		$('input[name="edt_supplier_id"]').val( datas.supplier_id );
+		    		$('input[name="edt_product_moq"]').val( datas.supplier_moq );
+			        $('input[name="edt_product_lead_time"]').val( datas.lead_time );
+			       	$('input[name="edt_product_moqprice"]').val(datas.product_price  );
+
+		    		$('select[name="edt_product"]').val( datas.product_id ).trigger("change");
+		    		$('select[name="edt_product_gst"]').val( datas.product_gst ).trigger("change");
+					$('select[name="edt_product_currency"]').val( datas.product_currency ).trigger("change");
+
+		    		getEditSupplierList(datas.product_id, datas.product_supplier_id);
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (product).!")
+		        })
+
+    		}
+    		else{
+
+	        	$('input[name="edt_product_id"]').val('');
+	        	$('input[name="edt_product_name"]').val('');
+	        	$('input[name="edt_product_sku"]').val('');
+	        	$('input[name="edt_product_upc"]').val('');
+	        	$('input[name="edt_product_category"]').val('');
+	        	$('input[name="edt_product_brand"]').val('');
+	        	$('input[name="edt_product_unit"]').val('');
+				$('input[name="edt_product_moq"]').val('');
+	        	$('input[name="edt_product_lead_time"]').val('');
+	        	$('input[name="edt_product_moqprice"]').val('');
+	        	$('input[name="edt_supplier_id"]').val('');
+	        	$('input[name="edt_unit_id"]').val('');
+	        	$('select[name="edt_product_supplier"]').val('').trigger("change");
+	        	$('select[name="edt_product_gst"]').val('').trigger("change");
+				$('select[name="edt_product_currency"]').val('').trigger("change");
+
+    			alert("Something Wrong");
+    		}
+    	}
+
+
+    	//btn action
+
+		$("#btn_save_edit_product").on("click", function(){
+
+			var pr_product_id = $('input[name="edt_pr_product_id"]').val();
+			var pr_id = $('input[name="pr_id"]').val();
+
+    		//product
+    		var product = $('select[name="edt_product"]').val();
+    		var product_id = $('input[name="edt_product_id"]').val();
+	        var product_name = $('input[name="edt_product_name"]').val();
+	        var product_sku = $('input[name="edt_product_sku"]').val();
+	        var product_upc = $('input[name="edt_product_upc"]').val();
+    		var product_category = $('input[name="edt_product_category"]').val();
+    		var product_brand = $('input[name="edt_product_brand"]').val();
+    		var product_qty = $('input[name="edt_product_qty"]').val();
+    		var product_unit = $('input[name="edt_product_unit"]').val();
+    		var product_unit_id = $('input[name="edt_unit_id"]').val();
+
+    		var product_supplier = $('select[name="edt_product_supplier"]').val();
+    		var supplier_id = $('input[name="edt_supplier_id"]').val();
+    		var product_moq = $('input[name="edt_product_moq"]').val();
+    		var product_lead_time = $('input[name="edt_product_lead_time"]').val();
+    		var product_moqprice = $('input[name="edt_product_moqprice"]').val();
+    		var product_gst = $('select[name="edt_product_gst"]').val();
+    		var product_currency = $('select[name="edt_product_currency"]').val();
+
+
+    		if (pr_product_id) {
+
+    			var urls = '{{route("prProd.service/store_pr_product")}}';
+
+	       		if (product_id == '' || product_qty == '' || product_supplier == '' || product_moqprice == '' || product_gst == '') 
+	       		{
+	       			alert("Check Your Input.");
+
+	       			return false;
+
+	       		}
+
+	       		if ( isNaN(product_qty) ) {
+
+	       			alert("Qty must be number.");
+
+	       			return false;
+	       		}
+
+	       		if ( isNaN(product_moqprice) ) {
+
+	       			alert("Price must be number.");
+
+	       			return false;
+	       		}
+
+	       		//set Data
+
+    			var data = {
+    						"func_type" : "update",
+    						"pr_product_id": pr_product_id,
+	            			"pr_id" : pr_id,
+	            			"product_gst" : product_gst,
+	            			"product_currency" : product_currency,
+	            			"product_id" : product_id,
+	            			"supplier_id" : supplier_id,
+	            			"supplier_moq_id" : product_supplier,
+	            			"product_qty" : product_qty,
+	            			"product_purchase_unit" : product_unit_id,
+	            			"product_price" : product_moqprice
+
+	       		};
+
+	       		//ajax
+
+
+	       		var ajax = getDataWithAjax(urls, 'POST', data);
+
+		        ajax.done(function(response){
+		        	alert(response);
+		        	var table = $('#pr-product-table').DataTable();
+					table.ajax.reload();
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (controller).!")
+		        })
+
+    		}else{
+    			alert("Something Wrong (pr_id input)")
+    		}
+
+		})	
 
     @endif
 
@@ -315,6 +500,8 @@
 	        	$('input[name="edt_product_lead_time"]').val('');
 	        	$('input[name="edt_product_moqprice"]').val('');
 	        	$('input[name="edt_supplier_id"]').val('');
+	        	$('select[name="edt_product_gst"]').val('').trigger("change");
+				$('select[name="edt_product_currency"]').val('').trigger("change");
 
 	        	getEditSupplierList(data.product_id);
 	        })
@@ -337,6 +524,8 @@
 	        	$('input[name="edt_supplier_id"]').val('');
 	        	$('input[name="edt_unit_id"]').val('');
 	        	$('select[name="edt_product_supplier"]').val('').trigger("change");
+	        	$('select[name="edt_product_gst"]').val('').trigger("change");
+				$('select[name="edt_product_currency"]').val('').trigger("change");
     	}
     });
 
@@ -382,10 +571,13 @@
 	        var ajax = getDataWithAjax(urls, 'GET', data);
 
 	        ajax.done(function(data){
-	        	$('input[name="edt_supplier_id"]').val(data.id);
+	        	$('input[name="edt_supplier_id"]').val(data.supplier_id);
 	        	$('input[name="edt_product_moq"]').val(data.supplier_moq);
 	        	$('input[name="edt_product_lead_time"]').val(data.lead_time);
 	        	$('input[name="edt_product_moqprice"]').val(data.supplier_price);
+
+	        	$('select[name="edt_product_gst"]').val(data.gst_id).trigger("change");
+	        	$('select[name="edt_product_currency"]').val(data.currency_id).trigger("change");
 	        })
 	        ajax.fail(function(error){
 	            alert("Something Wrong (product).!")
@@ -396,6 +588,8 @@
     			$('input[name="edt_product_moq"]').val('');
 	        	$('input[name="edt_product_lead_time"]').val('');
 	        	$('input[name="edt_product_moqprice"]').val('');
+	        	$('select[name="edt_product_gst"]').val('').trigger("change");
+				$('select[name="edt_product_currency"]').val('').trigger("change");
 
     	}
     });

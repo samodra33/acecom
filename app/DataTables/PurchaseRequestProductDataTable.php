@@ -43,6 +43,7 @@ class PurchaseRequestProductDataTable extends DataTable
     public function query(PurchaseRequestProduct $model)
     {
         $query = $model->newQuery()
+                        ->leftjoin(PurchaseRequest::getTableName()." as pr", "pr.pr_id", PurchaseRequestProduct::getTableName().".pr_id")
                         ->leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseRequestProduct::getTableName().".product_id")
                         ->leftjoin(Brand::getTableName()." as brand", "brand.id", "prod.product_brand")
 
@@ -53,6 +54,7 @@ class PurchaseRequestProductDataTable extends DataTable
                                     PurchaseRequestProduct::getTableName().".pr_product_id",
                                     PurchaseRequestProduct::getTableName().".product_qty",
                                     PurchaseRequestProduct::getTableName().".product_price",
+                                    "pr.is_approve",
                                     "prod.product_sku",
                                     "prod.product_upc",
                                     "prod.product_name",
@@ -78,7 +80,7 @@ class PurchaseRequestProductDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('pr-table')
+                    ->setTableId('pr-product-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->parameters([ 
@@ -103,6 +105,7 @@ class PurchaseRequestProductDataTable extends DataTable
             "product_name",
             "Brand" => [ "data" => "title", "name" => "brand.title" ],
             "Supplier" => [ "data" => "name", "name" => "supp.name" ],
+            "Qty" => [ "data" => "product_qty", "name" => "product_qty" ],
             "unit" => [ "data" => "unit_code", "name" => "unit.unit_code" ],
             "Price" => [ "data" => "product_price", "name" => "product_price" ],
         ];

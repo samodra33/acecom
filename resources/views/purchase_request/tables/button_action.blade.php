@@ -1,6 +1,15 @@
 <?php 
 $plMsg = "Are you sure ?";
 
+$showButton = true;
+if(isset($is_approve))
+{
+	if($is_approve==1)
+	{
+		$showButton = false;
+	}
+}
+
 
 //get role
 $role = DB::table('roles')->find(Auth::user()->role_id);
@@ -40,19 +49,23 @@ $delete_permission_active = DB::table('role_has_permissions')->where([
 
 @endif
 
-@if($edit_permission_active)
-	<a href="{{ route('pr.edit', $pr_id) }}" class='btn btn-primary btn-sm'>
-		<i class="fa fa-pencil fa-fw"></i>
-	</a>
-@endif
+@if($showButton)
 
-@if($delete_permission_active)
+	@if($edit_permission_active)
+		<a href="{{ route('pr.edit', $pr_id) }}" class='btn btn-primary btn-sm'>
+			<i class="fa fa-pencil fa-fw"></i>
+		</a>
+	@endif
 
-	{!! Form::button('<i class="fa fa-trash fa-fw"></i>', [
-	'type' => 'submit',
-	'class' => 'btn btn-danger btn-sm',
-	'onclick' => "return confirm('".$plMsg."')"
-	]) !!}
+	@if($delete_permission_active)
+
+		{!! Form::button('<i class="fa fa-trash fa-fw"></i>', [
+		'type' => 'submit',
+		'class' => 'btn btn-danger btn-sm',
+		'onclick' => "return confirm('".$plMsg."')"
+		]) !!}
+	@endif
+	
 @endif
 </div>
 {!! Form::close() !!}

@@ -1,6 +1,15 @@
 <div class="col-md-6">
 
 	<div class="row form-group">
+		<div class="col-md-4">
+			<label class="control-label">Type <span style="color:red;">*</span></label>
+		</div>
+		<div class="col-md-8">
+			{{ Form::select("pr_type", $purchase_type_list, null, array("class"=>"form-control select2_picker", "placeholder"=>"Select", "required"=>"required")) }}
+		</div>
+	</div>
+
+	<div class="row form-group">
 		<div class="col col-md-4">
 			<label class="control-label">PR Date <span style="color:red;">*</span></label>
 		</div>

@@ -130,4 +130,10 @@ class TaxController extends Controller
         $lims_tax_data->save();
         return redirect('tax')->with('not_permitted', 'Data deleted successfully');
     }
+
+    public function selectList()
+    {
+        return Tax::where("is_active", 1)->select("id", "name")
+            ->pluck('name','id'); 
+    }
 }

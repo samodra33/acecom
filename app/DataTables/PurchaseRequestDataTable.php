@@ -10,6 +10,7 @@ use Yajra\DataTables\Services\DataTable;
 
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
+use App\Models\PurchaseType;
 use App\Supplier;
 use App\User;
 
@@ -84,6 +85,7 @@ class PurchaseRequestDataTable extends DataTable
     {
         return $model->newQuery()
                     ->leftJoin(User::getTableName()." as apllied", "apllied.id", PurchaseRequest::getTableName().".created_by")
+                    ->leftJoin(PurchaseType::getTableName()." as type", "type.type_id", PurchaseRequest::getTableName().".pr_type")
                     ->select(
                                 PurchaseRequest::getTableName().".pr_id",
                                 PurchaseRequest::getTableName().".pr_no",
@@ -92,7 +94,8 @@ class PurchaseRequestDataTable extends DataTable
                                 PurchaseRequest::getTableName().".created_at",
                                 PurchaseRequest::getTableName().".updated_by",
                                 PurchaseRequest::getTableName().".updated_at",
-                                "apllied.name as Applied By"
+                                "apllied.name as Applied By",
+                                "type.type_name as type"
 
                      )
                     ->where(PurchaseRequest::getTableName().".is_active", 1);
@@ -129,6 +132,7 @@ class PurchaseRequestDataTable extends DataTable
             "status" => [ "data" => "status", "name" => "is_approve" ],
             "pr_no",
             "supplier",
+            "type"  => [ "data" => "type", "name" => "type.type_name" ],
             "Created Date"  => [ "data" => "Created Date", "name" => "created_at" ],
             "Applied By" => [ "data" => "Applied By", "name" => "apllied.name" ],
             "Modified Date" => [ "data" => "Modified Date", "name" => "updated_at" ]

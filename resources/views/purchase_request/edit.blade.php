@@ -11,13 +11,14 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>{{trans('file.Edit Purchase Request')}}</h4>
+                        <h4>{{$name_form}} Purchase Request</h4>
                     </div>
                     <div class="card-body">
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
 
                         {!! Form::model($pr, ['route' => ['pr.update', $pr->pr_id] , 'method' => 'patch', 'files' => true, 'id' => 'purchase-request-form', "autocomplete"=>"off"]) !!}
 
+                        {{ Form::hidden("pr_id", isset($pr->pr_id)?$pr->pr_id:null ) }}
                         <div class="row">
                         {{-- LEFT FIELD --}}
                         @include('purchase_request.field_left')
@@ -29,7 +30,17 @@
                         </div>
 
                         <div class="mt-3 col-md-12">
+                            <a href="{{ route('pr.index') }}" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary" id="btn_save">Save</button>
+                            
+                            @if(isset($pr->is_approve))
+                            
+                            @if($pr->is_approve != 1)
+
+                            <button type="submit" class="btn btn-warning" name="approve_pr" id="approve_pr" value="confirm" onclick="if (confirm('Are you sure to approve this PR ?')) commentDelete(1); return false">Approve</button>
+
+                            @endif
+                            @endif
                         </div>
                         {!! Form::close() !!}
                     </div>
@@ -48,7 +59,16 @@
                     <div class="card-body">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <a href="#" data-toggle="modal" data-target="#add_product" class="btn btn-primary"><i class="dripicons-plus"></i> {{__('file.add_product')}}</a>
+                                @if(!request()->route()->named("pr.show"))
+                                @if(isset($pr->is_approve))
+                                @if($pr->is_approve != 1)
+
+                                <a href="#" data-toggle="modal" data-target="#add_product" class="btn btn-primary"><i class="dripicons-plus" ></i> {{__('file.add_product')}}</a>
+
+                                @endif
+                                @endif
+                                @endif
+
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -83,6 +103,19 @@
 
     //table
     window.add_product_table = $('#add-product-table').DataTable();
+
+    //
+
+    @if($pr->is_approve == 1 || isset($read_only))
+    $('#btn_save').remove();
+    $('#btn_save_edit_product').remove();
+    $('#add_product_button').remove();
+    $('#approve_pr').remove();
+    $('#add_product').remove();
+    $('input').attr("readOnly", true);
+    $('select').attr("disabled", "disabled");
+    $('textarea').attr("disabled", "disabled");
+    @endif
 
 </script>
 
