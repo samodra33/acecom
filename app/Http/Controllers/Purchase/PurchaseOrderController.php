@@ -101,7 +101,7 @@ class PurchaseOrderController extends Controller
 
         if ($poApprove == $prProductCount) {
            
-           return 400;
+           return "400";
         }
 
         $prProduct = $prProduct->get();
@@ -179,11 +179,11 @@ class PurchaseOrderController extends Controller
 
             }//endforeach
 
-            return 200;
+            return "200";
 
         }//endif1
 
-        return 0;
+        return "0";
     }
 
     public function convertPrProducttoPoProduct($pr_id, $po_id, $po_supplier)

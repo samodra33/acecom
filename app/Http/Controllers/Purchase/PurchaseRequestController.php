@@ -433,12 +433,12 @@ class PurchaseRequestController extends Controller
 
                 $convert = app("App\Http\Controllers\Purchase\PurchaseOrderController")->convertPrtoPo($id);
 
-                if ($convert == 200) {
+                if ($convert == "200") {
                     \Session::flash('message', 'PR Converted to PO successfully');  
                     return redirect(route('po.index'));
                 }
 
-                if ($convert == 400) {
+                if ($convert == "400") {
                     \Session::flash('not_permitted', 'FAILED :: This PR has been converted into a PO and approved as a PO');  
                     return redirect(route('pr.show', $pr->pr_id));
                 }
