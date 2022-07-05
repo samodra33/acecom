@@ -8,13 +8,15 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderProduct;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
 use App\Models\PurchaseType;
 use App\Supplier;
 use App\User;
 
-class PurchaseRequestDataTable extends DataTable
+class PurchaseOrderDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -41,24 +43,6 @@ class PurchaseRequestDataTable extends DataTable
             }
         })
 
-        ->addColumn("supplier", function($query){
-
-            $supplier = PurchaseRequestProduct::join(Supplier::getTableName()." as supp", "supp.id", PurchaseRequestProduct::getTableName().".supplier_id")
-            ->where("pr_id", $query->pr_id)
-            ->where(PurchaseRequestProduct::getTableName().".is_active", 1)
-            ->select("supp.name")
-            ->groupBy("supp.name")
-            ->get();
-
-            $supplierPrint = "";
-
-            foreach ($supplier as $key => $value) {
-
-                $supplierPrint .= "<li>".$value->name."</li>";
-            }
-
-            return "<ul>".$supplierPrint."</ul>";
-        })
 
         ->addColumn("Created Date", function($query){
 
@@ -72,34 +56,34 @@ class PurchaseRequestDataTable extends DataTable
 
         })
 
-        ->addColumn('action', 'purchase_request.tables.button_action')
-        ->rawColumns(["action", "supplier"]);
+        ->addColumn('action', 'purchase_order.tables.button_action')
+        ->rawColumns(["action"]);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\App\PurchaseRequest $model
+     * @param \App\App\PurchaseOrder $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(PurchaseRequest $model)
+    public function query(PurchaseOrder $model)
     {
         return $model->newQuery()
-                    ->leftJoin(User::getTableName()." as apllied", "apllied.id", PurchaseRequest::getTableName().".created_by")
-                    ->leftJoin(PurchaseType::getTableName()." as type", "type.type_id", PurchaseRequest::getTableName().".pr_type")
+                    ->leftJoin(PurchaseRequest::getTableName()." as pr", "pr.pr_id", PurchaseOrder::getTableName().".pr_id")
+                    ->leftJoin(Supplier::getTableName()." as supp", "supp.id", PurchaseOrder::getTableName().".po_supplier")
+                    ->leftJoin(PurchaseType::getTableName()." as type", "type.type_id", PurchaseOrder::getTableName().".po_type")
                     ->select(
-                                PurchaseRequest::getTableName().".pr_id",
-                                PurchaseRequest::getTableName().".pr_no",
-                                PurchaseRequest::getTableName().".is_approve",
-                                PurchaseRequest::getTableName().".created_by",
-                                PurchaseRequest::getTableName().".created_at",
-                                PurchaseRequest::getTableName().".updated_by",
-                                PurchaseRequest::getTableName().".updated_at",
-                                "apllied.name as Applied By",
-                                "type.type_name as type"
+                                PurchaseOrder::getTableName().".po_id",
+                                PurchaseOrder::getTableName().".po_no",
+                                PurchaseOrder::getTableName().".is_approve",
+                                PurchaseOrder::getTableName().".created_at",
+                                PurchaseOrder::getTableName().".updated_at",
+                                "supp.name as supplier_name",
+                                "type.type_name as type",
+                                "pr.pr_no"
 
                      )
-                    ->where(PurchaseRequest::getTableName().".is_active", 1);
+                    ->where(PurchaseOrder::getTableName().".is_active", 1);
     }
 
     /**
@@ -118,7 +102,7 @@ class PurchaseRequestDataTable extends DataTable
                                     'autoWidth' => false, 
                                     'searching' => false  
                                 ])
-                    ->orderBy(6);
+                    ->orderBy(1);
     }
 
     /**
@@ -131,11 +115,11 @@ class PurchaseRequestDataTable extends DataTable
         return [
             "action" => ["orderable" => false],
             "status" => [ "data" => "status", "name" => "is_approve" ],
+            "po_no",
             "pr_no",
-            "supplier",
+            "Supplier"  => [ "data" => "supplier_name", "name" => "supp.name" ],
             "type"  => [ "data" => "type", "name" => "type.type_name" ],
             "Created Date"  => [ "data" => "Created Date", "name" => "created_at" ],
-            "Applied By" => [ "data" => "Applied By", "name" => "apllied.name" ],
             "Modified Date" => [ "data" => "Modified Date", "name" => "updated_at" ]
         ];
     }
@@ -147,6 +131,6 @@ class PurchaseRequestDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'PurchaseRequest_' . date('YmdHis');
+        return 'PurchaseOrder_' . date('YmdHis');
     }
 }

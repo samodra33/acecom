@@ -40,6 +40,10 @@
                             <button type="submit" class="btn btn-warning" name="approve_pr" id="approve_pr" value="confirm" onclick="if (confirm('Are you sure to approve this PR ?')) commentDelete(1); return false">Approve</button>
 
                             @endif
+
+                            @if($pr->is_approve === 1)
+                            <button type="submit" class="btn btn-success" name="convert_to_po" id="convert_to_po" value="confirm" onclick="if (confirm('Note :: Approved PO will not be updated.\nAre you sure to convert this PR to PO ?')) commentDelete(1); return false">Convert to Po</button>
+                            @endif
                             @endif
                         </div>
                         {!! Form::close() !!}

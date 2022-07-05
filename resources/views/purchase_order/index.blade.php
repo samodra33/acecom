@@ -7,16 +7,11 @@
 @endif
 
 <section>
-    <div class="container-fluid">
-        @if(in_array("purchases-request-add", $permissions_lists))
-        <a href="{{route('pr.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Purchase')}}</a>&nbsp;
-        @endif
-    </div>
 
     <div class="container-fluid">
         <div class="card">
             <div class="card-header mt-2">
-                <h3 class="text-center">{{trans('file.Purchase Request')}}</h3>
+                <h3 class="text-center">{{trans('file.Purchase Order')}}</h3>
             </div>
 
             <div class="row mb-3">
@@ -32,7 +27,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-2 mt-3">
                     <div class="form-group">
                         <button class="btn btn-primary" id="filter-btn" type="submit">{{trans('file.Search')}}</button>
@@ -49,7 +43,7 @@
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                    <strong class="card-title">Purchase Request List</strong>
+                    <strong class="card-title">Purchase Order List</strong>
                   </div>
                   <div class="card-body">
                     <div class="row">

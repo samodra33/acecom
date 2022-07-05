@@ -419,12 +419,34 @@ class PurchaseRequestController extends Controller
             if($request->has("approve_pr")){
                 
                 $pr->is_approve   = 1;
-                $pr->updated_by             = Auth::user()->id;
+                $pr->pr_approved_by   = Auth::user()->id;
+                $pr->pr_approved_dt   = now();
+                $pr->updated_by       = Auth::user()->id;
 
                 $pr->save();
 
-                \Session::flash('message', 'Product Approved successfully');  
+                \Session::flash('message', 'PR Approved successfully');  
                 return redirect(route('pr.show', $pr->pr_id));
+            }
+
+            if($request->has("convert_to_po")){
+
+                $convert = app("App\Http\Controllers\Purchase\PurchaseOrderController")->convertPrtoPo($id);
+
+                if ($convert == 1) {
+                    \Session::flash('message', 'PR Converted to PO successfully');  
+                    return redirect(route('po.index'));
+                }
+
+                if ($convert == 202) {
+                    \Session::flash('not_permitted', 'FAILED :: This PR has been converted into a PO and approved as a PO');  
+                    return redirect(route('pr.show', $pr->pr_id));
+                }
+
+                \Session::flash('not_permitted', 'PR Converted Fail');  
+                return redirect(route('pr.show', $pr->pr_id));
+
+                
             }
 
             $pr->pr_date                = $request->pr_date;
