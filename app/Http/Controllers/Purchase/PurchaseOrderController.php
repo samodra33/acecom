@@ -101,7 +101,7 @@ class PurchaseOrderController extends Controller
 
         if ($poApprove == $prProductCount) {
            
-           return 202;
+           return 400;
         }
 
         $prProduct = $prProduct->get();
@@ -179,7 +179,7 @@ class PurchaseOrderController extends Controller
 
             }//endforeach
 
-            return 1;
+            return 200;
 
         }//endif1
 
