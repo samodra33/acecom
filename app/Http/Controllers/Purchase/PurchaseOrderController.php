@@ -94,6 +94,8 @@ class PurchaseOrderController extends Controller
                                                     "pr.pr_remarks_supplier",
                                                     "pr.pr_type"
                                             );
+        
+        $prProduct = $prProduct->get();
 
         $prProductCount = $prProduct->count();
 
@@ -104,8 +106,7 @@ class PurchaseOrderController extends Controller
            return 400;
         }
 
-        $prProduct = $prProduct->get();
-
+        
         //Store PO
         if ($prProduct) {//if1
 
