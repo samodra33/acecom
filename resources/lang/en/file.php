@@ -668,7 +668,7 @@ return [
 	"Manual Input" => "Manual Input",
 	"" => "Manual Input",
 	"outlet" => "Outlet",
-	"outlet name" => "Outlet Name",
+	"Outlet name" => "Outlet Name",
 	"type" => "Type",
 
 ];
