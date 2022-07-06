@@ -152,6 +152,22 @@
 							</div>
 						</div>
 
+						<div class="col-md-12">
+
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover" id="product_warehouse">
+									<thead>
+										<tr>
+											<th>{{trans('file.Action')}}</th>
+											<th>{{trans('file.Warehouse')}}</th>
+											<th>{{trans('file.Qty')}}</th>
+										</tr>
+									</thead>
+
+								</table>
+							</div>
+						</div>
+
 					</div>
 				</div>
 				<div class="form-group">
@@ -181,6 +197,10 @@
 
     	function getProduct(id)
     	{
+    		var warehousetable = $('#product_warehouse').DataTable();
+    		warehousetable.destroy();
+
+
     		if(id){
 
     			var urls = '{{route("poProd.service.find_product_id", ":param")}}';
@@ -214,6 +234,7 @@
 					$('select[name="edt_product_currency"]').val( datas.product_currency ).trigger("change");
 
 		    		getEditSupplierList(datas.product_id, datas.product_supplier_id);
+		    		getWarehouseTable(datas.po_product_id)
 		        })
 		        ajax.fail(function(error){
 		            alert("Something Wrong (product).!")
@@ -241,6 +262,133 @@
     			alert("Something Wrong");
     		}
     	}
+
+    	$('select[name="edt_product_warehouse"]').on('select2:close', function() {
+
+    		var id = $(this).val();
+    		var po_product_id = $('input[name="edt_po_product_id"]').val();
+
+	        if(id){
+
+		        var urls = '{{route("poProd.service.storeproductwarehouse")}}';
+
+		        var data = {
+		            "warehouse_id" : id,
+		            "po_product_id" : po_product_id
+		        }
+
+		        var ajax = getDataWithAjax(urls, 'PATCH', data);
+
+		        ajax.done(function(data){
+
+		        	alert(data);
+
+		        	var warehousetable = $('#product_warehouse').DataTable();
+		        	warehousetable.ajax.reload();
+		        	
+		        	$('select[name="edt_product_warehouse"]').val('').trigger("change");
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (warehouse controller).!")
+		        })
+
+	    	}else{
+
+				$('select[name="edt_product_warehouse"]').val('').trigger("change");
+	    	}
+    	})
+
+    	function getWarehouseTable(id)
+    	{
+
+		    $('#product_warehouse').DataTable({
+
+		        processing: true,
+		        serverSide: true,
+		        bInfo: false,
+		        bPaginate: true,
+		        bAutoWidth: false, 
+		        searching: false, 
+		        ajax: {
+		          url : '{{ route("poProd.service.productwarehouse_table") }}',
+		          data : {
+		            po_product_id : id
+		          }
+		        },
+		        columns: [
+		        {data: 'action', name: 'action'},
+		        {data: 'warehouse_name', name: 'warehouse.name'},
+		        {data: 'qty', name: 'warehouse_qty'}
+		        ],
+		        order: [[1, 'desc']]
+		    });
+		}
+
+		function updateWarehouse(e)
+    	{
+
+    		var qty = $(e).val();
+    		var po_warehouse_id = $(e).data('ref');
+    		var po_product_id = $(e).data('pop');
+
+	        if(po_warehouse_id){
+
+		        var urls = '{{route("poProd.service.updateproductwarehouse")}}';
+
+		        var data = {
+		            "po_warehouse_id" : po_warehouse_id,
+		            "po_product_id" : po_product_id,
+		            "qty" : qty
+		        }
+
+		        var ajax = getDataWithAjax(urls, 'PATCH', data);
+
+		        ajax.done(function(data){
+
+		        	alert(data);
+
+		        	var warehousetable = $('#product_warehouse').DataTable();
+		        	warehousetable.ajax.reload();
+		        	
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (warehouse controller).!")
+		        })
+
+	    	}else{
+
+				alert("Something Wrong (view).!")
+	    	}
+    	}
+
+		function removeWarehouse(id)
+    	{
+
+	        if(id){
+
+		        var urls = '{{route("poProd.destroypowarehouse", ":param")}}';
+		        urls = urls.replace(':param', id);
+
+		        var ajax = getDataWithAjax(urls, 'delete', []);
+
+		        ajax.done(function(data){
+
+		        	alert(data);
+
+		        	var warehousetable = $('#product_warehouse').DataTable();
+		        	warehousetable.ajax.reload();
+		        	
+		        })
+		        ajax.fail(function(error){
+		            alert("Something Wrong (warehouse controller).!")
+		        })
+
+	    	}else{
+
+				alert("Something Wrong (view).!")
+	    	}
+    	}
+
     	
     @endif
 

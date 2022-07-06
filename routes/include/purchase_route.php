@@ -21,3 +21,11 @@ Route::delete('poProd/destroyprprod/{id}', 'Purchase\PurchaseOrderController@des
 
 Route::GET('poProd/service/find-product-id/{id}', 'Purchase\PurchaseOrderController@getProductbyId')
         ->name('poProd.service.find_product_id');
+Route::GET('poProd/service/productwarehouse-table', 'Purchase\PurchaseOrderController@getProductWarehouseTable')
+        ->name('poProd.service.productwarehouse_table');
+Route::PATCH('poProd/service/storeproductwarehouse', 'Purchase\PurchaseOrderController@storeproductwarehouse')
+        ->name('poProd.service.storeproductwarehouse');
+Route::PATCH('poProd/service/updateproductwarehouse', 'Purchase\PurchaseOrderController@updateproductwarehouse')
+        ->name('poProd.service.updateproductwarehouse');
+Route::delete('poProd/destroypowarehouse/{id}', 'Purchase\PurchaseOrderController@destroyPoWarehouse')
+        ->name("poProd.destroypowarehouse");

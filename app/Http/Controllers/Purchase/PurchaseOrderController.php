@@ -22,6 +22,7 @@ use App\Category;
 use App\Unit;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderProduct;
+use App\Models\PurchaseOrderProductWarehouse;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
 use App\Models\MasterProduct;
@@ -30,6 +31,7 @@ use App\Models\PurchaseType;
 
 use App\DataTables\PurchaseOrderDataTable;
 use App\DataTables\PurchaseOrderProductDataTable;
+use App\DataTables\PurchaseOrderProductWarehouseDataTable;
 
 class PurchaseOrderController extends Controller
 {
@@ -392,5 +394,85 @@ class PurchaseOrderController extends Controller
         }
 
         return response()->json($poProd);
+    }
+
+    //get Product Warehouse
+
+    public function getProductWarehouseTable(Request $request, PurchaseOrderProductWarehouseDataTable $dataTable)
+    {
+        return $dataTable
+            ->with("id", $request->po_product_id)
+            ->render('po.edit');
+    }
+
+    public function storeproductwarehouse(Request $request)
+    {
+        $pWarehouse = new PurchaseOrderProductWarehouse();
+
+
+        $pWarehouse->po_product_id = $request->po_product_id;
+        $pWarehouse->warehouse_id = $request->warehouse_id;
+        $pWarehouse->warehouse_qty = 0;
+
+        $pWarehouse->created_by       = Auth::user()->id;
+        $pWarehouse->updated_by       = Auth::user()->id;
+
+        $pWarehouse->save();
+
+        return response()->json("Warehouse successfully added.");
+
+
+
+    }
+
+    public function updateproductwarehouse(Request $request)
+    {
+
+        $poProd = PurchaseOrderProduct::Select(PurchaseOrderProduct::getTableName().".product_qty")
+                                        ->where("po_product_id", $request->po_product_id)
+                                        ->first();
+
+
+        $pWarehouse = PurchaseOrderProductWarehouse::where("po_warehouse_id", $request->po_warehouse_id);
+
+        $pWarehouse = $pWarehouse->first();
+
+        //qty check
+
+        $sumWarehouse = $pWarehouse->where("is_active", 1)->sum("warehouse_qty");
+
+        $qtyTotal = $request->qty + ($sumWarehouse - $pWarehouse->warehouse_qty);
+
+        if ($qtyTotal > $poProd->product_qty) {
+
+            return response()->json("Failed :: The amount cannot be more than the purchase order qty.");
+        }
+        
+
+        $pWarehouse->warehouse_qty = $request->qty;
+
+        $pWarehouse->updated_by       = Auth::user()->id;
+
+        $pWarehouse->save();
+
+        return response()->json("Warehouse successfully updated.");
+
+
+
+    }
+
+    public function destroyPoWarehouse($id)
+    {
+
+        $pWarehouse = PurchaseOrderProductWarehouse::where("po_warehouse_id", $id)->first();
+
+        $pWarehouse->is_active = 0;
+
+        $pWarehouse->updated_by       = Auth::user()->id;
+
+        $pWarehouse->save();
+
+        return response()->json("Warehouse successfully Deleted.");
+
     }
 }
