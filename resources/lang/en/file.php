@@ -667,7 +667,8 @@ return [
 	"Auto Generate by System" => "Auto Generate by System",
 	"Manual Input" => "Manual Input",
 	"" => "Manual Input",
-	"outlet" => "Outle",
+	"outlet" => "Outlet",
+	"outlet name" => "Outlet Name",
 	"type" => "Type",
 
 ];
