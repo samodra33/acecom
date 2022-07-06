@@ -669,6 +669,7 @@ return [
 	"" => "Manual Input",
 	"outlet" => "Outlet",
 	"Outlet name" => "Outlet Name",
+	"HQ Warehouse" => "HQ Warehouse",
 	"type" => "Type",
 
 ];
