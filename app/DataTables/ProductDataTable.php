@@ -43,14 +43,15 @@ class ProductDataTable extends DataTable
             $supplier = MasterProductSupplier::join(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
             ->where("product_id", $query->product_id)
             ->where(MasterProductSupplier::getTableName().".is_active", 1)
-            ->select("supp.name")
+            ->select("supp.name", "supp.company_name")
+            ->groupBy("supp.name", "supp.company_name")
             ->get();
 
             $supplierPrint = "";
 
             foreach ($supplier as $key => $value) {
 
-                $supplierPrint .= "<li>".$value->name."</li>";
+                $supplierPrint .= "<li>".$value->name." - ".$value->company_name."</li>";
             }
 
             return "<ul>".$supplierPrint."</ul>";
@@ -74,7 +75,7 @@ class ProductDataTable extends DataTable
 
             }else{
 
-                return "";
+                return "This product does not have a serial number";
 
             }
 
@@ -153,7 +154,7 @@ class ProductDataTable extends DataTable
             "min_price" => [ "data" => "product_min_price" ],
             "cost" => [ "data" => "product_cost" ],
             "S/N Input Type",
-            "supplier",
+            "supplier" => ["orderable" => false],
         ];
     }
 

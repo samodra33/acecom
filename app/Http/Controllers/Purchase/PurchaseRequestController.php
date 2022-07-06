@@ -71,6 +71,13 @@ class PurchaseRequestController extends Controller
             ->pluck('type_name','type_id'); 
     }
 
+    public function selectList()
+    {
+        return PurchaseRequest::select("pr_id", "pr_no")
+            ->where("is_active", 1)
+            ->pluck('pr_no','pr_id'); 
+    }
+
     public function index(PurchaseRequestDataTable $datatable)
     {
 
@@ -456,7 +463,7 @@ class PurchaseRequestController extends Controller
 
             $pr->save();
 
-            \Session::flash('message', 'Product updated successfully');  
+            \Session::flash('message', 'PR updated successfully');  
             return redirect()->back();
 
         }

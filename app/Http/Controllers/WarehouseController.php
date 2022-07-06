@@ -153,4 +153,11 @@ class WarehouseController extends Controller
         $lims_warehouse_data->save();
         return redirect('warehouse')->with('message', 'Data deleted successfully');
     }
+
+    public function selectList()
+    {
+        return Warehouse::where('is_active','=', 1)->orderBy('name', 'asc')
+            ->select("id", "name")
+            ->pluck('name','id'); 
+    }
 }

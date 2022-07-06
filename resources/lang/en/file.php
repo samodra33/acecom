@@ -666,6 +666,9 @@ return [
 	"Lead Time" => "Lead Time",
 	"Auto Generate by System" => "Auto Generate by System",
 	"Manual Input" => "Manual Input",
+	"" => "Manual Input",
+	"outlet" => "Outle",
+	"type" => "Type",
 
 ];
 ?>

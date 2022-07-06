@@ -46,15 +46,15 @@ class PurchaseRequestDataTable extends DataTable
             $supplier = PurchaseRequestProduct::join(Supplier::getTableName()." as supp", "supp.id", PurchaseRequestProduct::getTableName().".supplier_id")
             ->where("pr_id", $query->pr_id)
             ->where(PurchaseRequestProduct::getTableName().".is_active", 1)
-            ->select("supp.name")
-            ->groupBy("supp.name")
+            ->select("supp.name", "supp.company_name")
+            ->groupBy("supp.name", "supp.company_name")
             ->get();
 
             $supplierPrint = "";
 
             foreach ($supplier as $key => $value) {
 
-                $supplierPrint .= "<li>".$value->name."</li>";
+                $supplierPrint .= "<li>".$value->name." - ".$value->company_name."</li>";
             }
 
             return "<ul>".$supplierPrint."</ul>";

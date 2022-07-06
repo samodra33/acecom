@@ -13,6 +13,13 @@ use Auth;
 use DNS1D;
 use DB;
 
+use App\PosSetting;
+use App\Warehouse;
+use App\Account;
+use App\Supplier;
+use App\Brand;
+use App\Category;
+use App\Unit;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderProduct;
 use App\Models\PurchaseRequest;
@@ -22,6 +29,7 @@ use App\Models\MasterProductSupplier;
 use App\Models\PurchaseType;
 
 use App\DataTables\PurchaseOrderDataTable;
+use App\DataTables\PurchaseOrderProductDataTable;
 
 class PurchaseOrderController extends Controller
 {
@@ -38,7 +46,10 @@ class PurchaseOrderController extends Controller
         "product_list" => array(),
         "gst_list" => array(),
         "currency_list" => array(),
-        "purchase_type_list" => array()
+        "purchase_type_list" => array(),
+        "supplier_lists" => array(),
+        "pr_lists" => array(),
+        "warehouse_lists" => array(),
     );
     
     public function poSelectionList()
@@ -56,6 +67,9 @@ class PurchaseOrderController extends Controller
         $this->selectionList["gst_list"] = app("App\Http\Controllers\TaxController")->selectList();
         $this->selectionList["currency_list"] = app("App\Http\Controllers\CurrencyController")->selectList();
         $this->selectionList["purchase_type_list"] = app("App\Http\Controllers\Purchase\PurchaseRequestController")->purchaseTypeselectList();
+        $this->selectionList["supplier_lists"] = app("App\Http\Controllers\SupplierController")->selectList();
+        $this->selectionList["pr_lists"] = app("App\Http\Controllers\Purchase\PurchaseRequestController")->selectList();
+        $this->selectionList["warehouse_lists"] = app("App\Http\Controllers\WarehouseController")->selectList();
     }
 
     public function index(PurchaseOrderDataTable $datatable)
@@ -237,25 +251,146 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(PurchaseOrderProductDataTable $datatable, $id)
     {
 
-        return "SHOW";
+        \View::share("name_form", "View");
+
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+        if ($role->hasPermissionTo('purchases-order-index')) {
+
+            $po = PurchaseOrder::where("po_id", $id)->where("is_active", 1)->first();
+
+            if(empty($po)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            $this->poSelectionList();
+
+            $this->selectionList["po"] = $po;
+            $this->selectionList["id"] = $id;
+
+            return $datatable->with("id", $id)->render('purchase_order.edit', $this->selectionList);
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
 
     }
 
-    public function edit($id)
+    public function edit(PurchaseOrderProductDataTable $datatable, $id)
     {
-        return "EDIT";
+
+        \View::share("name_form", "Edit");
+
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+        if ($role->hasPermissionTo('purchases-order-edit')) {
+
+            $po = PurchaseOrder::where("po_id", $id)->where("is_active", 1)->first();
+
+            if(empty($po)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            $this->poSelectionList();
+
+            $this->selectionList["po"] = $po;
+            $this->selectionList["id"] = $id;
+
+            return $datatable->with("id", $id)->render('purchase_order.edit', $this->selectionList);
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function update(Request $request, $id)
     {
-        return "UPDATE";
+        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
+
+        if ($role->hasPermissionTo('purchases-order-edit')) {
+
+            $po = PurchaseOrder::where("po_id", $id)->where("is_active", 1)->first();
+
+            if(empty($po)){
+
+                \Session::flash('not_permitted', 'The data not found.');
+                return redirect()->back();
+            }
+
+            if($request->has("approve_po")){
+                
+                $po->is_approve   = 1;
+                $po->approve_by   = Auth::user()->id;
+                $po->approve_date   = now();
+                $po->updated_by       = Auth::user()->id;
+
+                $po->save();
+
+                \Session::flash('message', 'PO Approved successfully');  
+                return redirect(route('po.show', $po->po_id));
+            }
+
+            $po->po_date = $request->po_date;
+            $po->po_remark = $request->po_remarks_to_supplier;
+            $po->updated_by       = Auth::user()->id;
+
+            $po->save();
+
+
+            \Session::flash('message', 'Product updated successfully');  
+            return redirect()->back();
+        }
+
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function destroy($id)
     {
         return "DESTROY";
+    }
+
+    //find product by Id
+    public function getProductbyId($id)
+    {
+
+        $poProd = PurchaseOrderProduct::leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseOrderProduct::getTableName().".product_id") 
+                                        ->leftjoin(Category::getTableName()." as category", "category.id", "prod.product_category")
+                                        ->leftjoin(Brand::getTableName()." as brand", "brand.id", "prod.product_brand")
+                                        ->leftjoin(Unit::getTableName()." as pUnit", "pUnit.id", PurchaseOrderProduct::getTableName().".product_purchase_unit")
+                                        ->leftjoin(MasterProductSupplier::getTableName()." as suppProd", "suppProd.product_supplier_id", PurchaseOrderProduct::getTableName().".supplier_moq_id")
+                                        ->leftjoin(Supplier::getTableName()." as supp", "supp.id", PurchaseOrderProduct::getTableName().".supplier_id")
+                                        ->select(
+                                                   PurchaseOrderProduct::getTableName().".po_product_id" ,
+                                                   PurchaseOrderProduct::getTableName().".product_qty" ,
+                                                   PurchaseOrderProduct::getTableName().".product_price" ,
+                                                   PurchaseOrderProduct::getTableName().".supplier_id" ,
+                                                   PurchaseOrderProduct::getTableName().".product_gst" ,
+                                                   PurchaseOrderProduct::getTableName().".product_currency" ,
+                                                   "prod.product_id",
+                                                   "prod.product_name",
+                                                   "prod.product_sku",
+                                                   "prod.product_upc",
+                                                   "category.id as category_id",
+                                                   "category.name as category_name",
+                                                   "brand.id as brand_id",
+                                                   "brand.title as brand_name",
+                                                   "pUnit.unit_code as prchsunit",
+                                                   "pUnit.id as prchsunitId",
+                                                   "suppProd.product_supplier_id",
+                                                   "suppProd.supplier_moq",
+                                                   "supp.lead_time"
+                                        )
+                                        ->where("po_product_id", $id)
+                                        ->first();
+
+        if(!empty($poProd)){
+            $res = $poProd->toArray();
+        }
+
+        return response()->json($poProd);
     }
 }
