@@ -439,13 +439,14 @@ class PurchaseOrderController extends Controller
 
         //qty check
 
-        $sumWarehouse = $pWarehouse->where("is_active", 1)->sum("warehouse_qty");
+        $sumWarehouse =  PurchaseOrderProductWarehouse::where("po_product_id", $request->po_product_id)
+                        ->where("is_active", 1)->sum("warehouse_qty");
 
         $qtyTotal = $request->qty + ($sumWarehouse - $pWarehouse->warehouse_qty);
 
         if ($qtyTotal > $poProd->product_qty) {
 
-            return response()->json("Failed :: The amount cannot be more than the purchase order qty.");
+             return response()->json("Failed :: The amount cannot be more than the purchase order qty.");
         }
         
 
