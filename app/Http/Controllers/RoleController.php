@@ -234,6 +234,47 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('purchases-order-delete');
 
+        /////////////////////////////////////////////////////////////////////////GRN
+
+        if($request->has('grn-index')){
+            $permission = Permission::firstOrCreate(['name' => 'grn-index']);
+            if(!$role->hasPermissionTo('grn-index')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('grn-index');
+
+        if($request->has('grn-add')){
+            $permission = Permission::firstOrCreate(['name' => 'grn-add']);
+            if(!$role->hasPermissionTo('grn-add')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('grn-add');
+
+        if($request->has('grn-edit')){
+            $permission = Permission::firstOrCreate(['name' => 'grn-edit']);
+            if(!$role->hasPermissionTo('grn-edit')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('grn-edit');
+
+        if($request->has('grn-delete')){
+            $permission = Permission::firstOrCreate(['name' => 'grn-delete']);
+            if(!$role->hasPermissionTo('grn-delete')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('grn-delete');
+
+        ////////////////////////////////////////////////////////////////////GRN
+
+
         if($request->has('sales-index')){
             $permission = Permission::firstOrCreate(['name' => 'sales-index']);
             if(!$role->hasPermissionTo('sales-index')){

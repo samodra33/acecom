@@ -218,11 +218,38 @@
             </li>
             @endif
 
+            
+            <?php
+                //view
+
+                $index_grn_permission = DB::table('permissions')->where('name', 'grn-index')->first();
+                $index_grn_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_grn_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+
+
+                //add
+
+                $add_grn_permission = DB::table('permissions')->where('name', 'grn-add')->first();
+                $add_grn_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $add_grn_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+            ?>
+
+            @if($index_grn_permission_active || $add_grn_permission_active)
             <li><a href="#grn" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Good Receive Note')}}</span></a>
             <ul id="grn" class="collapse list-unstyled ">
-                <li id="grn-list-menu"><a href="">{{trans('file.GRN List')}}</a></li>
-                <li id="grn-create-menu"><a href="">{{trans('file.create GRN')}}</a></li>
+                @if($index_grn_permission_active)
+                <li id="grn-list-menu"><a href="{{route('grn.index')}}">{{trans('file.GRN List')}}</a></li>
+                @endif
+
+                @if($add_grn_permission_active)
+                <li id="grn-create-menu"><a href="{{route('grn.create')}}">{{trans('file.create GRN')}}</a></li>
+                @endif
             </ul>
+            @endif
 
             <?php
 

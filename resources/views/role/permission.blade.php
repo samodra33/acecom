@@ -194,6 +194,58 @@
 						        </tr>
 
 						        <tr>
+						            <td>{{trans('file.Good Receive Note')}}</td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-index", $all_permission))
+								                <input type="checkbox" value="1" id="grn-index" name="grn-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-index" name="grn-index">
+								                @endif
+								                <label for="grn-index"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-add", $all_permission))
+								                <input type="checkbox" value="1" id="grn-add" name="grn-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-add" name="grn-add">
+								                @endif
+								                <label for="grn-add"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-edit", $all_permission))
+								                <input type="checkbox" value="1" id="grn-edit" name="grn-edit" checked />
+								                @else
+								                <input type="checkbox" value="1" id="grn-edit" name="grn-edit">
+								                @endif
+								                <label for="grn-edit"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-delete", $all_permission))
+								                <input type="checkbox" value="1" id="grn-delete" name="grn-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-delete" name="grn-delete">
+								                @endif
+								                <label for="grn-delete"></label>
+							            	</div>
+						            	</div>
+						            </td>
+						        </tr>
+
+						        <tr>
 						            <td>{{trans('file.Sale')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
