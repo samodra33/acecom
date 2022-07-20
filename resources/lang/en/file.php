@@ -672,6 +672,7 @@ return [
 	"Outlet name" => "Outlet Name",
 	"HQ Warehouse" => "HQ Warehouse",
 	"type" => "Type",
+	"Stock List" => "Stock List",
 
 ];
 ?>

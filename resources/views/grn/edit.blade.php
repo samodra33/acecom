@@ -16,8 +16,9 @@
                     <div class="card-body">
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
 
-                        {!! Form::open(['route' => 'grn.store', 'method' => 'post', 'files' => true, 'id' => 'grn-form', "autocomplete"=>"off"]) !!}
+                        {!! Form::model($grn, ['route' => ['grn.update', $grn->grn_id] , 'method' => 'patch', 'files' => true, 'id' => 'grn-form', "autocomplete"=>"off"]) !!}
 
+                        {{ Form::hidden("grn_id", isset($grn->grn_id)?$grn->grn_id:null ) }}
                         <div class="row">
                         {{-- LEFT FIELD --}}
                         @include('grn.field_left')
@@ -31,7 +32,20 @@
                         <div id="hidden_product_grn"></div>
 
                         <div class="mt-3 col-md-12">
+
+                            <a href="{{ route('grn.index') }}" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary" id="btn_save">Save</button>
+                            
+                            @if(isset($grn->is_approve))
+                            
+                            @if($grn->is_approve != 1)
+
+                            <button type="submit" class="btn btn-warning" name="approve_grn" id="approve_grn" value="confirm" onclick="if (confirm('Are you sure to approve this GRN ?')) commentDelete(1); return false">Approve</button>
+
+                            @endif
+
+                            @endif
+
                         </div>
                         {!! Form::close() !!}
                     </div>
@@ -50,28 +64,16 @@
                     <div class="card-body">
                         <div class="col-md-12">
                             <div class="form-group">
+                                @if(!request()->route()->named("grn.show"))
+                                @if($grn->is_approve != 1)
                                 <a href="#" data-toggle="modal" data-target="#add_pr_product" class="btn btn-primary"><i class="dripicons-plus"></i> {{__('file.add_product')}}</a>
+                                @endif
+                                @endif
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover" id="add-product-table">
-                                    <thead>
-                                        <tr>
-                                            <th>{{trans('file.Action')}}</th>
-                                            <th>{{trans('file.Product SKU')}}</th>
-                                            <th>{{trans('file.Product UPC')}}</th>
-                                            <th>{{trans('file.Product Name')}}</th>
-                                            <th>{{trans('file.Brand')}}</th>
-                                            <th>{{trans('file.Supplier')}}</th>
-                                            <th>{{trans('file.Warehouse')}}</th>
-                                            <th>{{trans('file.Qty')}}</th>
-                                            <th>{{trans('file.Unit')}}</th>
-                                            <th>{{trans('file.Price')}}</th>
-                                        </tr>
-                                    </thead>
-
-                                </table>
+                                @include("global.datatable")
                             </div>
                         </div>
                     </div>
@@ -103,9 +105,6 @@
       $("input[name='grn_date']").val(e.format("yyyy-mm-dd"));
     });
 
-    //table
-    window.add_product_table = $('#add-product-table').DataTable();
-
     //validator
 
     jQuery.validator.setDefaults({
@@ -121,6 +120,19 @@
             $(element).closest('div.form-group').find('.validation-msg').html('');
         }
     });
+
+    //disable
+
+    @if($grn->is_approve == 1 || isset($read_only))
+    $('#btn_save').remove();
+    $('#btn_save_edit_product').remove();
+    $('#add_product_button').remove();
+    $('#approve_grn').remove();
+    $('#add_product').remove();
+    $('input').attr("readOnly", true);
+    $('select').attr("disabled", "disabled");
+    $('textarea').attr("disabled", "disabled");
+    @endif
 
 </script>
 

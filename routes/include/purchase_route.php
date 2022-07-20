@@ -15,6 +15,9 @@ Route::GET('prProd/service/find-product-id/{id}', 'Purchase\PurchaseRequestContr
 //Purchase Order
 Route::resource('po', 'Purchase\PurchaseOrderController');
 
+Route::GET('po/service/find-po-by-warehouse/{id}', 'Purchase\PurchaseOrderController@getPobyWarehouse')
+        ->name('po.service.find_po_by_warehouse');
+
 //PO Product
 Route::delete('poProd/destroyprprod/{id}', 'Purchase\PurchaseOrderController@destroyPoProduct')
         ->name("poProd.destroyprprod");
@@ -29,3 +32,5 @@ Route::PATCH('poProd/service/updateproductwarehouse', 'Purchase\PurchaseOrderCon
         ->name('poProd.service.updateproductwarehouse');
 Route::delete('poProd/destroypowarehouse/{id}', 'Purchase\PurchaseOrderController@destroyPoWarehouse')
         ->name("poProd.destroypowarehouse");
+Route::GET('poProd/service/add-poProd-create-ajax', 'Purchase\PurchaseOrderController@getAddPoProduct')
+        ->name('poProd.service.add_poProd_create_ajax');

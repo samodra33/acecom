@@ -18,7 +18,7 @@
 			<label class="control-label">Remark</label>
 		</div>
 		<div class="col-md-8">
-			{{ Form::textarea('grn_remarks', $grn->grn_remarks ?? null, array("class"=>"form-control", "placeholder"=>"Remarks", "rows"=>"5")) }}
+			{{ Form::textarea('grn_remark', $grn->grn_remark ?? null, array("class"=>"form-control", "placeholder"=>"Remarks", "rows"=>"5")) }}
 		</div>
 	</div>
 	

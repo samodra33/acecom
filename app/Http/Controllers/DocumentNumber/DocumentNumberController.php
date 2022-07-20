@@ -38,6 +38,12 @@ class DocumentNumberController extends Controller
             return array();
         }
 
+        // Check for reset by month
+        $checkRenewSequence = $this->renewSequence($getDocumentNumberSequence->sequence_id);
+        if(isset($checkRenewSequence->sequence_id)){
+                $getDocumentNumberSequence = $checkRenewSequence;
+        }
+
         $sequenceID = $getDocumentNumberSequence->sequence_id;
         $prefix = $getDocumentNumber->doc_no_value;
         $doc = $getDocumentNumber->doc_no_type;
@@ -96,6 +102,34 @@ class DocumentNumberController extends Controller
             return $getDocumentNumberSequenceUpdate;
         }
         return array();
+    }
+
+    public function renewSequence($sequenceId)
+    {
+
+        $restartSequence = 0;
+
+        $getDocumentNumberSequence = DocumentNumberSequence::find($sequenceId);
+        if(empty($getDocumentNumberSequence)){
+            return array();
+        }
+        $strSequenceLastMonth = date("Y-m", strtotime($getDocumentNumberSequence->sequence_last_update_dt));
+        $strCurrentMonth = date("Y-m", strtotime(date("Y-m-d")));
+
+        if($strSequenceLastMonth != $strCurrentMonth){
+            $lastSequenceValue = $getDocumentNumberSequence->sequence_value;
+            $getDocumentNumberSequence->sequence_value = str_pad($restartSequence, 5, "0", STR_PAD_LEFT);
+            $getDocumentNumberSequence->sequence_last_update_by = 0;
+            $getDocumentNumberSequence->sequence_last_update_dt = date("Y-m-d");
+            $getDocumentNumberSequence->sequence_last_update_timestamp = now();
+            $getDocumentNumberSequence->save();
+
+            return $this->isSequenceUpdated($sequenceId, $lastSequenceValue);
+        }
+
+        return array(
+            "renew_sequence" => "updated"
+        );
     }
 
 }

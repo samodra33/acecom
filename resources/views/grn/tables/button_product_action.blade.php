@@ -4,7 +4,7 @@ $btn = 'primary';
 $btn_fa = 'pencil';
 
 $showDelButton = true;
-if ($is_approve == 1 || request()->route()->getName() == 'pr.show') {
+if ($is_approve == 1 || request()->route()->getName() == 'grn.show') {
 
 	$btn = 'warning';
 	$btn_fa = 'eye';
@@ -15,7 +15,7 @@ if ($is_approve == 1 || request()->route()->getName() == 'pr.show') {
 $role = DB::table('roles')->find(Auth::user()->role_id);
 
 //edit role
-$edit_permission = DB::table('permissions')->where('name', 'purchases-request-edit')->first();
+$edit_permission = DB::table('permissions')->where('name', 'grn-edit')->first();
 $edit_permission_active = DB::table('role_has_permissions')->where([
 	['permission_id', $edit_permission->id],
 	['role_id', $role->id]
@@ -23,7 +23,7 @@ $edit_permission_active = DB::table('role_has_permissions')->where([
 
 
 //delete role
-$delete_permission = DB::table('permissions')->where('name', 'purchases-request-delete')->first();
+$delete_permission = DB::table('permissions')->where('name', 'grn-delete')->first();
 $delete_permission_active = DB::table('role_has_permissions')->where([
 	['permission_id', $delete_permission->id],
 	['role_id', $role->id]
@@ -31,10 +31,10 @@ $delete_permission_active = DB::table('role_has_permissions')->where([
 
 ?>
 
-{!! Form::open(['route' => ['prProd.destroyprprod', $pr_product_id], 'method' => 'delete']) !!}
+{!! Form::open(['route' => ['grnProd.destroyprprod', $grn_product_id], 'method' => 'delete']) !!}
 <div class='btn-group'>
 	
-	<a href="#" class='btn btn-{{$btn}} btn-sm' data-toggle="modal" data-target="#edit_product" onclick="getProduct( {{ $pr_product_id }} )">
+	<a href="#" class='btn btn-{{$btn}} btn-sm' data-toggle="modal" data-target="#edit_product" onclick="getProduct( {{ $grn_product_id }} )">
 		<i class="fa fa-{{$btn_fa}} fa-fw"></i>
 	</a>
 

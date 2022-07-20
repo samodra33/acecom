@@ -355,8 +355,8 @@ class PurchaseOrderController extends Controller
         return "DESTROY";
     }
 
-    //find product by Id
-    public function getProductbyId($id)
+    //find po product by Id
+    public function getProductbyId($id, $is_not_ajax=null)
     {
 
         $poProd = PurchaseOrderProduct::leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseOrderProduct::getTableName().".product_id") 
@@ -389,8 +389,9 @@ class PurchaseOrderController extends Controller
                                         ->where("po_product_id", $id)
                                         ->first();
 
-        if(!empty($poProd)){
-            $res = $poProd->toArray();
+        if($is_not_ajax==1){
+            
+            return $poProd;
         }
 
         return response()->json($poProd);
@@ -462,6 +463,32 @@ class PurchaseOrderController extends Controller
 
     }
 
+    public function updatePoWarehouseStatus($data)
+    {
+
+        $statusId = 1;
+
+        $pWarehouse = PurchaseOrderProductWarehouse::where("po_warehouse_id", $data["po_warehouse_id"])->first();
+        $recievedQty = app("App\Http\Controllers\grn\GrnController")->receivedQtyByPoWarehouse($data["po_warehouse_id"], 1);
+
+        if ($recievedQty < $pWarehouse->warehouse_qty) {
+            $statusId = 2;
+        }
+
+        if ($recievedQty >= $pWarehouse->warehouse_qty) {
+            $statusId = 3;
+        }
+
+        $pWarehouse->status = $statusId;
+
+        $pWarehouse->updated_by       = Auth::user()->id;
+
+        $pWarehouse->save();
+
+        return 1;
+
+    }
+
     public function destroyPoWarehouse($id)
     {
 
@@ -476,4 +503,143 @@ class PurchaseOrderController extends Controller
         return response()->json("Warehouse successfully Deleted.");
 
     }
+
+    //find po by warehouse
+    public function getPobyWarehouse(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("warehouse_id")){
+            return response()->json($res, 400);
+        }
+
+        $poData = PurchaseOrderProduct::join(PurchaseOrderProductWarehouse::getTableName()." as poWarehouse", "poWarehouse.po_product_id", PurchaseOrderProduct::getTableName().".po_product_id")
+
+                                    ->join(PurchaseOrder::getTableName()." as po", "po.po_id", PurchaseOrderProduct::getTableName().".po_id")
+
+                                    ->where(PurchaseOrderProduct::getTableName().".is_active", 1)
+                                    ->where("poWarehouse.is_active", 1)
+                                    ->where("po.is_approve", 1)
+                                    ->where("po.is_active", 1);
+
+        if ($request->warehouse_id != 0) {
+           
+           $poData = $poData->where("poWarehouse.warehouse_id", $request->warehouse_id);
+        }
+
+        $poData = $poData->select("po.po_id", "po.po_no")
+                        ->pluck("po.po_no","po.po_id")
+                        ->all();
+
+        return response()->json($poData);
+    }
+
+    //find po warehouse product by po warehouse Id
+    public function getProductWarehousebyPoWarehouseId(Request $request, $id, $is_not_ajax=null)
+    {
+
+        $poProd = PurchaseOrderProduct::join(PurchaseOrderProductWarehouse::getTableName()." as poWarehouse", "poWarehouse.po_product_id", PurchaseOrderProduct::getTableName().".po_product_id")
+
+                                        ->leftjoin(Warehouse::getTableName()." as warehouse", "warehouse.id", "poWarehouse.warehouse_id")
+                                        ->leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseOrderProduct::getTableName().".product_id") 
+                                        ->leftjoin(Category::getTableName()." as category", "category.id", "prod.product_category")
+                                        ->leftjoin(Brand::getTableName()." as brand", "brand.id", "prod.product_brand")
+                                        ->leftjoin(Unit::getTableName()." as pUnit", "pUnit.id", PurchaseOrderProduct::getTableName().".product_purchase_unit")
+                                        ->leftjoin(MasterProductSupplier::getTableName()." as suppProd", "suppProd.product_supplier_id", PurchaseOrderProduct::getTableName().".supplier_moq_id")
+                                        ->leftjoin(Supplier::getTableName()." as supp", "supp.id", PurchaseOrderProduct::getTableName().".supplier_id")
+                                        ->select(
+                                                   PurchaseOrderProduct::getTableName().".po_product_id" ,
+                                                   PurchaseOrderProduct::getTableName().".po_id" ,
+                                                   PurchaseOrderProduct::getTableName().".product_qty" ,
+                                                   PurchaseOrderProduct::getTableName().".product_price" ,
+                                                   PurchaseOrderProduct::getTableName().".supplier_id" ,
+                                                   PurchaseOrderProduct::getTableName().".product_gst" ,
+                                                   PurchaseOrderProduct::getTableName().".product_currency" ,
+                                                   "prod.product_id",
+                                                   "prod.product_name",
+                                                   "prod.product_sku",
+                                                   "prod.product_upc",
+                                                   "category.id as category_id",
+                                                   "category.name as category_name",
+                                                   "brand.id as brand_id",
+                                                   "brand.title as brand_name",
+                                                   "pUnit.unit_code as prchsunit",
+                                                   "pUnit.id as prchsunitId",
+                                                   "suppProd.product_supplier_id",
+                                                   "suppProd.supplier_moq",
+                                                   "supp.lead_time",
+                                                   "supp.id as supplier_id",
+                                                   "supp.name as supplier_name",
+                                                   "poWarehouse.po_warehouse_id",
+                                                   "poWarehouse.warehouse_qty",
+                                                   "poWarehouse.warehouse_id",
+                                                   "warehouse.name as warehouse_name"
+                                        )
+                                        ->where("poWarehouse.po_warehouse_id", $id)
+                                        ->first();
+
+        if($is_not_ajax==1){
+            
+            return $poProd;
+        }
+
+        return response()->json($poProd);
+    }
+
+    public function getAddPoProduct(Request $request)
+    {
+        $toRowData = [];
+
+        foreach ($request->products as $key => $value) {
+
+            $qty = $request->qty[$key] ?? null;
+
+            //convert to Illuminate Request
+            $prodRequest = new \Illuminate\Http\Request();
+            $prodRequest->setMethod('POST');
+            $prodRequest->request->add(['product_id' => $value]);
+
+            $findProduct = $this->getProductWarehousebyPoWarehouseId($prodRequest, $value, 1);
+
+            if($findProduct->count()<=0)
+            {
+
+                return response()->json("Supplier Not Found, set Default Supplier First", 400);
+            }
+
+            if($findProduct->count()>0)
+            {
+
+                $receivedQty = app("App\Http\Controllers\Grn\GrnController")->receivedQtyByPoWarehouse($value, 1);
+                $unreceivedQty = $findProduct->warehouse_qty - $receivedQty;
+
+                $toRowData[] = array(
+                    "po_warehouse_id" => $value,
+                    "qty" => $qty,
+                    "unreceivedQty" => $unreceivedQty,
+                    "po_id"   => $findProduct->po_id,
+                    "po_product_id"   => $findProduct->po_product_id,
+                    "product_price"   => $findProduct->product_price,
+                    "product_id"   => $findProduct->product_id,
+                    "product_name"   => $findProduct->product_name,
+                    "product_sku"   => $findProduct->product_sku,
+                    "product_upc"   => $findProduct->product_upc,
+                    "category_name"   => $findProduct->category_name,
+                    "brand_name"   => $findProduct->brand_name,
+                    "prchsunitId"   => $findProduct->prchsunitId,
+                    "prchsunit"   => $findProduct->prchsunit,
+                    "supplier_id"   => $findProduct->supplier_id,
+                    "supplier_name"   => $findProduct->supplier_name,
+                    "warehouse_name"   => $findProduct->warehouse_name,
+                    "warehouse_id"   => $findProduct->warehouse_id,
+
+                );
+            }
+        }
+
+        return response()->json($toRowData);
+    }
+
+
 }

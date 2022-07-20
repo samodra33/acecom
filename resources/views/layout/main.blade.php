@@ -145,6 +145,12 @@
                         ['permission_id', $supplier_index_permission->id],
                         ['role_id', $role->id]
                     ])->first();
+
+                $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
+                $supplier_add_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $supplier_add_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
             ?>
 
             @if($supplier_index_permission_active)
@@ -153,17 +159,12 @@
 
                 <ul id="supplier" class="collapse list-unstyled ">
                     @if($supplier_index_permission_active)
-                    <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
-                    <?php
-                    $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
-                    $supplier_add_permission_active = DB::table('role_has_permissions')->where([
-                        ['permission_id', $supplier_add_permission->id],
-                        ['role_id', $role->id]
-                    ])->first();
-                    ?>
+
                     @if($supplier_add_permission_active)
                     <li id="supplier-create-menu"><a href="{{route('supplier.create')}}">{{trans('file.Add Supplier')}}</a></li>
                     @endif
+
+                    <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
                     @endif
                 </ul>
 
@@ -241,13 +242,15 @@
             @if($index_grn_permission_active || $add_grn_permission_active)
             <li><a href="#grn" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Good Receive Note')}}</span></a>
             <ul id="grn" class="collapse list-unstyled ">
-                @if($index_grn_permission_active)
-                <li id="grn-list-menu"><a href="{{route('grn.index')}}">{{trans('file.GRN List')}}</a></li>
-                @endif
 
                 @if($add_grn_permission_active)
                 <li id="grn-create-menu"><a href="{{route('grn.create')}}">{{trans('file.create GRN')}}</a></li>
                 @endif
+
+                @if($index_grn_permission_active)
+                <li id="grn-list-menu"><a href="{{route('grn.index')}}">{{trans('file.GRN List')}}</a></li>
+                @endif
+                
             </ul>
             @endif
 
@@ -269,6 +272,10 @@
             @if($stock_count_active || $adjustment_active)
             <li><a href="#inventory" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.Inventory')}}</span><span></a>
             <ul id="inventory" class="collapse list-unstyled ">
+
+                <li id="stock-list-menu"><a href="{{route('stock.index')}}">{{trans('file.Stock List')}}</a></li>
+
+                <!--
                 @if($adjustment_active)
                 <li id="adjustment-list-menu"><a href="{{route('qty_adjustment.index')}}">{{trans('file.Adjustment List')}}</a></li>
                 <li id="adjustment-create-menu"><a href="{{route('qty_adjustment.create')}}">{{trans('file.Add Adjustment')}}</a></li>
@@ -276,6 +283,8 @@
                 @if($stock_count_active)
                 <li id="stock-count-menu"><a href="{{route('stock-count.index')}}">{{trans('file.Stock Count')}}</a></li>
                 @endif
+                -->
+
             </ul>
             </li>
             @endif
@@ -287,6 +296,8 @@
                     ['role_id', $role->id]
                 ])->first();
             ?>
+
+            <!--
             @if($index_permission_active)
             <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
             <ul id="transfer" class="collapse list-unstyled ">
@@ -305,6 +316,8 @@
             </ul>
             </li>
             @endif
+
+            -->
 
             <?php
             $sale_index_permission = DB::table('permissions')->where('name', 'sales-index')->first();

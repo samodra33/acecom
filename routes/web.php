@@ -33,6 +33,8 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
     require ('include/purchase_route.php');
     //grn Module
     require ('include/grn_route.php');
+    //stock Module
+    require ('include/stock_route.php');
 
     // for dev purpose only
     require ('salespro/pajar_route.php');

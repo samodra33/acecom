@@ -488,7 +488,7 @@ class PurchaseRequestController extends Controller
     }
 
     //find product by Id
-    public function getProductbyId($id)
+    public function getProductbyId($id, $is_not_ajax=null)
     {
 
         $prProd = PurchaseRequestProduct::leftjoin(MasterProduct::getTableName()." as prod", "prod.product_id", PurchaseRequestProduct::getTableName().".product_id") 
@@ -521,8 +521,8 @@ class PurchaseRequestController extends Controller
                                         ->where("pr_product_id", $id)
                                         ->first();
 
-        if(!empty($prProd)){
-            $res = $prProd->toArray();
+        if($is_not_ajax==1){
+            return $prProd;
         }
 
         return response()->json($prProd);
