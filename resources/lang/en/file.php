@@ -674,6 +674,7 @@ return [
 	"type" => "Type",
 	"Stock List" => "Stock List",
 	'Serial Number Management' => 'Serial Number Management',
+	'Serial Number List' => 'Serial Number List',
 
 ];
 ?>
