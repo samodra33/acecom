@@ -31,6 +31,7 @@ use App\Unit;
 use App\GeneralSetting;
 
 use App\DataTables\StockListDataTable;
+use App\DataTables\SerialNumberListDataTable;
 
 class StockController extends Controller
 {
@@ -45,6 +46,12 @@ class StockController extends Controller
     public function index(StockListDataTable $datatable)
     {
         return $datatable->render("stock_management.index");
+    }
+
+    public function indexSerialNumber(SerialNumberListDataTable $datatable)
+    {
+        return $datatable->render("serial_number.index");
+
     }
 
     

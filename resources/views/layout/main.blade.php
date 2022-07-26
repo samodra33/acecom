@@ -274,6 +274,7 @@
             <ul id="inventory" class="collapse list-unstyled ">
 
                 <li id="stock-list-menu"><a href="{{route('stock.index')}}">{{trans('file.Stock List')}}</a></li>
+                <li id="stock-list-menu"><a href="{{route('stock.index.serial_number')}}">{{trans('file.Serial Number Management')}}</a></li>
 
                 <!--
                 @if($adjustment_active)

@@ -673,6 +673,7 @@ return [
 	"HQ Warehouse" => "HQ Warehouse",
 	"type" => "Type",
 	"Stock List" => "Stock List",
+	'Serial Number Management' => 'Serial Number Management',
 
 ];
 ?>
