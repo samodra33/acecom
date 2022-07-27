@@ -62,6 +62,8 @@ class GrnProductDataTable extends DataTable
                                 "prod.product_name",
                                 "prod.product_sku",
                                 "prod.product_upc",
+                                "prod.is_sn",
+                                "prod.sn_input_type",
                                 "brand.id as brand_id",
                                 "brand.title as brand_name",
                                 "supp.name as supplier_name",

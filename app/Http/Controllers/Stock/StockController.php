@@ -54,6 +54,12 @@ class StockController extends Controller
 
     }
 
+    public function downloadImporSnFormatCsv() {
+        $file = 'public/serial_number_import/SN-Import-Example.csv';
+        $name = basename($file);
+        return response()->download($file, $name);
+    }
+
     
     public function stockIn($datas, $type)
     {
@@ -163,4 +169,112 @@ class StockController extends Controller
         }
 
     }//sn
+
+
+    public function importSerialNumber(Request $request)
+    {
+        $type = $request->typeDoc;
+        $type_reff = $request->type_reff;
+        $snData = array();
+        $data = '';
+
+        /////////////////////////////////////get stored SN Qty
+
+        $qtyProd = GrnProduct::where("grn_product_id", $type_reff)
+                            ->select("product_qty")
+                            ->first();
+
+        $qtySN = SerialNumber::where("type", $type)
+                            ->where("type_reff", $type_reff)
+                            ->where("is_active", 1)
+                            ->count();
+
+        /////////////////////////////////////get file
+        $upload = $request->file('fileupload');
+        $ext = pathinfo($upload->getClientOriginalName(), PATHINFO_EXTENSION);
+
+        if( $ext != 'csv' )
+        {
+           return 'Please upload a CSV file';
+        }
+
+        $filename =  $upload->getClientOriginalName();
+        $filePath = $upload->getRealPath();
+
+        ///////////////////////////////open and read
+
+        $file = fopen($filePath, 'r');
+        $header = fgetcsv($file);
+        $escapedHeader = [];
+
+        /////////////////////////////validate
+
+        foreach ($header as $key => $value) {
+            $lheader = strtolower($value);
+            $escapedItem = preg_replace('/[^a-z]/', '', $lheader);
+            array_push($escapedHeader, $escapedItem);
+        }
+
+        /////////////////////////////looping through othe columns
+
+        while($columns=fgetcsv($file))
+        {
+            if($columns[0] == "")
+                continue;
+            foreach ($columns as $key => $value) {
+                $value=preg_replace('/\D/','',$value);
+            }
+           $data= array_combine($escapedHeader, $columns);
+
+           $snData[] = array(
+                "type" =>  $type,
+                "type_reff" =>  $type_reff,
+                "serial_number" =>  $data["serialnumber"],
+                "status" => 1,
+                "is_active" =>  1,
+                "created_by" =>  Auth::user()->id,
+                "updated_by" =>  Auth::user()->id,
+            );
+        }
+
+        ///////////////////////////////////////check Qty
+
+        $qtyCsv = count($snData);
+
+        $qtyIn = $qtyProd->product_qty;
+
+        $amountSnUnstored =  $qtyIn - $qtySN;
+
+        if ($qtyCsv > $amountSnUnstored) {
+
+            return response()->json("Import Failed, the number of serial numbers does not match the number of stocks");
+        }
+
+        ///////////////////////////////////////store Serial Number
+
+        if (count($snData) > 0) {
+
+            foreach ($snData as $key => $value) {
+
+                try {
+
+                    $serialNumber = SerialNumber::create($snData[$key]);
+
+                } catch (Exception $e) {
+
+                    return response()->json("Import Failed");
+                }
+
+                //endforarch
+            }
+
+            return response()->json("Import Successfully");
+
+            //endif
+        }
+
+        return response()->json("File Empty !!!");
+
+    }//import
+
 }

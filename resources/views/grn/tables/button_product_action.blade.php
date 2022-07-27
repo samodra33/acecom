@@ -4,6 +4,14 @@ $btn = 'primary';
 $btn_fa = 'pencil';
 
 $showDelButton = true;
+$showInputSerialNumber = false;
+
+if ($is_approve == 1 && $is_sn == 1 && $sn_input_type == 1){
+
+	$showInputSerialNumber = true;
+
+}
+
 if ($is_approve == 1 || request()->route()->getName() == 'grn.show') {
 
 	$btn = 'warning';
@@ -33,10 +41,17 @@ $delete_permission_active = DB::table('role_has_permissions')->where([
 
 {!! Form::open(['route' => ['grnProd.destroyprprod', $grn_product_id], 'method' => 'delete']) !!}
 <div class='btn-group'>
-	
+
+@if($showInputSerialNumber)
+	<a href="#" class='btn btn-info btn-sm' data-toggle="modal" data-target="#import_serial_number" onclick="getGrnProductId( {{ $grn_product_id }} )">
+		<i class="fa fa-barcode fa-fw"></i>
+	</a>
+@endif
+
 	<a href="#" class='btn btn-{{$btn}} btn-sm' data-toggle="modal" data-target="#edit_product" onclick="getProduct( {{ $grn_product_id }} )">
 		<i class="fa fa-{{$btn_fa}} fa-fw"></i>
 	</a>
+
 
 @if($delete_permission_active && $showDelButton)
 

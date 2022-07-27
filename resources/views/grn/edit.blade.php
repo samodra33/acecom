@@ -86,6 +86,7 @@
 
 @include('grn.modals.add_grn_product')
 @include('grn.modals.edit_grn_product')
+@include('grn.modals.import_serial_number')
 
 @endsection
 @push('scripts')
