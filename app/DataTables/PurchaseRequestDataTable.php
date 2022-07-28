@@ -60,9 +60,9 @@ class PurchaseRequestDataTable extends DataTable
             return "<ul>".$supplierPrint."</ul>";
         })
 
-        ->addColumn("Created Date", function($query){
+        ->addColumn("PR Date", function($query){
 
-            return date_format($query->created_at,"Y/M/d");
+            return date_format($query->pr_date,"Y/M/d");
 
         })
 
@@ -70,6 +70,43 @@ class PurchaseRequestDataTable extends DataTable
 
             return date_format($query->updated_at,"Y/M/d");
 
+        })
+
+        ->filter(function ($query) {
+
+            if (request()->has('pr_no')) {
+                if(request("pr_no")!=""){
+                    $query->where("pr_no", "LIKE", "%".request('pr_no')."%");
+                }
+            }
+
+            if (request()->has('pr_type')) {
+                if(request("pr_type")!=""){
+                    $query->where("type.type_id", request('pr_type'));
+                }
+            }
+
+            if (request()->has('start_date')) {
+                if(request("start_date")!=""){
+                    $query->where("pr_date", ">=", request('start_date'));
+                }
+            }
+
+            if (request()->has('end_date')) {
+                if(request("end_date")!=""){
+                    $query->where("pr_date", "<=", request('end_date'));
+                }
+            }
+
+            if (request()->has('supp_name')) {
+                if(request("supp_name")!=""){
+                    $query->join(PurchaseRequestProduct::getTableName()." as prProd", "prProd.pr_id", PurchaseRequest::getTableName().".pr_id")
+                          ->join(Supplier::getTableName()." as supp", "supp.id", "prProd.supplier_id")
+                          ->where("supp.name",'like', "%".request('supp_name')."%")
+                          ->orwhere("supp.company_name",'like', "%".request('supp_name')."%")
+                          ->groupBy(PurchaseRequest::getTableName().".pr_id");
+                }
+            }
         })
 
         ->addColumn('action', 'purchase_request.tables.button_action')
@@ -90,12 +127,14 @@ class PurchaseRequestDataTable extends DataTable
                     ->select(
                                 PurchaseRequest::getTableName().".pr_id",
                                 PurchaseRequest::getTableName().".pr_no",
+                                PurchaseRequest::getTableName().".pr_date",
                                 PurchaseRequest::getTableName().".is_approve",
                                 PurchaseRequest::getTableName().".created_by",
                                 PurchaseRequest::getTableName().".created_at",
                                 PurchaseRequest::getTableName().".updated_by",
                                 PurchaseRequest::getTableName().".updated_at",
                                 "apllied.name as Applied By",
+                                "type.type_id",
                                 "type.type_name as type"
 
                      )
@@ -118,7 +157,7 @@ class PurchaseRequestDataTable extends DataTable
                                     'autoWidth' => false, 
                                     'searching' => false  
                                 ])
-                    ->orderBy(6);
+                    ->orderBy(7);
     }
 
     /**
@@ -134,7 +173,7 @@ class PurchaseRequestDataTable extends DataTable
             "pr_no",
             "supplier",
             "type"  => [ "data" => "type", "name" => "type.type_name" ],
-            "Created Date"  => [ "data" => "Created Date", "name" => "created_at" ],
+            "PR Date"  => [ "data" => "PR Date", "name" => "pr_date" ],
             "Applied By" => [ "data" => "Applied By", "name" => "apllied.name" ],
             "Modified Date" => [ "data" => "Modified Date", "name" => "updated_at" ]
         ];
