@@ -11,6 +11,7 @@ use Yajra\DataTables\Services\DataTable;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestProduct;
 use App\Models\PurchaseType;
+use App\Models\MasterProduct;
 use App\Supplier;
 use App\User;
 
@@ -74,6 +75,11 @@ class PurchaseRequestDataTable extends DataTable
 
         ->filter(function ($query) {
 
+            $query->join(PurchaseRequestProduct::getTableName()." as prProd", "prProd.pr_id", PurchaseRequest::getTableName().".pr_id")
+                  ->join(Supplier::getTableName()." as supp", "supp.id", "prProd.supplier_id")
+                  ->join(MasterProduct::getTableName()." as prod", "prod.product_id", "prProd.product_id")
+                  ->where("prProd.is_active", 1);
+
             if (request()->has('pr_no')) {
                 if(request("pr_no")!=""){
                     $query->where("pr_no", "LIKE", "%".request('pr_no')."%");
@@ -100,13 +106,30 @@ class PurchaseRequestDataTable extends DataTable
 
             if (request()->has('supp_name')) {
                 if(request("supp_name")!=""){
-                    $query->join(PurchaseRequestProduct::getTableName()." as prProd", "prProd.pr_id", PurchaseRequest::getTableName().".pr_id")
-                          ->join(Supplier::getTableName()." as supp", "supp.id", "prProd.supplier_id")
-                          ->where("supp.name",'like', "%".request('supp_name')."%")
-                          ->orwhere("supp.company_name",'like', "%".request('supp_name')."%")
-                          ->groupBy(PurchaseRequest::getTableName().".pr_id");
+
+                    $suppName = request('supp_name');
+
+                    $query->where(function($filter) use ($suppName){
+                            $filter->where("supp.name",'like', "%".request('supp_name')."%");
+                            $filter->orwhere("supp.company_name",'like', "%".request('supp_name')."%");
+                          });
+                          
                 }
             }
+
+            if (request()->has('product_name')) {
+                if(request("product_name")!=""){
+                    $query->where("prod.product_name",'like', "%".request('product_name')."%");
+                }
+            }
+
+            if (request()->has('product_sku')) {
+                if(request("product_sku")!=""){
+                    $query->where("prod.product_sku",'like', "%".request('product_sku')."%");
+                }
+            }
+
+            $query->groupBy(PurchaseRequest::getTableName().".pr_id");
         })
 
         ->addColumn('action', 'purchase_request.tables.button_action')

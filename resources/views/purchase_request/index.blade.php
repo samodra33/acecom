@@ -47,7 +47,28 @@
 
               </div>
 
-              <div class="row" style="margin-top:20px;">
+              <div class="row">
+
+                <div class="col-md-4">
+                  <div class="mt-3">
+                    <label class="control-label">Product Name</label>
+                    {{ Form::text("product_name", null, array("class"=>"form-control", "placeholder"=>"Product Name")) }}
+                  </div>
+                </div>
+
+
+                <div class="col-md-4">
+                  <div class="mt-3">
+                    <label class="control-label">Product SKU</label>
+                    {{ Form::text("product_sku", null, array("class"=>"form-control", "placeholder"=>"Product SKU")) }}
+                  </div>
+                </div>
+
+
+              </div>
+
+
+              <div class="row">
 
 
                 <div class="col-md-4">
@@ -163,6 +184,8 @@
         data.pr_no = $("input[name='pr_no']").val();
         data.supp_name = $("input[name='supp_name']").val();
         data.pr_type = $("select[name='pr_type']").val();
+        data.product_name = $("input[name='product_name']").val();
+        data.product_sku = $("input[name='product_sku']").val();
         data.start_date = $("input[name='pr_start_date']").val();
         data.end_date = $("input[name='pr_end_date']").val();
 
