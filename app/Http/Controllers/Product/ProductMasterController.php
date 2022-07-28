@@ -54,14 +54,15 @@ class ProductMasterController extends Controller
     {
 
         $role = Role::find(Auth::user()->role_id);
-        if($role->hasPermissionTo('products-index')){            
+        if($role->hasPermissionTo('products-index')){
+            $this->productSelectionList();            
             $permissions = Role::findByName($role->name)->permissions;
             foreach ($permissions as $permission)
                 $all_permission[] = $permission->name;
             if(empty($all_permission))
                 $all_permission[] = 'dummy text';
 
-            return $datatable->render("ProductMaster.index", compact('all_permission'));
+            return $datatable->render("ProductMaster.index", compact('all_permission'), $this->selectionList);
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');

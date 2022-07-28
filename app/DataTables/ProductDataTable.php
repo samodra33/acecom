@@ -81,6 +81,39 @@ class ProductDataTable extends DataTable
 
         })
 
+        ->filter(function ($query) {
+            if (request()->has('product_name')) {
+                if(request("product_name")!=""){
+                    $query->where("product_name", "LIKE", "%".request('product_name')."%");
+                }
+            }
+
+            if (request()->has('product_sku')) {
+                if(request("product_sku")!=""){
+                    $query->where("product_sku", "LIKE", "%".request('product_sku')."%");
+                }
+            }
+
+            if (request()->has('product_upc')) {
+                if(request("product_upc")!=""){
+                    $query->where("product_upc", "LIKE", "%".request('product_upc')."%");
+                }
+            }
+
+            if (request()->has('brand')) {
+                if(request("brand")!=""){
+                    $query->where("brand.id", request('brand'));
+                }
+            }
+
+            if (request()->has('category')) {
+                if(request("category")!=""){
+                    $query->where("category.id", request('category'));
+                }
+            }
+
+        })
+
         ->addColumn('action', 'ProductMaster.tables.button_action')
         ->rawColumns(["image", "action", "supplier"]);
     }
