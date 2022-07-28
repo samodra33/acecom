@@ -44,10 +44,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.GST')}}</label>
-                                    <input type="number" name="gst_number" class="form-control">
+                                    <label>{{trans('file.GST')}} *</strong> </label>
+                                    <select required name="gst_number" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select GST...">
+                                        @foreach($tax as $datas)
+                                            <option value="{{$datas->id}}">{{$datas->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+                            
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.Email')}} *</label>
@@ -59,6 +64,18 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{trans('file.Currency')}} *</strong> </label>
+                                    <select required name="currency_number" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Currency...">
+                                        @foreach($currency as $datas)
+                                            <option value="{{$datas->id}}">{{$datas->code}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.Phone Number')}} *</label>

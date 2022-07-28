@@ -17,6 +17,11 @@ use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
 use App\Supplier;
+use App\Brand;
+use App\Category;
+use App\Unit;
+use App\Currency;
+use App\Tax;
 
 use App\DataTables\ProductDataTable;
 use App\DataTables\ProductSkuDataTable;
@@ -56,9 +61,6 @@ class ProductMasterController extends Controller
             if(empty($all_permission))
                 $all_permission[] = 'dummy text';
 
-
-            //return view('ProductMaster.index', compact('all_permission'));
-
             return $datatable->render("ProductMaster.index", compact('all_permission'));
         }
         else
@@ -73,7 +75,7 @@ class ProductMasterController extends Controller
     public function create()
     {
         $this->productSelectionList();
-        return view("ProductMaster.create")->with($this->selectionList);;
+        return view("ProductMaster.create")->with($this->selectionList);
     }
 
     /**
@@ -135,6 +137,7 @@ class ProductMasterController extends Controller
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
+        $prod->sn_input_type = $request->sn_input_type ?? 0;
         $prod->created_by = Auth::user()->id;
         $prod->updated_by = Auth::user()->id;
 
@@ -357,6 +360,7 @@ class ProductMasterController extends Controller
         $prod->product_image = $data['image'];
         $prod->product_detail = $request->product_details;
         $prod->is_sn = $request->is_sn ?? 0;
+        $prod->sn_input_type = $request->sn_input_type ?? 0;
         $prod->created_by = Auth::user()->id;
         $prod->updated_by = Auth::user()->id;
 
@@ -411,7 +415,60 @@ class ProductMasterController extends Controller
         return $id;
     }
 
-    //find supplier
+    //getAllProduct
+
+    public function selectList()
+    {
+        return MasterProduct::where('is_active','=', 1)->orderBy('product_sku', 'asc')
+            ->select("product_id", DB::raw("CONCAT(product_sku,' - ',product_name) AS product"))
+            ->pluck('product','product_id'); 
+    }
+
+    //find Product
+    public function getProductDetail(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("product_id")){
+            return response()->json($res, 400);
+        }
+
+        $prod = MasterProduct::leftjoin(Brand::getTableName()." as brand", "brand.id", MasterProduct::getTableName().".product_brand")
+                            ->leftjoin(Category::getTableName()." as category", "category.id", MasterProduct::getTableName().".product_category")
+                            ->leftjoin(Unit::getTableName()." as pUnit", "pUnit.id", MasterProduct::getTableName().".product_purchase_unit")
+                            ->where("product_id", $id)
+                            ->select(
+                                MasterProduct::getTableName().".product_id",
+                                MasterProduct::getTableName().".product_sku",
+                                MasterProduct::getTableName().".product_upc",
+                                MasterProduct::getTableName().".product_name",
+                                MasterProduct::getTableName().".product_suggested_price as suggested_price",
+                                MasterProduct::getTableName().".product_min_price as min_price",
+                                MasterProduct::getTableName().".product_cost as cost",
+                                MasterProduct::getTableName().".product_image",
+                                MasterProduct::getTableName().".is_active",
+                                MasterProduct::getTableName().".sn_input_type",
+                                MasterProduct::getTableName().".is_sn",
+                                MasterProduct::getTableName().".product_detail",
+                                MasterProduct::getTableName().".product_alert_qty",
+                                "brand.title as Brand",
+                                "category.name as Category",
+                                "pUnit.unit_code as prchsunit",
+                                "pUnit.id as prchsunitId"
+
+
+                              )
+                            ->first();
+
+        if(!empty($prod)){
+            $res = $prod->toArray();
+        }
+
+        return response()->json($prod);
+    }
+
+    //find supplier by product_supplier_id
     public function getProductSupplier(Request $request, $id)
     {
 
@@ -421,15 +478,48 @@ class ProductMasterController extends Controller
             return response()->json($res, 400);
         }
 
-        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".product_supplier_id")
+        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+                                    ->leftjoin(Tax::getTableName()." as tax", "tax.id", "supp.gst_number")
+                                    ->leftjoin(Currency::getTableName()." as curr", "curr.id", "supp.currency_number")
                                     ->where("product_supplier_id", $id)
+                                    ->select(
+                                                MasterProductSupplier::getTableName().".product_supplier_id",
+                                                MasterProductSupplier::getTableName().".product_id",
+                                                MasterProductSupplier::getTableName().".supplier_id",
+                                                MasterProductSupplier::getTableName().".supplier_moq",
+                                                MasterProductSupplier::getTableName().".supplier_price",
+                                                "supp.lead_time",
+                                                "supp.gst_number as gst_id",
+                                                "supp.currency_number as currency_id"
+                                    )
                                     ->first();
 
         if(!empty($prodSupp)){
             $res = $prodSupp->toArray();
         }
 
-        return $prodSupp;
+        return response()->json($prodSupp);
+        //return $prodSupp;
+    }
+
+    //find supplier by product
+    public function getListSupplierbyProductJson(Request $request, $id)
+    {
+
+        $res = array();
+
+        if(!$request->has("product_id")){
+            return response()->json($res, 400);
+        }
+
+        $prodSupp = MasterProductSupplier::leftjoin(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+                                    ->where("product_id", $id)
+                                    ->where(MasterProductSupplier::getTableName().".is_active", 1)
+                                    ->select("product_supplier_id", DB::raw("CONCAT(name,' - ',company_name) AS supplier"))
+                                    ->pluck("supplier","product_supplier_id")
+                                    ->all();
+
+        return response()->json($prodSupp);
     }
 
     //update supplier
@@ -471,7 +561,8 @@ class ProductMasterController extends Controller
 
         $suppDb->save();
 
-        return "Added.";
+        return response()->json("Record Added successfully.", 200);
+        //return "Added.";
     }
 
     //get Supplier table

@@ -63,6 +63,8 @@
       <link rel="stylesheet" href="<?php echo asset('vendor/bootstrap/css/bootstrap-rtl.min.css') ?>" type="text/css">
       <link rel="stylesheet" href="<?php echo asset('css/custom-rtl.css') ?>" type="text/css" id="custom-style">
     @endif
+
+      <link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}">
   </head>
 
   <body onload="myFunction()">
@@ -106,12 +108,14 @@
             @if($category_permission_active || brand_permission_active || $index_permission_active)
             <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.product')}}</span><span></a>
             <ul id="product" class="collapse list-unstyled ">
-                @if($category_permission_active)
-                <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
-                @endif
                 @if($brand_permission_active)
                     <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
                 @endif
+
+                @if($category_permission_active)
+                <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
+                @endif
+
                 @if($index_permission_active)
                 <li id="product-list-menu"><a href="{{route('mProduct.index')}}">{{__('file.product_list')}}</a></li>
                 <!--<li id="product-list-menu"><a href="{{route('products.index')}}">old product (not use)</a></li>-->
@@ -123,7 +127,6 @@
                 ])->first();
                 ?>
                 @if($add_permission_active)
-                <li id="product-create-menu"><a href="{{route('mProduct.create')}}">{{trans('file.add_product')}}</a></li>
                 <!--<li id="product-create-menu"><a href="{{route('products.create')}}">old add product (not use)</a></li>-->
                 @endif
                 @endif
@@ -142,6 +145,12 @@
                         ['permission_id', $supplier_index_permission->id],
                         ['role_id', $role->id]
                     ])->first();
+
+                $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
+                $supplier_add_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $supplier_add_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
             ?>
 
             @if($supplier_index_permission_active)
@@ -150,17 +159,12 @@
 
                 <ul id="supplier" class="collapse list-unstyled ">
                     @if($supplier_index_permission_active)
-                    <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
-                    <?php
-                    $supplier_add_permission = DB::table('permissions')->where('name', 'suppliers-add')->first();
-                    $supplier_add_permission_active = DB::table('role_has_permissions')->where([
-                        ['permission_id', $supplier_add_permission->id],
-                        ['role_id', $role->id]
-                    ])->first();
-                    ?>
+
                     @if($supplier_add_permission_active)
                     <li id="supplier-create-menu"><a href="{{route('supplier.create')}}">{{trans('file.Add Supplier')}}</a></li>
                     @endif
+
+                    <li id="supplier-list-menu"><a href="{{route('supplier.index')}}">{{trans('file.Supplier List')}}</a></li>
                     @endif
                 </ul>
 
@@ -169,36 +173,86 @@
 
             
             <?php
-            $index_permission = DB::table('permissions')->where('name', 'purchases-index')->first();
-                $index_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $index_permission->id],
+                //view
+
+                $index_pr_permission = DB::table('permissions')->where('name', 'purchases-request-index')->first();
+                $index_pr_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_pr_permission->id],
                     ['role_id', $role->id]
                 ])->first();
-            ?>
-            @if($index_permission_active)
-            <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Purchase')}}</span></a>
-            <ul id="purchase" class="collapse list-unstyled ">
-                <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('file.Purchase List')}}</a></li>
-                <?php
-                $add_permission = DB::table('permissions')->where('name', 'purchases-add')->first();
+
+
+                $index_po_permission = DB::table('permissions')->where('name', 'purchases-order-index')->first();
+                $index_po_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_po_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+
+                //add
+
+                $add_permission = DB::table('permissions')->where('name', 'purchases-request-add')->first();
                 $add_permission_active = DB::table('role_has_permissions')->where([
                     ['permission_id', $add_permission->id],
                     ['role_id', $role->id]
                 ])->first();
-                ?>
+            ?>
+            @if($index_pr_permission_active || $index_po_permission_active)
+            <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Purchase')}}</span></a>
+            <ul id="purchase" class="collapse list-unstyled ">
+
+                @if($index_pr_permission_active)
+                <li id="purchase-request-menu"><a href="{{route('pr.index')}}">{{trans('file.Purchase Request')}}</a></li>
+                @endif
+
+                @if($index_po_permission_active)
+                <li id="purchase-order-menu"><a href="{{route('po.index')}}">{{trans('file.Purchase Order')}}</a></li>
+                @endif
+
+                <!--
+                <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('file.Purchase List')}}</a></li>
                 @if($add_permission_active)
                 <li id="purchase-create-menu"><a href="{{route('purchases.create')}}">{{trans('file.Add Purchase')}}</a></li>
                 <li id="purchase-import-menu"><a href="{{url('purchases/purchase_by_csv')}}">{{trans('file.Import Purchase By CSV')}}</a></li>
                 @endif
+                -->
             </ul>
             </li>
             @endif
 
+            
+            <?php
+                //view
+
+                $index_grn_permission = DB::table('permissions')->where('name', 'grn-index')->first();
+                $index_grn_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_grn_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+
+
+                //add
+
+                $add_grn_permission = DB::table('permissions')->where('name', 'grn-add')->first();
+                $add_grn_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $add_grn_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+            ?>
+
+            @if($index_grn_permission_active || $add_grn_permission_active)
             <li><a href="#grn" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Good Receive Note')}}</span></a>
             <ul id="grn" class="collapse list-unstyled ">
-                <li id="grn-list-menu"><a href="">{{trans('file.GRN List')}}</a></li>
-                <li id="grn-create-menu"><a href="">{{trans('file.create GRN')}}</a></li>
+
+                @if($add_grn_permission_active)
+                <li id="grn-create-menu"><a href="{{route('grn.create')}}">{{trans('file.create GRN')}}</a></li>
+                @endif
+
+                @if($index_grn_permission_active)
+                <li id="grn-list-menu"><a href="{{route('grn.index')}}">{{trans('file.GRN List')}}</a></li>
+                @endif
+                
             </ul>
+            @endif
 
             <?php
 
@@ -218,6 +272,11 @@
             @if($stock_count_active || $adjustment_active)
             <li><a href="#inventory" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.Inventory')}}</span><span></a>
             <ul id="inventory" class="collapse list-unstyled ">
+
+                <li id="stock-list-menu"><a href="{{route('stock.index')}}">{{trans('file.Stock List')}}</a></li>
+                <li id="stock-list-menu"><a href="{{route('stock.index.serial_number')}}">{{trans('file.Serial Number Management')}}</a></li>
+
+                <!--
                 @if($adjustment_active)
                 <li id="adjustment-list-menu"><a href="{{route('qty_adjustment.index')}}">{{trans('file.Adjustment List')}}</a></li>
                 <li id="adjustment-create-menu"><a href="{{route('qty_adjustment.create')}}">{{trans('file.Add Adjustment')}}</a></li>
@@ -225,9 +284,41 @@
                 @if($stock_count_active)
                 <li id="stock-count-menu"><a href="{{route('stock-count.index')}}">{{trans('file.Stock Count')}}</a></li>
                 @endif
+                -->
+
             </ul>
             </li>
             @endif
+
+            <?php
+            $index_permission = DB::table('permissions')->where('name', 'transfers-index')->first();
+            $index_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $index_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+            ?>
+
+            <!--
+            @if($index_permission_active)
+            <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
+            <ul id="transfer" class="collapse list-unstyled ">
+                <li id="transfer-list-menu"><a href="{{route('transfers.index')}}">{{trans('file.Transfer List')}}</a></li>
+                <?php
+                $add_permission = DB::table('permissions')->where('name', 'transfers-add')->first();
+                $add_permission_active = DB::table('role_has_permissions')->where([
+                    ['permission_id', $add_permission->id],
+                    ['role_id', $role->id]
+                ])->first();
+                ?>
+                @if($add_permission_active)
+                <li id="transfer-create-menu"><a href="{{route('transfers.create')}}">{{trans('file.Add Transfer')}}</a></li>
+                <li id="transfer-import-menu"><a href="{{url('transfers/transfer_by_csv')}}">{{trans('file.Import Transfer By CSV')}}</a></li>
+                @endif
+            </ul>
+            </li>
+            @endif
+
+            -->
 
             <?php
             $sale_index_permission = DB::table('permissions')->where('name', 'sales-index')->first();
@@ -331,31 +422,6 @@
                 ?>
                 @if($add_permission_active)
                 <li id="quotation-create-menu"><a href="{{route('quotations.create')}}">{{trans('file.Add Quotation')}}</a></li>
-                @endif
-            </ul>
-            </li>
-            @endif
-            <?php
-            $index_permission = DB::table('permissions')->where('name', 'transfers-index')->first();
-            $index_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $index_permission->id],
-                    ['role_id', $role->id]
-                ])->first();
-            ?>
-            @if($index_permission_active)
-            <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
-            <ul id="transfer" class="collapse list-unstyled ">
-                <li id="transfer-list-menu"><a href="{{route('transfers.index')}}">{{trans('file.Transfer List')}}</a></li>
-                <?php
-                $add_permission = DB::table('permissions')->where('name', 'transfers-add')->first();
-                $add_permission_active = DB::table('role_has_permissions')->where([
-                    ['permission_id', $add_permission->id],
-                    ['role_id', $role->id]
-                ])->first();
-                ?>
-                @if($add_permission_active)
-                <li id="transfer-create-menu"><a href="{{route('transfers.create')}}">{{trans('file.Add Transfer')}}</a></li>
-                <li id="transfer-import-menu"><a href="{{url('transfers/transfer_by_csv')}}">{{trans('file.Import Transfer By CSV')}}</a></li>
                 @endif
             </ul>
             </li>
@@ -754,8 +820,71 @@
             </li>
             @endif
 
+            <?php
+                    $warehouse_permission = DB::table('permissions')->where('name', 'warehouse')->first();
+                    $warehouse_permission_active = DB::table('role_has_permissions')->where([
+                                    ['permission_id', $warehouse_permission->id],
+                                    ['role_id', $role->id]
+                                ])->first();
+
+                    $unit_permission = DB::table('permissions')->where('name', 'unit')->first();
+                    $unit_permission_active = DB::table('role_has_permissions')->where([
+                                    ['permission_id', $unit_permission->id],
+                                    ['role_id', $role->id]
+                                ])->first();
+
+                    $currency_permission = DB::table('permissions')->where('name', 'currency')->first();
+                    $currency_permission_active = DB::table('role_has_permissions')->where([
+                                    ['permission_id', $currency_permission->id],
+                                    ['role_id', $role->id]
+                                ])->first();
+
+                    $tax_permission = DB::table('permissions')->where('name', 'tax')->first();
+                    $tax_permission_active = DB::table('role_has_permissions')->where([
+                                    ['permission_id', $tax_permission->id],
+                                    ['role_id', $role->id]
+                                ])->first();
+
+                    $general_setting_permission = DB::table('permissions')->where('name', 'general_setting')->first();
+                    $general_setting_permission_active = DB::table('role_has_permissions')->where([
+                                    ['permission_id', $general_setting_permission->id],
+                                    ['role_id', $role->id]
+                                ])->first();
+            ?>
+
             <li><a href="#setting" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-gear"></i><span>{{trans('file.settings')}}</span></a>
                 <ul id="setting" class="collapse list-unstyled ">
+
+                    <li id="user-menu"><a href="{{route('user.profile', ['id' => Auth::id()])}}">{{trans('file.User Profile')}}</a></li>
+                    
+                    @if($role->id <= 2)
+                    <li id="role-menu"><a href="{{route('role.index')}}">{{trans('file.Role Permission')}}</a></li>
+                    @endif
+
+                    @if($warehouse_permission_active)
+                    <li id="warehouse-menu"><a href="{{route('warehouse.index')}}">{{trans('file.Warehouse')}}</a></li>
+                    @endif
+
+                    @if($unit_permission_active)
+                    <li id="unit-menu"><a href="{{route('unit.index')}}">{{trans('file.Unit')}}</a></li>
+                    @endif
+
+                    @if($currency_permission_active)
+                    <li id="currency-menu"><a href="{{route('currency.index')}}">{{trans('file.Currency')}}</a></li>
+                    @endif
+                    @if($tax_permission_active)
+                    <li id="tax-menu"><a href="{{route('tax.index')}}">{{trans('file.Tax')}}</a></li>
+                    @endif
+
+                    @if($general_setting_permission_active)
+                    <li id="general-setting-menu"><a href="{{route('setting.general')}}">{{trans('file.General Setting')}}</a></li>
+                    @endif
+
+                </ul>
+            </li>
+
+            <li><a href="#settingSalespro" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-gear"></i><span>Setting Salespro</span></a>
+                <ul id="settingSalespro" class="collapse list-unstyled ">
                     <?php
                         $send_notification_permission = DB::table('permissions')->where('name', 'send_notification')->first();
                         $send_notification_permission_active = DB::table('role_has_permissions')->where([
@@ -763,11 +892,7 @@
                                     ['role_id', $role->id]
                                 ])->first();
 
-                        $warehouse_permission = DB::table('permissions')->where('name', 'warehouse')->first();
-                        $warehouse_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $warehouse_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
+                        
 
                         $customer_group_permission = DB::table('permissions')->where('name', 'customer_group')->first();
                         $customer_group_permission_active = DB::table('role_has_permissions')->where([
@@ -776,29 +901,7 @@
                                 ])->first();
 
 
-                        $unit_permission = DB::table('permissions')->where('name', 'unit')->first();
-                        $unit_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $unit_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
 
-                        $currency_permission = DB::table('permissions')->where('name', 'currency')->first();
-                        $currency_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $currency_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
-
-                        $tax_permission = DB::table('permissions')->where('name', 'tax')->first();
-                        $tax_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $tax_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
-
-                        $general_setting_permission = DB::table('permissions')->where('name', 'general_setting')->first();
-                        $general_setting_permission_active = DB::table('role_has_permissions')->where([
-                                    ['permission_id', $general_setting_permission->id],
-                                    ['role_id', $role->id]
-                                ])->first();
 
                         $backup_database_permission = DB::table('permissions')->where('name', 'backup_database')->first();
                         $backup_database_permission_active = DB::table('role_has_permissions')->where([
@@ -856,9 +959,7 @@
                                             ['role_id', $role->id]
                                             ])->first();
                     ?>
-                    @if($role->id <= 2)
-                    <li id="role-menu"><a href="{{route('role.index')}}">{{trans('file.Role Permission')}}</a></li>
-                    @endif
+                    
                     @if($discount_plan_permission_active)
                     <li id="discount-plan-list-menu"><a href="{{route('discount-plans.index')}}">{{trans('file.Discount Plan')}}</a></li>
                     @endif
@@ -870,31 +971,20 @@
                     <a href="" id="send-notification">{{trans('file.Send Notification')}}</a>
                     </li>
                     @endif
-                    @if($warehouse_permission_active)
-                    <li id="warehouse-menu"><a href="{{route('warehouse.index')}}">{{trans('file.Warehouse')}}</a></li>
-                    @endif
+                    
                     @if($customer_group_permission_active)
                     <li id="customer-group-menu"><a href="{{route('customer_group.index')}}">{{trans('file.Customer Group')}}</a></li>
                     @endif
-                    @if($unit_permission_active)
-                    <li id="unit-menu"><a href="{{route('unit.index')}}">{{trans('file.Unit')}}</a></li>
-                    @endif
-                    @if($currency_permission_active)
-                    <li id="currency-menu"><a href="{{route('currency.index')}}">{{trans('file.Currency')}}</a></li>
-                    @endif
-                    @if($tax_permission_active)
-                    <li id="tax-menu"><a href="{{route('tax.index')}}">{{trans('file.Tax')}}</a></li>
-                    @endif
-                    <li id="user-menu"><a href="{{route('user.profile', ['id' => Auth::id()])}}">{{trans('file.User Profile')}}</a></li>
+
+
+                    
                     @if($create_sms_permission_active)
                     <li id="create-sms-menu"><a href="{{route('setting.createSms')}}">{{trans('file.Create SMS')}}</a></li>
                     @endif
                     @if($backup_database_permission_active)
                     <li><a href="{{route('setting.backup')}}">{{trans('file.Backup Database')}}</a></li>
                     @endif
-                    @if($general_setting_permission_active)
-                    <li id="general-setting-menu"><a href="{{route('setting.general')}}">{{trans('file.General Setting')}}</a></li>
-                    @endif
+
                     @if($mail_setting_permission_active)
                     <li id="mail-setting-menu"><a href="{{route('setting.mail')}}">{{trans('file.Mail Setting')}}</a></li>
                     @endif
@@ -1480,6 +1570,8 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
     @endif
+    <script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('js/custom.js')}}"></script>
     @stack('scripts')
     <script>
         if ('serviceWorker' in navigator ) {

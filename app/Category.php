@@ -16,8 +16,4 @@ class Category extends Model
         "name", 'image', "parent_id", "is_active"
     ];
 
-    public function product()
-    {
-    	return $this->hasMany('App\Product');
-    }
 }

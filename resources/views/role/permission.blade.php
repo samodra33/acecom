@@ -90,52 +90,156 @@
 						        </tr>
 
 						        <tr>
-						            <td>{{trans('file.Purchase')}}</td>
+						            <td>{{trans('file.Purchase Request')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("purchases-index", $all_permission))
-								                <input type="checkbox" value="1" id="purchases-index" name="purchases-index" checked>
+								                @if(in_array("purchases-request-index", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-request-index" name="purchases-request-index" checked>
 								                @else
-								                <input type="checkbox" value="1" id="purchases-index" name="purchases-index">
+								                <input type="checkbox" value="1" id="purchases-request-index" name="purchases-request-index">
 								                @endif
-								                <label for="purchases-index"></label>
+								                <label for="purchases-request-index"></label>
 							                </div>
 							            </div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("purchases-add", $all_permission))
-								                <input type="checkbox" value="1" id="purchases-add" name="purchases-add" checked>
+								                @if(in_array("purchases-request-add", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-request-add" name="purchases-request-add" checked>
 								                @else
-								                <input type="checkbox" value="1" id="purchases-add" name="purchases-add">
+								                <input type="checkbox" value="1" id="purchases-request-add" name="purchases-request-add">
 								                @endif
-								                <label for="purchases-add"></label>
+								                <label for="purchases-request-add"></label>
 							                </div>
 							            </div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("purchases-edit", $all_permission))
-								                <input type="checkbox" value="1" id="purchases-edit" name="purchases-edit" checked />
+								                @if(in_array("purchases-request-edit", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-request-edit" name="purchases-request-edit" checked />
 								                @else
-								                <input type="checkbox" value="1" id="purchases-edit" name="purchases-edit">
+								                <input type="checkbox" value="1" id="purchases-request-edit" name="purchases-request-edit">
 								                @endif
-								                <label for="purchases-edit"></label>
+								                <label for="purchases-request-edit"></label>
 							                </div>
 							            </div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("purchases-delete", $all_permission))
-								                <input type="checkbox" value="1" id="purchases-delete" name="purchases-delete" checked>
+								                @if(in_array("purchases-request-delete", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-request-delete" name="purchases-request-delete" checked>
 								                @else
-								                <input type="checkbox" value="1" id="purchases-delete" name="purchases-delete">
+								                <input type="checkbox" value="1" id="purchases-request-delete" name="purchases-request-delete">
 								                @endif
-								                <label for="purchases-delete"></label>
+								                <label for="purchases-request-delete"></label>
+							            	</div>
+						            	</div>
+						            </td>
+						        </tr>
+
+						        <tr>
+						            <td>{{trans('file.Purchase Order')}}</td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("purchases-order-index", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-order-index" name="purchases-order-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="purchases-order-index" name="purchases-order-index">
+								                @endif
+								                <label for="purchases-order-index"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("purchases-order-add", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-order-add" name="purchases-order-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="purchases-order-add" name="purchases-order-add">
+								                @endif
+								                <label for="purchases-order-add"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("purchases-order-edit", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-order-edit" name="purchases-order-edit" checked />
+								                @else
+								                <input type="checkbox" value="1" id="purchases-order-edit" name="purchases-order-edit">
+								                @endif
+								                <label for="purchases-order-edit"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("purchases-order-delete", $all_permission))
+								                <input type="checkbox" value="1" id="purchases-order-delete" name="purchases-order-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="purchases-order-delete" name="purchases-order-delete">
+								                @endif
+								                <label for="purchases-order-delete"></label>
+							            	</div>
+						            	</div>
+						            </td>
+						        </tr>
+
+						        <tr>
+						            <td>{{trans('file.Good Receive Note')}}</td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-index", $all_permission))
+								                <input type="checkbox" value="1" id="grn-index" name="grn-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-index" name="grn-index">
+								                @endif
+								                <label for="grn-index"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-add", $all_permission))
+								                <input type="checkbox" value="1" id="grn-add" name="grn-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-add" name="grn-add">
+								                @endif
+								                <label for="grn-add"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-edit", $all_permission))
+								                <input type="checkbox" value="1" id="grn-edit" name="grn-edit" checked />
+								                @else
+								                <input type="checkbox" value="1" id="grn-edit" name="grn-edit">
+								                @endif
+								                <label for="grn-edit"></label>
+							                </div>
+							            </div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("grn-delete", $all_permission))
+								                <input type="checkbox" value="1" id="grn-delete" name="grn-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="grn-delete" name="grn-delete">
+								                @endif
+								                <label for="grn-delete"></label>
 							            	</div>
 						            	</div>
 						            </td>

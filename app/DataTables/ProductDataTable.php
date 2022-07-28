@@ -11,6 +11,7 @@ use Yajra\DataTables\Services\DataTable;
 use App\Models\MasterProduct;
 use App\Models\MasterProductSku;
 use App\Models\MasterProductSupplier;
+use App\Supplier;
 use App\Brand;
 use App\Category;
 
@@ -37,8 +38,51 @@ class ProductDataTable extends DataTable
 
             return "Image not found";
         })
+        ->addColumn("supplier", function($query){
+
+            $supplier = MasterProductSupplier::join(Supplier::getTableName()." as supp", "supp.id", MasterProductSupplier::getTableName().".supplier_id")
+            ->where("product_id", $query->product_id)
+            ->where(MasterProductSupplier::getTableName().".is_active", 1)
+            ->select("supp.name", "supp.company_name")
+            ->groupBy("supp.name", "supp.company_name")
+            ->get();
+
+            $supplierPrint = "";
+
+            foreach ($supplier as $key => $value) {
+
+                $supplierPrint .= "<li>".$value->name." - ".$value->company_name."</li>";
+            }
+
+            return "<ul>".$supplierPrint."</ul>";
+        })
+
+        ->addColumn("S/N Input Type", function($query){
+
+
+            if ($query->is_sn == 1) {
+
+                if ($query->sn_input_type == 1) {
+                    return "Manual Input";
+                }
+                elseif($query->sn_input_type == 0) {
+
+                    return "Auto Generate by System";
+                }else{
+
+                    return "Auto Generate by System";
+                }
+
+            }else{
+
+                return "This product does not have a serial number";
+
+            }
+
+        })
+
         ->addColumn('action', 'ProductMaster.tables.button_action')
-        ->rawColumns(["image", "action"]);
+        ->rawColumns(["image", "action", "supplier"]);
     }
 
     /**
@@ -61,10 +105,14 @@ class ProductDataTable extends DataTable
                                 MasterProduct::getTableName().".product_upc",
                                 MasterProduct::getTableName().".product_name",
                                 MasterProduct::getTableName().".product_suggested_price",
+                                MasterProduct::getTableName().".product_min_price",
+                                MasterProduct::getTableName().".product_cost",
                                 MasterProduct::getTableName().".product_image",
                                 MasterProduct::getTableName().".is_active",
-                                "brand.title as Brand",
-                                "category.name as Category"
+                                MasterProduct::getTableName().".sn_input_type",
+                                MasterProduct::getTableName().".is_sn",
+                                "brand.title",
+                                "category.name"
 
 
                               )
@@ -95,13 +143,18 @@ class ProductDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            "action",
+            "action" => ["orderable" => false],
             "image",
             "product_sku",
             "product_upc",
             "product_name",
-            "Brand",
-            "Category"
+            "Brand" => [ "data" => "title", "name" => "brand.title" ],
+            "Category" => [ "data" => "name", "name" => "category.name" ],
+            "suggested_price" => [ "data" => "product_suggested_price" ],
+            "min_price" => [ "data" => "product_min_price" ],
+            "cost" => [ "data" => "product_cost" ],
+            "S/N Input Type",
+            "supplier" => ["orderable" => false],
         ];
     }
 

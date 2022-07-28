@@ -28,8 +28,13 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
 
     //////////////////////////////////////////////////////////////
     // SalesPro Module :
-
     require ('salespro/salespro_route.php');
+    //purchase Module
+    require ('include/purchase_route.php');
+    //grn Module
+    require ('include/grn_route.php');
+    //stock Module
+    require ('include/stock_route.php');
 
     // for dev purpose only
     require ('salespro/pajar_route.php');
@@ -44,6 +49,8 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
     Route::get("mProduct/service/gencode", 'Product\ProductMasterController@generateCode');
     Route::get('mProduct/saleunit/{id}', 'Product\ProductMasterController@saleUnit');
     Route::post('mProduct/updateProduct', 'Product\ProductMasterController@updateProduct')->name('mProduct.updateProduct');
+    Route::GET('mProduct/service/find-product/{id}', 'Product\ProductMasterController@getProductDetail')
+        ->name('mProduct.service.find_product');
 
     //product SKU
     Route::GET('mProduct/service/sku-table', 'Product\ProductMasterController@getSkuTable')
@@ -66,6 +73,9 @@ Route::group(['middleware' => ['auth', 'active', 'auth.timeout']], function () {
         ->name("mProduct.destroyprodsupp");
     Route::GET('mProduct/service/find-supplier/{id}', 'Product\ProductMasterController@getProductSupplier')
         ->name('mProduct.service.find_supplier');
+
+    Route::GET('mProduct/service/find-supplier-by-product/{id}', 'Product\ProductMasterController@getListSupplierbyProductJson')
+        ->name('mProduct.service.find_supplier_by_product');
 
     Route::PATCH('mProduct/service/{id}/edit-prod-supplier', 'Product\ProductMasterController@updateProductSupplierAjax')
         ->name('mProduct.service.edit_prod_supplier');

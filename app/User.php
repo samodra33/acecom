@@ -6,10 +6,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+use App\Traits\EloquentGetTableNameTrait;
+
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+
+    use EloquentGetTableNameTrait;
 
     protected $fillable = [
         'name', 'email', 'password', "phone", "company_name", "role_id", "biller_id", "warehouse_id", "is_active", "is_deleted", 'google2fa_secret',

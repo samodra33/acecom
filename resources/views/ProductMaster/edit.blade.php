@@ -37,7 +37,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>{{trans('file.Update SKU and Supplier')}}</h4>
+                        <h4>{{trans('file.Update Supplier')}}</h4>
                     </div>
                     <div class="card-body">
 
@@ -151,27 +151,6 @@
     //table
     window.product_image = $('#product_image').DataTable({searching: false, paging: false, info: false});
 
-    $('#product_sku').DataTable({
-
-        processing: true,
-        serverSide: true,
-        bInfo: false,
-        bPaginate: true,
-        bAutoWidth: false, 
-        ajax: {
-          url : '{{ route("mProduct.service.sku_table") }}',
-          data : {
-            product_id : $('input[name="product_id"]').val()
-          }
-        },
-        columns: [
-        {data: 'action', name: 'action'},
-        {data: 'sku_no', name: 'sku_no'},
-        {data: 'sku_desc', name: 'sku_desc'}
-        ],
-        order: [[2, 'desc']]
-    });
-
     $('#product_supplier').DataTable({
 
         processing: true,
@@ -179,6 +158,7 @@
         bInfo: false,
         bPaginate: true,
         bAutoWidth: false, 
+        searching: false, 
         ajax: {
           url : '{{ route("mProduct.service.supplierProd_table") }}',
           data : {
@@ -188,7 +168,7 @@
         columns: [
         {data: 'action', name: 'action'},
         {data: 'supplier_moq', name: 'supplier_moq'},
-        {data: 'supplier_name', name: 'supplier_name'},
+        {data: 'supplier_name', name: 'supp.name'},
         {data: 'supplier_price', name: 'supplier_price'}
         ],
         order: [[2, 'desc']]
@@ -229,6 +209,25 @@
         });
     }
 
+    //radio button SN
+
+    var sn = {{ $product->is_sn ?? 0  }};
+
+    $("input[name=sn_input_type]").prop("disabled",true);
+
+    if (sn == 1) {
+
+        $("input[name=sn_input_type]").prop("disabled",false);
+    }
+
+    $("input[name='is_sn']").on("change", function () {
+        if ($(this).is(':checked')) {
+            $("input[name=sn_input_type]").prop("disabled",false);
+        }else{
+
+            $("input[name=sn_input_type]").prop("disabled",true);
+        }
+    });
 
     //dropzone portion
     Dropzone.autoDiscover = false;
@@ -357,5 +356,27 @@
     });
 
 
+    /*
+    $('#product_sku').DataTable({
+
+        processing: true,
+        serverSide: true,
+        bInfo: false,
+        bPaginate: true,
+        bAutoWidth: false, 
+        ajax: {
+          url : '{{ route("mProduct.service.sku_table") }}',
+          data : {
+            product_id : $('input[name="product_id"]').val()
+          }
+        },
+        columns: [
+        {data: 'action', name: 'action'},
+        {data: 'sku_no', name: 'sku_no'},
+        {data: 'sku_desc', name: 'sku_desc'}
+        ],
+        order: [[2, 'desc']]
+    });
+    */
 </script>
 @endpush

@@ -57,4 +57,10 @@ class CurrencyController extends Controller
         Currency::find($id)->delete();
         return redirect()->back()->with('message', 'Currency deleted successfully');
     }
+
+    public function selectList()
+    {
+        return Currency::select("id", "code")
+            ->pluck('code','id'); 
+    }
 }
