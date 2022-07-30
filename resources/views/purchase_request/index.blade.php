@@ -106,6 +106,13 @@
     </div>
 
     <div class="container-fluid">
+
+        <a href="#" data-toggle="modal" data-target="#bulk_approve" class="btn btn-success">{{trans('file.Bulk Approve')}}</a>
+        <a href="#" data-toggle="modal" data-target="#bulk_convert" class="btn btn-success">{{trans('file.Bulk Convert')}}</a>
+
+    </div>
+
+    <div class="container-fluid">
         <div class="mt-3">
           <div>
             <div class="row">
@@ -137,7 +144,8 @@
 
 </section>
 
-
+@include('purchase_request.modals.bulk_approve')
+@include('purchase_request.modals.bulk_convert')
 @endsection
 
 @push('scripts')

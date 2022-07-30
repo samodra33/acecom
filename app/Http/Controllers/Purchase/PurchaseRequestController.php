@@ -28,6 +28,7 @@ use App\Models\PurchaseType;
 
 use App\DataTables\PurchaseRequestDataTable;
 use App\DataTables\PurchaseRequestProductDataTable;
+use App\DataTables\MultipleFunctionPRDataTable;
 
 class PurchaseRequestController extends Controller
 {
@@ -76,6 +77,18 @@ class PurchaseRequestController extends Controller
         return PurchaseRequest::select("pr_id", "pr_no")
             ->where("is_active", 1)
             ->pluck('pr_no','pr_id'); 
+    }
+
+    //get multi pr table
+
+    public function gerMultiPrTable(Request $request, MultipleFunctionPRDataTable $dataTable)
+    {
+        return $dataTable
+            ->with([
+            "unaprove" => $request->unaprove,
+            "convert" => $request->convert
+            ])
+            ->render('purchase_request.edit');
     }
 
     public function index(PurchaseRequestDataTable $datatable)
@@ -526,6 +539,48 @@ class PurchaseRequestController extends Controller
         }
 
         return response()->json($prProd);
+    }
+
+    ////bulk approve
+
+    public function bulkPrApprove(Request $request)
+    {
+
+        $pr = PurchaseRequest::whereIn("pr_id", $request->pr_id)
+        ->update([
+            "is_approve" => 1,
+            "pr_approved_dt" => now(),
+            "pr_approved_by" => Auth::user()->id,
+            "updated_by" => Auth::user()->id,
+        ]);
+
+        if ($pr) {
+
+            return response()->json("Record approved successfully.", 200);
+        }
+
+        return response()->json("Something Wrong (controller)");
+    }
+
+    ////bulk approve
+
+    public function bulkConverttoPo(Request $request)
+    {
+
+        try {
+            
+            foreach ($request->pr_id as $key => $value) {
+
+                app("App\Http\Controllers\Purchase\PurchaseOrderController")->convertPrtoPo($value);
+            }
+
+        } catch (Exception $e) {
+
+            return response()->json("Something Wrong (controller)");
+
+        }
+
+        return response()->json("Record converted successfully.", 200);
     }
 
 }

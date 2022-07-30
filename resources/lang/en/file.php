@@ -676,6 +676,8 @@ return [
 	'Serial Number Management' => 'Serial Number Management',
 	'Serial Number List' => 'Serial Number List',
 	'Product Search' => 'Product Search',
+	'Bulk Approve' => 'Bulk Approve',
+	'Bulk Convert' => 'Bulk Convert',
 
 ];
 ?>

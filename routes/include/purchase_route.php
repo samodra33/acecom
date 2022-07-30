@@ -34,3 +34,14 @@ Route::delete('poProd/destroypowarehouse/{id}', 'Purchase\PurchaseOrderControlle
         ->name("poProd.destroypowarehouse");
 Route::GET('poProd/service/add-poProd-create-ajax', 'Purchase\PurchaseOrderController@getAddPoProduct')
         ->name('poProd.service.add_poProd_create_ajax');
+
+
+//bulk
+Route::GET('pr/service/get-multi-pr-table', 'Purchase\PurchaseRequestController@gerMultiPrTable')
+        ->name('pr.service.get_multi_pr_table');
+
+Route::GET('pr/service/bulk-pr-approve-ajax', 'Purchase\PurchaseRequestController@bulkPrApprove')
+        ->name('pr.service.bulk_pr_approve_ajax');
+
+Route::GET('pr/service/bulk-pr-convert-po-ajax', 'Purchase\PurchaseRequestController@bulkConverttoPo')
+        ->name('pr.service.bulk_pr_convert_po_ajax');

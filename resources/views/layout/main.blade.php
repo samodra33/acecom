@@ -68,6 +68,28 @@
   </head>
 
   <body onload="myFunction()">
+    
+        <div id="js-sprinner-loading" style="        
+        position: fixed;
+        z-index: 10000;
+        background-color: #b2b2b2;
+        min-height: 100%;
+        width: 100%;
+        height: auto;
+        opacity: .50;
+        filter: alpha(opacity=65);
+        text-align: center;
+        display:none;
+        ">
+            <img id="loading-image" src="{{url('/img/LoadingRolling.gif')}}" style="position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            margin:auto;" />
+
+        </div>
+
     <div id="loader"></div>
       <!-- Side Navbar -->
       <nav class="side-navbar">
